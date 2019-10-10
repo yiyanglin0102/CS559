@@ -1,0 +1,6 @@
+<!-- here is a big, empty SVG! make it into something interesting! -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="600px" width="600px">
+    <!-- you can delete this big rectangle - it's just a placeholder -->
+    <rect x="0" y="0" height="600" width="600" fill="#DDD" />
+</svg>
+

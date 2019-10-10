@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Workbook 6, Page 9: Programming Task 2
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/9-Museum.md -->
+<h1 id="workbook-6-page-9-programming-task-2">Workbook 6, Page 9: Programming Task 2</h1>
+<div class="examplebox">
+<h2 id="exercise-museum">Exercise: Museum</h2>
+<p>Curate your own Space-Age Sculpture Museum!</p>
+<p>In this part of the assignment, we give you some starter code for a "museum." It has pedestals to display things, spotlights to shine on them, and cameras to look at each thing in more detail. The only problem - this museum doesn't have much on display.</p>
+<p>(We say "space-age" because the objects magically float above their pedestals).</p>
+<p>Your job is to add some new objects for museum visitors to see. We've given you one simple object to start with. You must add three more objects, to fill the other three pedestals.
+You may build these objects up from primitives as you did with the snowman, or you may import any of the sample objects in the "OBJ" folder included in the project (Note that you should <strong>not</strong> import objects you find online. We need to limit the number of items to download for grading).</p>
+<p>As with the snowman, you can use simple materials of different colors (e.g., <a href="https://threejs.org/docs/#api/en/materials/MeshPhongMaterial"><code>MeshPhongMaterial</code></a> or <a href="https://threejs.org/docs/#api/en/materials/MeshStandardMaterial"><code>MeshStandardMaterial</code></a>).
+Again, the point is not to have the fanciest material, just try different settings out and see what you come up with.</p>
+<p>Now, it would be boring if the objects simply sat on the pedestals. You will add a cool sci-fi effect and set each object to float just above its pedestal, spinning slowly in place. If you want the effect to be more convincing, you could (optionally) embellish the motion by making the objects bob slightly, as if they were suspended in some kind of energy field.</p>
+<p>In addition, you will need to adjust the position and rotation of the provided spotlights and cameras such that each spotlight shines on <em>one</em> object, and cameras 1, 2, 3, and 4 each point at <em>one</em> object. The "main" camera should remain in the same position and orientation.</p>
+<p>Recap of requirements:  </p>
+<ul>
+<li>Add three objects (built from primitives or imported from OBJ folder).</li>
+<li>Give each object a material.</li>
+<li>Make each object float and slowly spin above its pedestal.</li>
+<li>Move each spotlight to shine down on one of the objects/pedestals.</li>
+<li>Move each camera (other than "main") to point at one of the objects.</li>
+</ul>
+<p>We may award bonus points if you made particularly cool objects and/or have them move in interesting ways. But remember, you must follow the assignment ground rules.</p>
+<p>A basic example (from the <em>main</em> camera view) is shown below:</p>
+<p><img alt="diagram" src="Images/A06-9-1.jpg" /></p>
+<p>We've given you a start in the file <code>9-Museum.js</code> (where you should put your  code). Some details of the starter code are given below:</p>
+<p>The first portion of the code (up to line 33 or so) just sets up the basic scene. You can find the functions called there at the bottom of the file, including the code that creates the pedestals. There you can find out the positions of the pedestals, so you know where to put your objects. The next block of code sets up a single cube on top of a pedestal, with a spotlight pointed at it, to demonstrate what you need to do.</p>
+<p>After this, there is code to generate the remaining three spotlights, and the four cameras that will individually point at objects in your scene. You can use the cube example for reference on the names of methods/properties that you need to set.</p>
+<p>Finally, there is an "animate" function, where you should add the code that makes your objects float and rotate above their pedestals.</p>
+<script src="./THREE/three.js"></script>
+<script src="./THREE/OBJLoader.js"></script>
+<script src="./THREE/OrbitControls.js" type="module" ></script>
+<script src="./9-Museum.js" type="module"></script>
+<div id="museum_area"></div>
+<div id="button_area">
+    <button type="button" id="main_cam">Main Camera</button>
+    <button type="button" id="cam_1">Camera 1</button>
+    <button type="button" id="cam_2">Camera 2</button>
+    <button type="button" id="cam_3">Camera 3</button>
+    <button type="button" id="cam_4">Camera 4</button>
+</div>
+
+
+</div>
+<div class="examplebox"></div>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Page 10-4: Lighting in Shaders
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/4-light.md -->
+<h1 id="page-10-4-lighting-in-shaders">Page 10-4: Lighting in Shaders</h1>
+<script src="THREE/three.js"></script>
+
+<script src="THREE/OrbitControls.js"></script>
+
+<div class="examplebox">
+<h2 id="box-1-lighting-in-shaders">Box 1: Lighting in Shaders</h2>
+<p>The first thing we usually need to do in a shader is compute lighting. The simple shaders from Page 2 didn't have lighting (so all sides of the cube looked the same).</p>
+<p>We discussed the equations for a simple lighting model (Phong) in class. You can find the shader code for this all over the web and even in some of the required readings.</p>
+<p>If you recall, in order to compute lighting at a point, we need to know:</p>
+<ol>
+<li>The local geometry (really just the normal vector)</li>
+<li>Information about the surface property (such as its color)</li>
+<li>Information about the lights (color, intensity, direction)</li>
+<li>Information about the camera (so we have the eye direction for specular computations)</li>
+</ol>
+<p>The geometry (#1) is different for every point - we'll need to pass it to the shader as a varying variable.</p>
+<p>Information about the surface is constant for the object, it goes into uniform variables. We could pass per-vertex colors, or do a texture lookup (in which case the texture is a uniform - but we'll get to that later).</p>
+<p>Information about the lights is constant for the scene, we can either pass it as a uniform variable, or hard code it into the shaders.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-simple-lighting">Box 2: Simple Lighting</h2>
+<p>Let's try a simple example. We'll make a purely diffuse surface lit by a single directional light source. The lighting equation is:</p>
+<p>
+<script type="math/tex; mode=display">
+c = c_d * (\hat{n} \cdot \hat{l}) * l_d
+</script>
+</p>
+<p>Where c is the resulting light color, <script type="math/tex"> c_d </script> is the surface color, <script type="math/tex"> l_d </script> is the light color, <script type="math/tex"> \hat{n} </script> is the unit normal vector, and <script type="math/tex"> \hat{l} </script> is the unit light vector (the direction the light comes from).</p>
+<p>This is quite simple in code. To make it even simpler, I will assume that <script type="math/tex"> l_d </script> is white.</p>
+<p>In the vertex shader, we can do everything as we have been, except that now we have to pass the normal vector. There is one catch: the normal vectors are in the object's local coordinate system. Just as we transform the object's positions by the "model" matrix to get it into the "world" coordinates, we need to provide a similar transformation to the normals. It turns out that if you transform an object by a matrix M, you have to transform its normals by a different matrix N (which is the <em>adjoint</em> or inverse-transpose of M). The math for this is discussed in Section 6.2.2 of Fundamental of Computer Graphics (<a href="https://canvas.wisc.edu/files/7180025/download?download_frd=1">FCG4_Ch06.pdf</a>). Don't worry too much - THREE knows about normal matrices.</p>
+<p>So, when we transform the vertex to get its final position, we also transform the normals using the <code>normalMatrix</code> that THREE gives us. There is one slight catch: notice that we transform the position by <code>modelViewMatrix</code> because we need to know where the vertex is going to end up in view coordinates (we need both the modeling matrix and the viewing matrix). The <code>normalMatrix</code> in THREE is similar: it tells us what direction the normal will be pointing in view (not world) coordinates. This is documented in the <a href="https://threejs.org/docs/#api/en/renderers/webgl/WebGLProgram"><code>WebGlProgram</code></a> page.</p>
+<p>So, our vertex program (which is in <code>diffuse1.vs</code> - with comments) looks like:</p>
+<div class="codehilite"><pre><span></span><span class="k">varying</span> <span class="kt">vec3</span> <span class="n">v_normal</span><span class="p">;</span>
+<span class="kt">void</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nb">gl_Position</span> <span class="o">=</span> <span class="n">projectionMatrix</span> <span class="o">*</span> <span class="n">modelViewMatrix</span> <span class="o">*</span> <span class="kt">vec4</span><span class="p">(</span> <span class="n">position</span><span class="p">,</span> <span class="mf">1.0</span> <span class="p">);</span>
+    <span class="n">v_normal</span> <span class="o">=</span> <span class="n">normalMatrix</span> <span class="o">*</span> <span class="n">normal</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Again, notice how we need to declare a varying variable, and that we have to compute the transformed normal (that is transformed the same way the the object is). Also notice that the normal is not transformed by the projection: we don't want the lighting affected by perspective.</p>
+<p>The action happens in the fragment shader which computes the lighting equation.</p>
+<div class="codehilite"><pre><span></span><span class="k">varying</span> <span class="kt">vec3</span> <span class="n">v_normal</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">vec3</span> <span class="n">lightDir</span> <span class="o">=</span> <span class="kt">vec3</span><span class="p">(</span><span class="mo">0</span><span class="p">,</span><span class="mo">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="k">const</span> <span class="kt">vec3</span> <span class="n">baseColor</span> <span class="o">=</span> <span class="kt">vec3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">.8</span><span class="p">,</span><span class="mf">.4</span><span class="p">);</span>
+
+<span class="kt">void</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// we need to renormalize the normal since it was interpolated</span>
+    <span class="kt">vec3</span> <span class="n">nhat</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">v_normal</span><span class="p">);</span>
+    <span class="c1">// deal with two sided lighting</span>
+    <span class="kt">float</span> <span class="n">light</span> <span class="o">=</span> <span class="n">abs</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">nhat</span><span class="p">,</span> <span class="n">lightDir</span><span class="p">));</span>
+    <span class="c1">// brighten the base color</span>
+    <span class="nb">gl_FragColor</span> <span class="o">=</span> <span class="kt">vec4</span><span class="p">(</span><span class="n">light</span> <span class="o">*</span> <span class="n">baseColor</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Let's discuss this part by part.</p>
+<p>First, I declare some "global" variables. I declare the varying variable to receive normal information from the vertex shader. I also declare two constants: the light direction vector <code>lightDir</code> and the surface color <code>baseColor</code> - these correspond to <script type="math/tex"> \hat{l} </script> and <script type="math/tex"> c_d </script> in the equation.</p>
+<p>In the shader itself, the first thing I do is compute nhat (which is <script type="math/tex"> \hat{n} </script>). I need to renormalize the vector: because the fragment normal is computed by linear interpolation of the vertex normals, it may no longer be unit length (even if the vertex normals were unit length).</p>
+<p>The I compute the dot product - just as in the equation. One slight deviation: I take the absolute value of this, so if the normal is facing inward I still get the same lighting. This makes sure things work for two sided lighting.</p>
+<p>Finally, I use this brightness amount to change the color.</p>
+<p>There is a hidden trick here: the normal vector is in the view (or camera coordinate) system. The Z axis is perpendicular to the image plane (basically, pointing towards the camera). If you look at the results, you'll see its as if the light is where the camera is (notice how the light on the sphere is brightest at the part that points towards the camera). You should also notice that although this is diffuse lighting, it changes as the camera moves (because the light is moving with the camera).</p>
+<div id="4-1"></div>
+<script src="4-1-diffuse.js" type="module"></script>
+
+<p>The JavaScript <code>4-1-diffuse.js</code> is similar to the previous examples, but make sure you understand the shaders <code>diffuse1.vs</code> and <code>diffuse1.fs</code> before going on.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-3-light-parameters-and-camera-coordinates">Box 3: Light Parameters and Camera Coordinates</h2>
+<p>Usually, we like to think about lights in "world coordinates", not coordinates that move with the cameras. So the previous example is inconvenient. In box 1, the light was attached to the camera. If we wanted to have the light defined in the world (for example, we would like to have the light coming from straight above - (0,1,0) - as if it were the sun at noon, or a light in the ceiling), we're stuck.</p>
+<p>It turns out this is a common problem. In many graphics systems, there is no notion of the "world coordinates" - there are just camera coordinates. All other coordinate systems are up to the programmer. The fact that we have "world coordinates" is our own convention.</p>
+<p>There are a few things we could do, here are two general approaches:</p>
+<ol>
+<li>
+<p>We could compute the normals in world coordinates. Unfortunately, while THREE gives us <code>normalMatrix</code> which is the adjoint of the <code>modelViewMatrix</code>, it has no equivalent pre-defined uniform for the adjoint of the <code>modelMatrix</code>. We have to compute it ourselves, and make our own uniform variable.</p>
+</li>
+<li>
+<p>We could transform the lights into view coordinates by transforming them by the viewing matrix. This is actually what THREE (and most graphics systems) do.</p>
+</li>
+</ol>
+<p>Let's try both approaches and make a light from vertically above (with the same diffuse material).</p>
+<p>We'll try approach #2 first: transforming the lights. The simplest thing to do would be to apply the view transformation in the fragment shader, re-writing it as...</p>
+<div class="codehilite"><pre><span></span><span class="k">varying</span> <span class="kt">vec3</span> <span class="n">v_normal</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">vec3</span> <span class="n">lightDirWorld</span> <span class="o">=</span> <span class="kt">vec3</span><span class="p">(</span><span class="mo">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mo">0</span><span class="p">);</span>
+<span class="k">const</span> <span class="kt">vec3</span> <span class="n">baseColor</span> <span class="o">=</span> <span class="kt">vec3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">.8</span><span class="p">,</span><span class="mf">.4</span><span class="p">);</span>
+
+<span class="kt">void</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// we need to renormalize the normal since it was interpolated</span>
+    <span class="kt">vec3</span> <span class="n">nhat</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">v_normal</span><span class="p">);</span>
+
+    <span class="c1">// get the lighting vector in the view coordinates</span>
+    <span class="c1">// warning: this is REALLY wasteful!</span>
+    <span class="kt">vec3</span> <span class="n">lightDir</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span> <span class="n">viewMatrix</span> <span class="o">*</span> <span class="n">lightDirWorld</span> <span class="p">);</span>
+
+    <span class="c1">// deal with two sided lighting</span>
+    <span class="kt">float</span> <span class="n">light</span> <span class="o">=</span> <span class="n">abs</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">nhat</span><span class="p">,</span> <span class="n">lightDir</span><span class="p">));</span>
+
+    <span class="c1">// brighten the base color</span>
+    <span class="nb">gl_FragColor</span> <span class="o">=</span> <span class="kt">vec4</span><span class="p">(</span><span class="n">light</span> <span class="o">*</span> <span class="n">baseColor</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>This works (note how the light comes from above, so the square is dark):
+<div id="4-2"></div>
+<script src="4-2-naive.js" type="module"></script></p>
+<p>Notice that because I am doing "two sided" lighting (with that <code>abs</code>), the light comes both from above and below (the top and bottom of the sphere are lit).</p>
+<p>The downside is this is really inefficient. We are doing a matrix multiply to change the light direction once for every fragment. That's a lot of work - that we don't need to be doing.</p>
+<p>The alternative would be to make the light direction a uniform variable. The problem with this is that when we create uniform variables, we don't know what the camera will be (or have the view matrix). For THREE's built in lights, this is implemented in the render loop so that the appropriate light directions are computed just before rendering when the view matrix is known. THREE provides mechanisms for performing these kinds of "pre-rendering" computations, but we won't discuss them.</p>
+<p>We could use a similar strategy to define our own "model matrix adjoint" uniform, we would need to recompute it every time the model matrix changed. Again, THREE has ways to do this, but we aren't going to take time to learn about them.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-4-using-threes-lights">Box 4: Using THREE's Lights</h2>
+<p>Of course, to really do things correctly and make them blend into our scenes, we should use the lights that are defined in the THREE scene so our objects using our shaders have the same lighting as those using THREE's shaders.</p>
+<p>Doing this requires:</p>
+<ol>
+<li>Setting up uniforms that receive information about THREE's lights. Fortunately, THREE will set this up for us. We just need to use some poorly documented parts of THREE (the <a href="https://threejs.org/docs/#api/en/renderers/shaders/UniformsLib"><code>UniformsLib</code></a>).</li>
+<li>In our Shaders, we need to loop over all of the lights and sum up their contributions.</li>
+</ol>
+<p>The upside is that THREE gives lighting information in view space, so the issues discussed in Box 3 are taken care of.</p>
+<p>Things get even trickier if we want to do shadows.</p>
+<p>We will not require you to figure out how to use THREE's lights in a shader - it will be sufficient for the exercises (future pages) to make a simple directional light source in camera coordinates. However, you can make your shaders work with THREE's lights for bonus points.</p>
+</div>
+<div class="sumbox">
+<h2 id="summary-lighting-in-shaders">Summary: Lighting in Shaders</h2>
+<p>Short version: we'll let THREE take care of it. We might want to do a little simple lighting to add to our more interesting shaders (next).</p>
+<p>On the <a href="5-procedural.html">next page</a> we'll try something more interesting.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

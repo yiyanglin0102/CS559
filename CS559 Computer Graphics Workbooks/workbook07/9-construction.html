@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Page 7-9: Exercise: Construction Site
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/9-construction.md -->
+<h1 id="page-7-9-exercise-construction-site">Page 7-9: Exercise: Construction Site</h1>
+<div class="examplebox">
+<p>Over the next few weeks, we'll build up Graphics Town. So, to start with, we'll need to get some construction equipment to start building.</p>
+<p>In terms of real learning goals, construction equipment is often great examples of articulated objects - they consist of pieces that rotate or translate relative to each other. Things like dump trucks, excavators, cranes, cement mixers, pile drivers, ... Also, this will let you try out more of the framework code, in particular the automatic creation of UIs for object parameters.</p>
+<p>We've started out with two examples: a tower crane and an excavator. If you look at the construction site at the bottom of the page you can see we've given two example machines. For both, the AutoUI creates sliders to control them. Notice how each machine has parameters (and therefore sliders) for position and orientation, but also for its articulations.</p>
+<p>The code is in <code>9-construction.js</code> and <code>9-constructionobjects.js</code>.</p>
+<p>You need to create some more machine types. Here is a list from the <a href="http://research.cs.wisc.edu/graphics/Courses/559-f2008/Assignments/ConstructionSite">2008</a> version of the assignment:</p>
+<ul>
+<li>Tower Crane</li>
+<li>Truck Crane</li>
+<li>Telescoping Truck Crane</li>
+<li>Excavator</li>
+<li>Mini-Loader</li>
+<li>Fork-Lift</li>
+<li>Fork-Lift Crane</li>
+<li>Bulldozer</li>
+<li>Front-End Loader</li>
+<li>Dump Truck</li>
+<li>Cement Mixer</li>
+<li>Back-hoe</li>
+<li>Garbage Truck</li>
+<li>Concrete Pumper (see <a href="http://www.potratzsouth.com/">here</a> or <a href="http://gordysconcretepumping.com/">here</a>)</li>
+<li><a href="https://en.wikipedia.org/wiki/Pile_driver">Pile Driver</a></li>
+</ul>
+<p>In the file <code>TestObjects.js</code> there is an object called a <code>HingeCube</code> that can give you a simple example. Otherwise, Luke has made a crane and an excavator in <code>9-constructionobjects.js</code>. Both have multiple degrees of freedom (2 for the crane, 4 for the excavator - we don't count the overall position and orientation). </p>
+<p>The minimum requirement is that you must create one or two new types of construction equipment and place them into the world. Between these one or two new types of construction equipment, there needs to be at least 2 articulated degrees of freedom (the rotation/translation to position the machine doesn't count). So, for example, you could make a dump truck and a fork-lift (each one degree of freedom), or a single back-hoe or concrete pumper (many degrees of articulation). The position and orientation of the machine do not count as degrees of articulation.</p>
+<p>The two machines (or two degrees of freedom) should be different: don't make two variants of a dump truck. If you make another tower crane or excavator, they should be sufficiently different from the ones we've given you. </p>
+<p>You can make the machines with rough geometry - build them out of boxes and cylinders. Or you can try to make nicer shapes. The most important thing is their behaviors: that you can control their articulations. You should say what the machines are, but they should be "good enough" that someone can tell.</p>
+<p>Remember: the key here is to make things that are articulated. There should be multiple (rigid) pieces that translate and rotate relative to each other (controlled by parameters that can be connected to the sliders).</p>
+<p>You will need to create new classes of objects for your new machine types. You can refer to the examples we have provided.</p>
+<p>Note that in this exercise, you will be using the <code>update</code> method of the objects you define so they can be controlled by sliders. You will also have to define the parameters in the constructor, and include the call for <code>AutoUI</code> in the world setup function.</p>
+<p>Please see the framework code ground rules on <a href="7-framework.html">page 7</a>. The example class <code>HingeCube</code> in <code>TestObjects.js</code> can give you a simple example of an articulation to start with. (A hint: the <code>HingeCube</code> is the beginnings of a dump truck).</p>
+<p>As on previous pages, you can load geometry, subject to the same rules.</p>
+<p><strong>Bonus Points:</strong> The minimum requirements allow for simple geometry and only a few degrees of articulation. For bonus points, you can make more machine types, more complicated machines, and nicer looking machines.</p>
+<p>If you want to make a nicer excavator, see the <a href="http://research.cs.wisc.edu/graphics/Courses/559-f2008/Assignments/Excavator">2008 assignment excavator page</a>. Note: unlike in 2008, you do not have to do the kinematics.</p>
+<p>A version of this assignment was given in <a href="http://research.cs.wisc.edu/graphics/Courses/559-f2008/Assignments/Excavator">2008</a>. Students had to do more than just make the machines.</p>
+</div>
+<script src="THREE/three.js"></script>
+
+<script src="THREE/OrbitControls.js"></script>
+
+<script src="9-construction.js" type="module"></script>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

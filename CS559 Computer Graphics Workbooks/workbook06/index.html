@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Workbook 6 - 3D and THREE
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/0-index.md -->
+<h1 id="workbook-6-3d-and-three">Workbook 6 - 3D and THREE</h1>
+<p>In this workbook, we'll move on to doing some 3D programming. To do this, we'll use a Javascript library called <strong>THREE.js</strong> (I'll just say THREE from now on).</p>
+<p>There are two major goals in this workbook:</p>
+<ol>
+<li>Get you set up with the mechanics of using THREE.js</li>
+<li>Get you to make some basics 3D pictures and animations using THREE.js using the basic pieces</li>
+</ol>
+<p>The idea is that once you've gotten started, it will be easier to explain both what is happening "underneath the hood" as well as fancier things. However, one down side of this strategy is that you may not always understand why you are doing things (since we aren't explaining how things work), and you may wonder why we are limiting ourselves to simple things (because we are saving more complicated stuff for later)</p>
+<h2 id="required-and-recommended-reading">Required and Recommended Reading</h2>
+<p>The main "reading" (aside from the workbook) will be the web documentation on the THREE.js library. You aren't expected to memorize any details, but you need to understand the concepts well enough to use them.</p>
+<p>The official documentation is at: <a href="https://threejs.org/docs/">https://threejs.org/docs/</a>. This is mainly a reference. Once you get started you can look up the details of the things you need.</p>
+<p>Be warned: a lot of the fancier stuff may not make sense until we've talked about what is happening "under the hood". The documentation dives into details quite quickly. The workbook is designed to guide you through the basics. Then use the official documentation as a reference to get the details as you need them .</p>
+<p>While there are a lot of THREE resources around the web, and the API documentation is pretty complete, things tend not to be that well organized, or really great for beginning. If you find a good resource, please post it on Piazza.</p>
+<ul>
+<li>
+<p><a href="https://github.com/mrdoob/three.js/wiki/Getting-Started">THREE.js Getting Started</a> - Shows you the minimum that you need to do. It's a bit redundant with this workbook, but seeing things in someone else's words may be useful.</p>
+</li>
+<li>
+<p><a href="https://medium.com/@benjamin.c.coleman/the-beginners-guide-to-beginning-three-js-c36b8947c2aa">THREE.js Tutorial</a> - This is very similar to the way we'll introduce things in this workbook. Read this to see what we're talking about said in different words.</p>
+</li>
+<li>
+<p><a href="https://tympanus.net/codrops/2016/04/26/the-aviator-animating-basic-3d-scene-threejs/">Aviator Game</a> - this is a complicated example that builds things up from scratch. It's a bit of a fancy application to start with, but you can see how the author builds something pretty cool using the pieces we'll learn about.</p>
+</li>
+</ul>
+<p><strong>The textbooks:</strong> When we learned about transformations, we skipped 3D transformations. Now is a good time to come back to them. You are <em>required</em> to read:</p>
+<ul>
+<li>
+<p>Chapter 6 of Hart's Big Fun Book of Computer Graphics (<a href="https://canvas.wisc.edu/files/7180428/download?download_frd=1">Hart06-jan19.pdf</a>). This Chapter mixes in many different, but important things, including a review of the vector algebra basics. Not all of the Chapter is essential now, so a bit of a "reader's guide":</p>
+<ul>
+<li>6.1 - Scale and Translation - important, but a simple extension of 2D</li>
+<li>6.2 - Handedness of Coordinate Systems - important</li>
+<li>6.3 - Vector Arithmetic - a good review including dot products and cross products. The section on Gramm-Schmidt Orthonormalization is useful, but a more advanced topic and is optional.</li>
+<li>6.4 - Rotation about a Coordinate Axis - important</li>
+<li>6.5 - Properties of Rotation Matrices - the first part is important, the part on Cayley's Formula is optional</li>
+<li>6.6 - Rotation about an Arbitrary Axis - this is very valuable, and good for getting the intuitions about rotations, but is optional since we won't discuss it in detail in class.</li>
+</ul>
+</li>
+<li>
+<p>Fundamentals of Computer Graphics Section 6.2 (<a href="https://canvas.wisc.edu/files/7180025/download?download_frd=1">FCG4_Ch06.pdf</a>) (which mainly just gives the matrices). You might want to go over other parts of the Chapter.</p>
+</li>
+</ul>
+<p>Other parts of the textbook will mainly tell you how things work. We'll get to that in class over the coming weeks. These readings are not required in order to do the workbook, but will help you understand some of the things you are doing.</p>
+<ul>
+<li>Fundamentals of Computer Graphics Chapter 7 (<a href="https://canvas.wisc.edu/files/7180026/download?download_frd=1">FCG4_Ch07.pdf</a>): Viewing - this will explain how cameras work.</li>
+<li>Fundamentals of Computer Graphics Chapter 8 (<a href="https://canvas.wisc.edu/files/7180027/download?download_frd=1">FCG4_Ch08.pdf</a>): The Graphics Pipeline - this will explain how drawing actually happens, with all the steps that the APIs are taking care of for us.</li>
+<li>Fundamentals of Computer Graphics Section 12.2 (<a href="https://canvas.wisc.edu/files/7180030/download?download_frd=1">FCG4_Ch12.pdf</a>): Scene Graphs - this reiterates what we've seen about using transformations to create hierarchical models</li>
+</ul>
+<h2 id="exercises">Exercises</h2>
+<p>Most pages have code examples - make sure you understand how they work.</p>
+<p>A Pages 4, 5 and 6 have simple examples on them. Make sure they work, and that you understand them.</p>
+<p>Pages <a href="8-Snowman.html">8</a> and <a href="9-Museum.html">9</a> ask you to make pictures. For now, please focus on understanding the simple stuff: you will have plenty of time later to use fancier features. There are bonus point opportunities on this page.</p>
+<h2 id="the-pages-in-this-workbook-are">The pages in this workbook are:</h2>
+<ul>
+<li><a href="index.html">Workbook 6 - 3D and THREE</a></li>
+<li><a href="1-Three.html">Workbook 6, Page 1: The THREE.js library</a></li>
+<li><a href="2-3D.html">Workbook 6, Page 2: Elements of 3D Graphics Programming</a></li>
+<li><a href="3-Scene.html">Workbook 6, Page 3: Making a Scene</a></li>
+<li><a href="4-ObjectsTransforms.html">Workbook 6, Page 4: Primitive Objects and Basic Transformations</a></li>
+<li><a href="5-LightsCamera.html">Workbook 6, Page 5: Lights, Camera, Action!</a></li>
+<li><a href="6-Materials.html">Workbook 6, Page 6: Materials</a></li>
+<li><a href="7-Animation.html">Workbook 6, Page 7: Animation</a></li>
+<li><a href="8-Snowman.html">Workbook 6, Page 8: Programming Task 1: Snowman</a></li>
+<li><a href="9-Museum.html">Workbook 6, Page 9: Programming Task 2</a></li>
+</ul>
+<h2 id="get-started">Get Started!</h2>
+<p>Don't forget to commit and push as you work!</p>
+<p>As usual, there is the README.md and QUESTIONS.md.</p>
+<p>Get started on <a href="1-Three.html">page one.</a></p>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

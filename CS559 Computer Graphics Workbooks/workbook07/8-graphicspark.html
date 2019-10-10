@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Page 7-8: Exercise: Graphics Park
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/8-graphicspark.md -->
+<h1 id="page-7-8-exercise-graphics-park">Page 7-8: Exercise: Graphics Park</h1>
+<div class="examplebox">
+<p>Over the next few weeks, we'll build Graphics Town. But to start, we'll begin with something less ambitious: a park. We'll add some "rides" to the park to make it more like an Amusement Park than just a playground.</p>
+<p>You can see the beginnings of a park below. The code is in <code>8-graphicspark.js</code>, <code>8-simplepark.js</code>  and <code>8-parkobjects.js</code>. The first file makes the park: it makes the world and places the playground equipment into it. The other files defines objects that are animated, <code>8-simplepark.js</code> is just a simple example and the latter is . You should look over all the files, you'll have to change both <code>8-graphicspark.js</code> and <code>8-parkobjects.js</code>.</p>
+<p>Here are the required things to do, we recommend doing them in order to learn how the code works:</p>
+<ol>
+<li>
+<p>Look at the simplest example (the bouncing cube) in <code>8-simplepark.js</code>, make sure you understand it, and then take it out of the main setup in <code>8-graphicspark.js</code> since it is distracting and really has no place in a park.</p>
+</li>
+<li>
+<p>The file <code>8-parkobjects.js</code> has a bunch of playground toys defined in it. Some of these are already placed in the world. You understand these examples as well. Also, you should place some new ones in the world. </p>
+<p>Right now, there are two "roundabouts" (a playground toy that spins around - sometimes these are called "orbiters" or "spinners" or "spinning wheel" - see <a href="https://en.wikipedia.org/wiki/Roundabout_(play)">Wikipedia</a>). There is a simple one and a fancy one. These are good examples to understand. </p>
+<p>In the  <code>8-parkobjects.js</code> there are some other objects defined (a swing and a carousel). Place at least one more swing set and one carousel in the park. This will give you a chance to see how we place objects in the world using the framework. Note that this doesn't require you to change the objects (class definitions), but it does require you to edit the world setup function.</p>
+<p>When you add objects, you will need to make sure that appropriate <code>import</code> statements are included in the <code>8-graphicspark.js</code> file. You should also make sure that you position the different playground toys so they have some space between them.</p>
+</li>
+<li>
+<p>We have started to make a "Carousel" or "Merry-go-Round." While the Wikipedia page says these can be like the "roundabout" above, what we really intended was an amusement park "merry go round" where horses (or other things you sit on) go up and down while the ride spins. There was a famous one at <a href="http://www.ellasdeli.com/carousel.php">Ella's Deli</a> on the east side, until it closed. We'd like you to expand the spinning thing we started to be more like one of these. You need to place "horses" on the poles, and have them go up and down as the ride spins. You can use simple geometry for the horses (a cube or other primitive), but there needs to be one on each pole, and it needs to go up and down as the merry-go-round spins. (note: the pole can go right through the object). This will require you to edit the constructor and <code>advance</code> function for the <code>Carousel</code> class.</p>
+</li>
+</ol>
+<p>These are three simple changes (remove the bouncing cube, add another swing, and animate the merry-go-round). But in the process, you'll get to see the framework code and get some practice making and animating a hierarchical object using THREE.JS (and our framework).</p>
+<p>For bonus points, you can do better than the minimums. The two things to do:</p>
+<ol>
+<li>
+<p>Make the merry-go-round have nice geometry (like horses and other animals, or something else). You can add more poles if you need to. </p>
+</li>
+<li>
+<p>Make more amusement park rides that have hierarchical motion. Things like tilt-a-whirls, spinning teacups, or (well, I don't know the names for these things). See the "flat rides" on <a href="https://www.tripsavvy.com/types-of-theme-park-attractions-4110823">this page</a> for names, or a Google image search for "spinning amusement park ride" turns up lots of things. It is more important that the rids have hierarchical motion than they have detailed geometry. Your ride must be animated. For now, do not make a train or roller coaster. But, if you are <strong>really</strong> ambitious you could try to adapt your flocking program to make bumper cars.</p>
+</li>
+</ol>
+<p>Everything you do for this exercise should be in the files <code>8-graphicspark.js</code> and <code>8-parkobjects.js</code>. Make sure that they show up properly in the view below on the page!</p>
+<p>As with the Quadcopter exercise, you may add object files subject to the same rules. (explain where they come from in the README, use legal ones, avoid huge ones, avoid features not discussed in class yet).</p>
+<p>Please see the framework code ground rules on <a href="7-framework.html">page 7</a>.</p>
+<p>After you do this exercise, go on to the <a href="9-construction.html">next page</a>.</p>
+</div>
+<script src="THREE/three.js"></script>
+
+<script src="THREE/OrbitControls.js"></script>
+
+<script src="8-graphicspark.js" type="module"></script>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

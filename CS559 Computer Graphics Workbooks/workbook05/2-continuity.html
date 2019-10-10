@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Workbook 5 - Page 2: Continuity
+</title>
+</header>
+<body>
+<!-- @@MDReplace: SOURCES/2-continuity.md -->
+<h1 id="workbook-5-page-2-continuity">Workbook 5, Page 2: Continuity</h1>
+<p>The concept of continuity is explained in Section 15.2.1 of Fundamentals of Computer Graphics.</p>
+<p>On this page, we'll just emphasize some of the more important concepts.</p>
+<p>By the way, the code snippets are taken from the previous page (or in the style of functions used on the previous page). The parametric functions are defined on the range (0,1). Given a parameter value, they return the position (x,y) and the tangent vector (<script type="math/tex">\partial x/\partial u, \partial y/\partial u</script>).</p>
+<div class="examplebox">
+<h2 id="box-1-continuity">Box 1: Continuity</h2>
+<p>On the previous page, we saw that when there was an <code>if</code> statement in our parametric function, there was a chance for an abrupt change (in the position or the derivative). We formalize this with a notion of continuity.</p>
+<p>We say that a curve has <strong>continuity</strong> at a particular site (parameter value) if the value is the same whether we approach the site from above or below. For example, in the two line segment example from the previous page:</p>
+<div class="codehilite"><pre><span></span><span class="kd">function</span> <span class="nx">disconnect</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">u</span><span class="o">&lt;</span><span class="mf">0.5</span><span class="p">)</span> <span class="k">return</span> <span class="p">[</span><span class="mi">0</span> <span class="p">,</span>    <span class="mi">200</span><span class="o">*</span><span class="nx">u</span><span class="p">,</span>       <span class="mi">0</span><span class="p">,</span> <span class="mi">200</span><span class="p">];</span>
+    <span class="k">else</span>       <span class="k">return</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">100</span><span class="o">-</span><span class="mi">200</span><span class="o">*</span><span class="p">(</span><span class="nx">u</span><span class="o">-</span><span class="mf">0.5</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">200</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>for the site u=.5, the curve has a very different value if you are infinitesimally less than .5 (approaching it from below has value (0,100)) than if you are infinitesimally more than .5 (approaching it from above has value (20,100)). We say this curve has a discontinuity in value at .5. Since we typically talk about discontinuities in terms of derivatives, we say that the curve has a discontinuity in its zeroth derivative.</p>
+<p>For the V shape, something similar happens with the first derivative.</p>
+<div class="codehilite"><pre><span></span><span class="kd">function</span> <span class="nx">twoLines</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">u</span><span class="o">&lt;</span><span class="mf">0.5</span><span class="p">)</span> <span class="k">return</span> <span class="p">[</span><span class="mi">100</span><span class="o">*</span><span class="nx">u</span><span class="p">,</span>    <span class="mi">200</span><span class="o">*</span><span class="nx">u</span><span class="p">,</span>       <span class="mi">100</span><span class="p">,</span><span class="mi">200</span><span class="p">];</span>
+    <span class="k">else</span>       <span class="k">return</span> <span class="p">[</span><span class="mi">100</span><span class="o">*</span><span class="nx">u</span><span class="p">,</span><span class="mi">100</span><span class="o">-</span><span class="mi">200</span><span class="o">*</span><span class="p">(</span><span class="nx">u</span><span class="o">-</span><span class="mf">0.5</span><span class="p">),</span> <span class="mi">100</span><span class="p">,</span><span class="o">-</span><span class="mi">200</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>For the values (zeroth derivative), there is no discontinuity (the value at .5 is (50,100) whether we approach it from above or below). But there is a discontinuity in the first derivative (tangent). Approaching .5 from below, the derivative (with respect to u) is (100,200), while approaching it from above it is (100,-200). We say this curve has a discontinuity in its first derivative.</p>
+<p>We say a curve is continuous (or has continuity), if it has no discontinuities across its parameter range. If a curve has no discontinuities of its zeroth derivatives (its values) we call it C(0). If a curve has no discontinuities in its zeroth or first derivatives, we call it C(1). More generally, if a curve has no discontinuities in any of its derivatives up to n, we call it C(n).</p>
+<p>Note that if we say a curve is C(1), that implies that it is also C(0).  It is possible to contrive a curve that has first derivative continuity but not value continuity, such as:</p>
+<div class="codehilite"><pre><span></span><span class="kd">function</span> <span class="nx">broken</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">u</span><span class="o">&lt;</span><span class="mf">.5</span><span class="p">)</span> <span class="k">return</span> <span class="p">[</span><span class="nx">u</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">];</span>
+  <span class="k">else</span>      <span class="k">return</span> <span class="p">[</span><span class="nx">u</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>such curves don't occur often in practice.</p>
+<p>Note that the V shape is C(0) but not C(1). Here's an example of a shape that is C(1) but not C(2):
+<div style="display: flex; flex-direction: row;" markdown=1>
+<div style="width: 70%" markdown=1></p>
+<div class="codehilite"><pre><span></span><span class="c1">// this code has the derivatives removed to be easier to read</span>
+<span class="kd">function</span> <span class="nx">twoQuarterCircles</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">pu</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">*</span> <span class="nx">u</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">u</span><span class="o">&lt;</span><span class="mf">.5</span><span class="p">)</span> <span class="k">return</span> <span class="p">[</span><span class="mi">50</span><span class="o">+</span><span class="mi">50</span><span class="o">*</span><span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="nx">pu</span><span class="p">),</span>    <span class="mi">50</span><span class="o">*</span><span class="nb">Math</span><span class="p">.</span><span class="nx">sin</span><span class="p">(</span><span class="nx">pu</span><span class="p">)];</span>
+    <span class="k">else</span>      <span class="k">return</span> <span class="p">[</span><span class="mi">50</span><span class="o">+</span><span class="mi">50</span><span class="o">*</span><span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="nx">pu</span><span class="p">),</span><span class="mi">100</span><span class="o">-</span><span class="mi">50</span><span class="o">*</span><span class="nb">Math</span><span class="p">.</span><span class="nx">sin</span><span class="p">(</span><span class="nx">pu</span><span class="p">)];</span>
+  <span class="p">}</span>
+</pre></div>
+
+
+</div>
+<div style="width: 30%" markdown=1>
+<svg width="200px" height="200px">
+  <circle cx="100" cy="50" r="50" fill="none" stroke="#888" stroke-width="1"/>
+  <circle cx="100" cy="150" r="50" fill="none" stroke="#888" stroke-width="1"/>
+  <path d="M 150 50 A 50 50 90 0 1 100 100" stroke="black" stroke-width="5" fill = "none"/>
+  <path d="M 100 100 A 50 50 -90 0 0 50 150 " stroke="red" stroke-width="5" fill = "none"/>
+</svg>
+</div>
+</div>
+Here, two circular arcs connect at u=.5. At the connection point, whether you are approaching from below or above, the tangent vector is horizontal and to the left. (watch the animation on the previous page)
+
+This connection of two arcs is C(1), but it is not C(2) - the second derivatives are different between the first (top) part and the second (bottom) part. In the former, at .5 the derivative is turning upwards, whereas in the latter it is turning downwards. The 2nd derivative discontinuity is this rapid change: elsewhere (as we go around the circle) the second derivative does change, but it changes smoothly.
+
+<p>Also, notice that when we talk about continuity, we only need to consider the switching points. The functions are generally continuous in between these exceptional points. We assemble curves from smooth pieces (such as arcs and polynomials), and the potential for discontinuities is at the connections.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-geometric-continuity">Box 2: Geometric Continuity</h2>
+<p>Suppose we aren't animating the pen, only looking at the resulting drawing. If we have a curve that changes its derivative, but we can't see that change, we might not care.</p>
+<p>For example, consider the curve:</p>
+<div class="codehilite"><pre><span></span><span class="kd">function</span> <span class="nx">speedUp</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">u</span><span class="o">&lt;</span><span class="mf">.5</span><span class="p">)</span> <span class="k">return</span> <span class="p">(</span><span class="nx">u</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">else</span> <span class="k">return</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="nx">u</span><span class="o">-</span><span class="mf">.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>The curve is a straight line, but the pen speeds up halfway (in parameter space). This curve is not C(1) as the derivative changes at u=.5. However, since the direction of the tangent does not change (only its speed), this might be "continuous enough". We call this easier kind of continuity (where the direction remains the same, even if the magnitude might change) <strong>geometric continuity</strong> (as opposed to the derivative continuity we had been discussing). We denote geometric continuity as G(n) (for nth derivatives). So G(1) means that the curves first derivatives have no discontinuities in their direction.</p>
+<p>More formally, geometric continuity is defined in terms of arc-length parameterizations. However, since we haven't introduced those yet (they are on page 4 of the workbook), we'll stick to the intuition based version. The book explains the details.</p>
+</div>
+<div class="sumbox">
+<h2 id="summary-continuity">Summary: Continuity</h2>
+<p>Continuity is the key to putting pieces together. On the <a href="3-cubics.html">next page</a> we will look at cubic polynomial segments, which are a common piece to put together.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html

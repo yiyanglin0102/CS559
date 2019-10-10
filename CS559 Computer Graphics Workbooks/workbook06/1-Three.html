@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Workbook 6, Page 1: The THREE.js library
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/1-Three.md -->
+<h1 id="workbook-6-page-1-the-threejs-library">Workbook 6, Page 1: The THREE.js library</h1>
+<p>On this page, we'll just deal with the mechanics of using the THREE.js library, and some of the issues specific to using the library in the way we've been programming in class.</p>
+<div class="examplebox">
+<h2 id="box-1-check-that-things-work">Box 1: Check that things work</h2>
+<p>Just to make sure that things work, here is a simple scene made with the THREE library. You should see a spinning green cube.</p>
+<div id="three1"></div>
+<script src="1-three-1.js" type="module"></script>
+
+<p>If you don't see the picture, something is wrong.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-mixing-old-and-new-style-javascript">Box 2: Mixing old and new style JavaScript</h2>
+<p>As we pointed out at the beginning of the semester, JavaScript is a much better language today than it was historically. And, since in class we can assume that the person running our program is using a modern browser, we can program in a modern version of the language.</p>
+<p>There is a downside to this: just because we can program in modern JavaScript doesn't mean that everyone else can. So, if we use someone else's code they might have written it in old style JavaScript.</p>
+<p>THREE.js was written before there was modern JavaScript. The main parts of it have been updated, but not all of it. We will need to use some of those non-updated parts, which means we need to use the "old style" versions of the whole thing. (I believe that the THREE code itself has been updated, its more that it provides "old style interfaces").</p>
+<p>This means:</p>
+<ol>
+<li>We must load the <code>three.js</code> file from our html file before we start our program. Our file might load first, so we need to wait for <code>window.onload</code> to finish.</li>
+<li>When it loads, THREE will create a global variable (called <code>THREE</code>) in the global namespace of the JavaScript page. We cannot use this variable name.</li>
+<li>We can use the <code>THREE</code> variable to access things within the library, even if our program is written in modern JavaScript.</li>
+</ol>
+<p>One problem: while the browser is willing to let us mix old-style and modern JavaScript, the tools for error checking might try to tell us we shouldn't use old-style stuff. In particular, Visual Studio Code keeps telling me there is a problem.</p>
+<p>Here is the same code as in Box 1, but now made a little more modern, and using the tricks I've been using in previous workbooks to get Visual Studio Code to help me find my bugs:</p>
+<div id="three2"></div>
+<script src="1-three-2.js" type="module"></script>
+
+<p>While this works just fine, Visual Studio Code tells me I have 8 problems. All of the form "Cannot find name 'THREE'" - which shouldn't be surprising. THREE isn't defined in this file anywhere. So while the browser will  have no problem at runtime (since we'll load THREE), Visual Studio Code (and more specifically, the TypeScript code checker) needs to be told about THREE.</p>
+<div class="warnbox">
+<p><strong>NOTE:</strong> We do not care if your program has type errors or linter warnings, as long as it runs.</p>
+<p>If you don't use Visual Studio Code, or prefer to turn off type checking, you don't need to worry about the problems described in the rest of this box. This will just explain why my code looks a little different than you might expect.</p>
+<p>You may find that using the type checker and linter will save you tons of time as it helps you find your bugs.</p>
+</div>
+<p>One solution: we can load THREE using modern JavaScript modules. We could use:</p>
+<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">THREE</span> <span class="nn">from</span> <span class="s2">&quot;three&quot;</span><span class="p">;</span>
+</pre></div>
+
+
+<p>But this has the problem that the file we have, "three.js" is not a proper modern JavaScript module. So while it works fine for type checking, the code doesn't run. Since we're not programming in TypeScript, we can't use TypeScript's module loader.</p>
+<p>I have found a workaround. If we have the TypeScript definitions for THREE (I have placed them in the <code>THREE/threets</code> directory in the workbook), we can tell the TypeScript checker that the THREE variable has the same type as the THREE module:</p>
+<div class="codehilite"><pre><span></span><span class="cm">/**  @type typeof import(&quot;./THREE/threets/index&quot;); */</span>
+<span class="kd">let</span> <span class="nx">THREEmod</span> <span class="o">=</span> <span class="nx">THREE</span><span class="p">;</span>
+</pre></div>
+
+
+<p>What I've really done is introduced a new variable <code>THREEmod</code> and told typescript (via the <code>@type</code> comment) that it has the same type as the thing we get when we import the module. The type inferencing system then infers that THREE must have the same type. This is a weird hack, but it's only required to get the nice type checking in Visual Studio Code.</p>
+<p>Sometimes (and I can't figure out when), the typescript type checker will still give a warning:
+<pre>
+'THREE' refers to a UMD global, but the current
+file is a module. Consider adding an import
+instead. ts(2686)
+</pre>
+which is correct (<code>THREE</code> is an old-fashioned Java import), but is unhelpful (I have considered adding an import, but I can't). The only robust answer I have found is to access the new variable (<code>THREEmod</code> above), rather than <code>THREE.</code></p>
+<p>If you do the magic comment / module assignment anywhere in your project, Visual Studio Code sometimes will pick up on what THREE is. So maybe you didn't even see the problems in <code>1-three-2.js</code> because Visual Studio Code figured things out.</p>
+<p>In future programs, I will do:</p>
+<div class="codehilite"><pre><span></span><span class="cm">/**  @type typeof import(&quot;./THREE/threets/index&quot;); */</span>
+<span class="kd">let</span> <span class="nx">T</span><span class="p">;</span>
+<span class="c1">// @ts-ignore</span>
+<span class="nx">T</span> <span class="o">=</span> <span class="nx">THREE</span><span class="p">;</span>
+</pre></div>
+
+
+<p>Which defines a new variable <code>T</code> that has the right typing information (so TypeScript knows the types). I split the assignment on two lines so I can tell TypeScript to ignore the warning when I use THREE.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-3-three-and-html">Box 3: THREE and HTML</h2>
+<p>THREE actually draws into a Canvas element. It doesn't use the Canvas 2D API - it uses WebGL (a different API that we will learn about later).</p>
+<p>Normally, THREE creates the Canvas element for us. In the examples above there was code</p>
+<div class="codehilite"><pre><span></span><span class="kd">let</span> <span class="nx">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">WebGLRenderer</span><span class="p">();</span>
+<span class="nx">renderer</span><span class="p">.</span><span class="nx">setSize</span><span class="p">(</span> <span class="mi">200</span><span class="p">,</span><span class="mi">200</span> <span class="p">);</span> <span class="c1">// was (window.innerWidth, window.innerHeight );</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;three2&quot;</span><span class="p">).</span><span class="nx">appendChild</span><span class="p">(</span> <span class="nx">renderer</span><span class="p">.</span><span class="nx">domElement</span> <span class="p">);</span>
+</pre></div>
+
+
+<p>Which created a <code>WebGLRenderer</code> object, which as part of it has an HTMLCanvasElement (where the drawing will happen). The <code>setSize</code> sets the size of the Canvas (in HTML pixels). The last line finds a container element called <code>three2</code> (it's a <code>DIV</code>) that I put into my HTML where I want to put the newly created canvas, and puts the Canvas into it.</p>
+<p>If we had a Canvas already, we could tell THREE to use it instead. So here is a Canvas in HTML:
+<canvas id="three3" width="200px" height="200px"></canvas>
+<script src="1-three-3.js" type="module"></script></p>
+<p>And the code looks like:</p>
+<div class="codehilite"><pre><span></span><span class="kd">let</span> <span class="nx">canvas</span> <span class="o">=</span> <span class="cm">/** @type {HTMLCanvasElement} */</span> <span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;three3&quot;</span><span class="p">));</span>
+<span class="kd">let</span> <span class="nx">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">WebGLRenderer</span><span class="p">({</span><span class="s2">&quot;canvas&quot;</span><span class="o">:</span><span class="nx">canvas</span><span class="p">});</span>
+</pre></div>
+
+
+<p>Basically, I had to find the Canvas and pass it to the constructor of the renderer.</p>
+<p>There is one subtle thing here that is a common paradigm in THREE programming (in fact, in JavaScript programming in general). Note how I pass the parameters to the <code>WebGLRenderer</code> constructor as an object <code>{"canvas":canvas}</code>. Since JavaScript doesn't support keyword arguments (like Python), we need some mechanism for specifying the parameters we want, without having to specify all of the parameters. So instead of passing a list of parameters, we pass an object with parameters in it.</p>
+<p>For example, suppose we have a function like:</p>
+<div class="codehilite"><pre><span></span><span class="kd">function</span> <span class="nx">foo</span><span class="p">(</span><span class="nx">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="nx">b</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="nx">c</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="nx">d</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// do something with a, b, c and d</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>and we want to call it with the default parameters for everything except <code>d</code> and we wanted d to be 7, we're stuck. We need to write <code>foo(1,2,3,7)</code>, if we wanted d=7. If this were Python, we could write <code>foo(d=7)</code>, but it's not. So instead we define the function to take one object that holds the parameters:</p>
+<div class="codehilite"><pre><span></span><span class="kd">function</span> <span class="nx">foo</span><span class="p">(</span><span class="nx">object</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">a</span> <span class="o">=</span> <span class="s2">&quot;a&quot;</span> <span class="k">in</span> <span class="nx">object</span> <span class="o">?</span> <span class="nx">object</span><span class="p">.</span><span class="nx">a</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">b</span> <span class="o">=</span> <span class="s2">&quot;b&quot;</span> <span class="k">in</span> <span class="nx">object</span> <span class="o">?</span> <span class="nx">object</span><span class="p">.</span><span class="nx">b</span> <span class="o">:</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">c</span> <span class="o">=</span> <span class="s2">&quot;c&quot;</span> <span class="k">in</span> <span class="nx">object</span> <span class="o">?</span> <span class="nx">object</span><span class="p">.</span><span class="nx">c</span> <span class="o">:</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">d</span> <span class="o">=</span> <span class="s2">&quot;d&quot;</span> <span class="k">in</span> <span class="nx">object</span> <span class="o">?</span> <span class="nx">object</span><span class="p">.</span><span class="nx">d</span> <span class="o">:</span> <span class="mi">4</span><span class="p">;</span>
+  <span class="c1">// do something with a, b, c and d</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>so we can write <code>foo({d:7})</code> (remember JavaScript quoting rules, I don't need quotes around d). This is a little bit of a hassle when we create the function, but very convenient when we use it (especially for functions with lots of arguments). Fortunately, the author of THREE wrote a lot of his code this way.</p>
+</div>
+<div class="sumbox">
+<h2 id="summary-using-three">Summary: Using THREE</h2>
+<p>So now, you can hopefully create a THREE program with the THREE library. Now lets try to figure out how to use THREE on <a href="2-3D.html">Page 2</a>.</p>
+</div>
+<script src="THREE/three.js"></script>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

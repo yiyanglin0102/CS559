@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+    <!--
+        Workbook 2 for CS559 - Page  -
+        started January 2019, by Michael Gleicher
+
+        students are allowed (and) encouraged to read the HTML source files!
+
+        (however, this one is boring - you can just look at it in the browser)
+    -->
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Assignment 02-06: Coordinate Systems</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="Libs/style559.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="Libs/pygments.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="a02.css" />
+</head>
+<body>
+
+    <!-- @@MDReplace: NOT_FOR_STUDENTS/A02_p6.md -->
+<h1>Workbook 2, Page 6: Where did I draw?</h1>
+<p>There is one detail we glossed over: with either Canvas or SVG, we referred to positions (such as the center of a circle, or corner of a rectangle) using two numbers. What do these mean?</p>
+<p>Notice that they don't always mean the same thing: here are two SVG elements, each with a circle at position (30,30). Look in the HTML - you'll see the exact same line is repeated twice - yet the two circles aren't in the same place (you can see both of them on the page)</p>
+<p><svg height="60px" width="60px"><circle cx="30" cy="30" r="10"></svg>
+<svg height="60px" width="60px"><circle cx="30" cy="30" r="10"></svg></p>
+<p>It should be obvious that we interpret position x=30, y=30 differently in each one.</p>
+<p>For SVG and Canvas, we interpret coordinates (x,y pairs) as follows:</p>
+<ul>
+<li>The origin (0,0) is in the top left corner of the element.</li>
+<li>The x value measures the distance to the right, starting at the origin. Each unit, is one "pixel" (more on that in a moment). So x=5 means move 5 "web pixels" to the right from the left edge of the element.</li>
+<li>The y value measures the distance downward from the top, starting at the origin. Note that this is different than what we typically do in math classes (where the origin is at the bottom and y goes upwards). Again, each unit of y is one "pixel".</li>
+</ul>
+<p>These three parts (where is the origin, how to interpret x, how to interpret y) are critical - if we don't know them, we cannot interpret x,y numbers as places to draw! Even the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes">official Canvas drawing tutorial</a> starts with this!</p>
+<p>We call this information about how to interpret coordinates a <strong>coordinate system</strong>. The official tutorial uses the term "coordinate space". A key idea in computer graphics is that we need to understand coordinate systems and always try to work in a convenient coordinate system. For example, when drawing, having a coordinate system relative to the current element we're drawing in is very convenient. Having to talk about things relative to the position on the screen would be inconvenient (we'd have to move everything if the page was scrolled or the window was moved).</p>
+<p>We can see an example of inconsistent coordinate systems when we handled the mouse on <a href="A02_p4.html">page 4</a>. Mouse coordinates are given relative to the window. We need to convert those coordinates to the Canvas by figuring out where the canvas is in the window!</p>
+<p>Next week, we will see how to work with coordinate systems mathematically. The trick will be to use matrices to represent coordinate systems, which requires us to use vector algebra. To make sure you're ready for that, please read up on some vector algebra basics (it should be a review from your math classes).</p>
+<p>Specifically:</p>
+<ul>
+<li>read the <a href="http://graphics.cs.wisc.edu/WP/tutorials/points-vectors-and-coordinate-systems-why-are-points-and-vectors-different/">Tutorial: Points, Vectors, Coordinates</a> to get a sense of the terms we are using</li>
+<li>if you aren't fluent with matrices and vectors (or, if you want a refresher), I recommend reading through Chapters 1, 2 and 4 of <em>Practical Linear Algebra</em>. The book is discussed on the <a href="https://graphics.cs.wisc.edu/WP/cs559-sp2019/books/">Books</a> page, and you can find it online at the UW Library (<a href="https://search.library.wisc.edu/catalog/9911163667202121">(Practical Linear Algebra-UW)</a>). We have put Chapters 1, 2 and 4 in Canvas (<a href="https://canvas.wisc.edu/files/7108164/download?download_frd=1">pla_chapter_1.pdf</a>, <a href="https://canvas.wisc.edu/files/7108165/download?download_frd=1">pla_chapter_2.pdf</a>, <a href="https://canvas.wisc.edu/files/7108166/download?download_frd=1">pla_chapter_4.pdf</a>).</li>
+</ul>
+<p>Also...</p>
+<p>You may have noticed from this week's assignment that we will be doing non-trivial JavaScript programming. If you feel like you need to accelerate your learning, see the <a href="https://graphics.cs.wisc.edu/WP/cs559-sp2019/javascript/">Javascript and 559</a> page, specifically the "Advice on Learning JavaScript" section.</p>
+<p>Finally...</p>
+<p>This is the last page of the workbook, but you still must look at the <code>questions.md</code> file. And don't forget to edit the <code>README.md</code> and to commit and push all your work!</p>
+    <!-- @@EndMDReplace -->
+
+</body>
+</html>

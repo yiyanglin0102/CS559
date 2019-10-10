@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Page 7-7: The CS559 Framework Code (GraphicsTown)
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/7-framework.md -->
+<h1 id="page-7-7-the-cs559-framework-code-graphicstown">Page 7-7: The CS559 Framework Code (GraphicsTown)</h1>
+<div class="examplebox">
+<h2 id="box-1-prelude-to-graphics-town">Box 1: Prelude to Graphics Town</h2>
+<p>For the remaining parts of the workbook (two exercises), you will work with some framework code we have created for this class. Learning to work with the Framework code is important practically (you will use it on all of the assignments from here on), but also pedagogically. In the real world, you often have to work with code that someone else wrote.</p>
+<p>The framework code allows you to focus on creating graphics objects and defining their behavior (for animation). You don't need to worry about setting up a user interface, or the basic stuff of the world. It will give you "good enough" defaults that you can focus on the parts of the assignment you care about. For example, in this assignment, you can focus on making hierarchical objects. For Workbook 8 you can focus on making appearances (just wait).</p>
+<p>The framework provides a "thin wrapper" around THREE.JS - you still program using THREE.JS, but you put your objects inside of wrapper objects, and define their behaviors as methods of these objects.</p>
+<p><strong>WARNING:</strong> The framework code will evolve over the next few assignments. In the next assignments you will be given newer versions that add new features.</p>
+<p>The best documentation for the framework is the code itself, and the examples that we give you. The code is designed to be (reasonably) self-documenting. I am trying to structure the comments to automatically produce a documentation web (using <a href="http://usejsdoc.org/">jsdoc</a>), but that only gets some of the information. The web of documentation is included in the workbook (<a href="Framework/Doc/index.html">start here</a>).</p>
+<p>For Spring 2019, the framework is being re-written from scratch. It is based on the version written in 2015 (which served graphics classes for 3 years).</p>
+<p>The framework is really helpful for small exercises where we simply want you to make an object. It will let you put the object on the screen with simple lighting and a simple UI with very little code. However, the real point of the framework is to allow you make a world with lots of objects that are all defined independently. This will let you make much more complex worlds. It also lets you add objects that we give you (or even to share objects with other students).</p>
+<p>The framework will allow us to build "Graphics Town" - where you will create a world with lots of "living" stuff in it. The last workbooks/assignments of the semester will ask you to do this. The new few assignments will ask you to make some objects and put them into simpler "worlds". However, the objects you create can be re-used later in later assignments.</p>
+<p>If you're wondering where the "fancy features" of the framework are (shadows, multi-pass rendering, or other fancy things)... Just wait. As we learn things in class, the framework will be extended to support these kinds of things.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-modern-javascript">Box 2: Modern JavaScript</h2>
+<p>Learning about features of "modern" JavaScript is a learning goal of this assignment.</p>
+<p>The framework code uses "modern" JavaScript. That includes modules and classes. We've actually had some of that in prior assignments, but this time you will see more of it. You will not be able to avoid writing a <code>class</code> or figuring out how to <code>export</code> from a module. Fortunately, we will provide a lot of examples, so you can always do things by modifying something we've given you to start with. However, we do recommend that you take some time to actually understand what is going on with the code.</p>
+<p>If you want to learn about JavaScript classes (and other modern features), most up-to-date books discuss it. See <a href="http://graphics.cs.wisc.edu/WP/cs559-sp2019/javascript/#Advice_on_Learning_JavaScript">the course JavaScript page</a> for suggestions. One specific recommendation: <a href="http://exploringjs.com/es6/ch_classes.html">Exploring JavaScript Chapter 15</a> has a nice introduction before it starts a deep-dive into some gory details and tricks to do fancy stuff.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-3-getting-started-with-a-simple-example">Box 3: Getting Started with a simple example</h2>
+<p>Here's the spinning cube example (from <a href="3-compare-rot.html">page 3</a> and the previous workbook and lecture). This time in the framework:</p>
+<div id="simplespin"></div>
+<script src="THREE/three.js"></script>
+<script src="THREE/OrbitControls.js"></script>
+<script src="7-simplespin.js" type="module"></script>
+
+<p>Everything is pretty much the default - except that I made the groundplane gray, not its usual green, since the cube is green. We got some lighting, a camera, orbit controls, an animation loop, and some other stuff "for free". It may not be exactly what we want, but we get a reasonable default and can always change things.</p>
+<p>The code is in <code>7-simplespin.js</code>. I'll include the key parts here:</p>
+<div class="codehilite"><pre><span></span><span class="c1">// define a special kind of cube that spins</span>
+<span class="kr">class</span> <span class="nx">SpinCube</span> <span class="kr">extends</span> <span class="nx">GrCube</span> <span class="p">{</span>
+    <span class="nx">constructor</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kr">super</span><span class="p">({</span><span class="nx">color</span><span class="o">:</span><span class="s2">&quot;green&quot;</span><span class="p">});</span>
+    <span class="p">}</span>
+    <span class="nx">advance</span><span class="p">(</span><span class="nx">ms</span><span class="p">,</span><span class="nx">daytime</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// this used to be .01 per step</span>
+        <span class="c1">// however, we want to advance things based on the frame rate</span>
+        <span class="c1">// if we get 60fps, that&#39;s 16 miliseconds</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">objects</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">x</span> <span class="o">+=</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="nx">ms</span> <span class="o">/</span> <span class="mi">16</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">objects</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="nx">ms</span> <span class="o">/</span> <span class="mi">16</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">go</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">world</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GrWorld</span><span class="p">({</span><span class="nx">groundplanecolor</span><span class="o">:</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span>
+                             <span class="nx">where</span><span class="o">:</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;simplespin&quot;</span><span class="p">)});</span>
+
+    <span class="kd">let</span> <span class="nx">cube</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SpinCube</span><span class="p">();</span>
+    <span class="nx">world</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">cube</span><span class="p">);</span>
+    <span class="c1">// we need to place the cube above the ground</span>
+    <span class="nx">cube</span><span class="p">.</span><span class="nx">objects</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">position</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="nx">world</span><span class="p">.</span><span class="nx">go</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="nx">onWindowOnload</span><span class="p">(</span><span class="nx">go</span><span class="p">);</span>
+</pre></div>
+
+
+<p>Walking through this...</p>
+<ol>
+<li>The main thing we do is define a new object type, a spinning cube. We create a class <code>SpinCube</code> that subclasses the built-in Cube type. The <code>super</code> call in the constructor runs the constructor of the base class (giving it an option that tells us the color).</li>
+<li>The main thing we do in the new object is to define its behavior by overriding the <code>advance</code> method. The advance method gets called every frame and tells the object to update itself. The first parameter (<code>ms</code>) gives an estimate of how long it has been since the last redraw. This way we can adapt the speed in case our frame rate drops, rather than assuming our computer keeps up with 60 frames per second (16 milliseconds per frame).</li>
+<li>Inside the <code>advance</code> method we do the same angle increments we did in the original program. Two things to note:<ul>
+<li>First, since we need access to the THREE <code>Object3D</code>, we have to look inside the list of objects that are "owned" by the <code>SpinCube</code> GrObject. I took advantage of the fact that I know that a <code>GrCube</code> has only one <code>Object3D</code>.</li>
+<li>Second, notice how I scale the spin rate by the time.</li>
+</ul>
+</li>
+<li>In the main program (the function <code>go</code> that is called on window load), all we need to do is:<ul>
+<li>create the world (making the <code>new GrWorld</code>)</li>
+<li>make objects and add them to the world</li>
+<li>start the animation loop</li>
+<li>We could do more (add more objects, adjust things), but we don't have to. We get reasonable defaults.</li>
+</ul>
+</li>
+<li>When I create the <code>GrWorld</code> I tell it where to put the DOM element that THREE creates for us. Here, I find the <code>simplespin</code> html element (it's a div). If I don't tell GrWorld where to put the element, it will just stick it at the end of the page.</li>
+<li>Since there is a ground, I needed to raise the cube above the ground. Again, this means accessing the internal <code>Object3D</code>.</li>
+</ol>
+<p>For a simple example like this one, the framework isn't that much easier than just writing the code from scratch using THREE.js directly. It does save me from having to remember to turn the lights on and point the camera the right way.</p>
+<p>In the simple example, I re-used a basic object (a cube). Just as when we use THREE directly, usually we will make more interesting objects. You'll see that on the next pages.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-4-another-simple-example">Box 4: Another Simple Example</h2>
+<p>The first example showed how to make a simple animation. Here is a different example, inspired by the <a href="2-euler-toy.html">EulerToy</a> demo on page 2. This time, rather than animating the cube, we control it with sliders. The nice thing: the framework will make the sliders for us!</p>
+<div id="simpleslide"></div>
+<script src="7-simpleslider.js" type="module"></script>
+
+<p>The code for this one is in <code>7-simpleslider.js</code>. This defines a different subclass of cube:</p>
+<div class="codehilite"><pre><span></span><span class="kr">class</span> <span class="nx">RotCube</span> <span class="kr">extends</span> <span class="nx">GrCube</span> <span class="p">{</span>
+    <span class="nx">constructor</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kr">super</span><span class="p">({</span><span class="nx">color</span><span class="o">:</span><span class="s2">&quot;green&quot;</span><span class="p">},</span>
+            <span class="p">[</span> <span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">,</span><span class="o">-</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+              <span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span><span class="o">-</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+              <span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span><span class="o">-</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+            <span class="p">]);</span>
+        <span class="p">}</span>
+        <span class="nx">update</span><span class="p">(</span><span class="nx">vec</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">objects</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">objects</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">objects</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">z</span> <span class="o">=</span> <span class="nx">vec</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>The big difference here is that when I created the cube subclass, I defined a set of "parameters" (the X, Y, Z) for rotation. They each range from <script type="math/tex">-\frac{\pi}{2}</script> to <script type="math/tex">\frac{\pi}{2}</script>. Since these are defined (with a name, range, and default value), the AutoUI code can make a control panel for it. Also notice how rather than defining an <code>advance</code> method, I provided an <code>update</code> method that takes the slider values as its argument.</p>
+<p>The main body of the code created the UI - but all this required was telling <code>AutoUI</code> to do its job.</p>
+<p>Again, this is a really simple case where I extend the cube. Under normal circumstances, I would extend the base class <code>GrObject</code> and populate it with THREE objects myself.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-5-the-framework-code-ground-rules">Box 5: The Framework Code Ground Rules</h2>
+<p>Some ground rules about the Framework Code:</p>
+<ol>
+<li>You are welcome to (required to!) read the framework code. The code is meant to be somewhat self-documenting (with comments and type declarations).</li>
+<li>Please avoid changing the framework code. Do not edit the files in the Framework directory unless we give you explicit instructions to do so. If you feel like you want to make your own version of something, copy the code into your own file and make changes. (be sure to give the code proper attribution)</li>
+<li>If you find a bug in the framework code, please notify the instructors by Piazza.</li>
+<li>We appreciate suggestions on how to make it better - this includes things we could document better, or functionality that we might want to add. The framework code will most likely be used by many classes, so suggestions may help many future students.</li>
+<li>You are strongly encouraged to use the framework code. Learning to work within someone else's (imperfect) code is part of the learning goals of the assignments. However, if you choose to implement things yourself, you will be responsible for providing all of the functionality that the framework provides.</li>
+</ol>
+</div>
+<div class="sumbox">
+<h2 id="summary-the-graphics-town-framework-code">Summary: The Graphics Town Framework Code</h2>
+<p>The main way to learn about the Framework code is to read the code and its documentation. But the most important thing to do is to try it out and do things with it. You'll get to do that in the next two exercises.</p>
+<p>First, we'll go make Graphics Park on the <a href="8-graphicspark.html">next page</a>.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

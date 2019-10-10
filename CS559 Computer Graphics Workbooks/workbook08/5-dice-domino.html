@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Page 8-5 - The Dice and Dominos Exercise
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/5-dice-domino.md -->
+<h1 id="page-8-5-the-dice-and-dominos-exercise">Page 8-5 - The Dice and Dominos Exercise</h1>
+<p>We've made lots of boxes in THREE. Now we'll turn a box into a die (one of a set of dice) and into a domino. All this means is we take a white box and put some dots on the side. For dice, we put a different number of dots on each side. For a domino, we put to sets of dots on the top.</p>
+<p>We've provided you with a simple texture with all 6 patterns of dots (1-6) in the file <code>Textures\dice_texture.png</code>. You are welcome to make a nicer texture file (don't forget to include it in the repo when you hand it in!). If you make a texture, it should contain all 6 dot patterns.</p>
+<p>For both the dice and domino(s) it is OK if they are simply boxes - as long as they have the right texture on them. If you want to be fancy, you can bevel the edges (real dice and dominos typically do not have square edges).</p>
+<div class="examplebox">
+<h2 id="exercise-51-dice">Exercise 5.1 Dice</h2>
+<p>Make two dice. This means defining a single class for dice and then making two instances. You should use the CS559 framework for this (so the new class is a subclass of <code>GrObject</code>).</p>
+<p>Place the dice on the groundplane. They should be oriented so the numbers on top are different. (no doubles). This should be as simple as rotating one of the dice.</p>
+<p>There is a set of files <a href="5-1-dice.html"><code>5-1-dice.html</code></a> and <code>5-1-dice.js</code> for you to put your work into. Load <a href="5-1-dice.html"><code>5-1-dice.html</code></a> to see it.</p>
+<p>Note: it is possible to do this assignment by using a THREE Box geometry and assigning a different material to each side. However, it is probably easier to define your own geometry and assign correct texture coordinates. And this is good practice for future things.</p>
+</div>
+<div class="examplebox">
+<h2 id="exercise-52-dominos">Exercise 5.2 Dominos</h2>
+<p>Make at least one domino. If you make only one domino, it should be a double 6.</p>
+<p><img alt="" src="Images/DBL6-Domino.jpg" /></p>
+<p>It's OK if your domino is just a box (twice as wide as it is deep, relatively thin). You need to have the dots on both sides of the top. The line between the sides is optional.</p>
+<p>You can use the texture you used for the dice for this exercise. (this is the recommended/expected way to do the assignment, but it is not required)</p>
+<p>Note: you could try to do this by making a single texture for the entire top of the domino (with two sixes on one texture). Please don't do this.</p>
+<p>The requirement is to make one domino. A double six. If you're ambitious (and want bonus points) you can make a set of dominos (up to 6-6). Here's what a set of dominos looks like <a href="https://www.123rf.com/photo_48347848_stock-vector-full-set-of-realistic-white-domino-pieces-vector-illustration-.html">in a drawing</a>. You could even arrange the dominos on the table in a legal way (numbers have to match - if you don't know the rules for dominos, don't worry).</p>
+<p>It is acceptable if your domino is a white box except for the black dots. You can round or bevel the edges to make them look nicer.</p>
+<p>There is a set of files <a href="5-2-domino.html"><code>5-2-domino.html</code></a> and <code>5-2-domino.js</code> for you to put your work into. You should use the CS559 Framework, and define a new class for dominos. If you really wanted to do it right, the constructor could take 2 numbers (one for the number of dots to appear on each side). The preferred way to implement this is to define your own Geometry, where the top of the box is made of at least 4 triangles, with texture coordinates that put the right numbers where they should go.</p>
+<p>Here's the domino page: <a href="5-2-domino.html"><code>5-2-domino.html</code></a>.</p>
+</div>
+<p>While you can get bonus points for this page, I recommend you put your energy and creativity for making things on the <a href="6-buildings.html">buildings page</a> which is the next exercise. The things you make for that exercise will be useful in future Graphics Town assignments.</p>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

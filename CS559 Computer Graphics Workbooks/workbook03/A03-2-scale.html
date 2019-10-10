@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+    <!--
+        Workbook 3 for CS559 - page two -
+        written January 2019, by Michael Gleicher
+
+        students are allowed (and) encouraged to read the HTML source files!
+
+        (however, this one is boring - you can just look at it in the browser)
+    -->
+
+<header>
+        <meta charset="UTF-8">
+        <!-- use the CS559 Style Sheet -->
+        <link rel="stylesheet" href="Libs/style559.css">
+        <link rel="stylesheet" href="a03.css">
+        <link rel="stylesheet" href="Libs/pygments.css">
+        <title>
+            Assignment 03: Index Page
+        </title>
+</header>
+<body>
+    <!-- @@MDReplace: SOURCES/scale.md -->
+<h2>Workbook 3, page 2 - Scale Transforms</h2>
+<p>Last page, we learned about our first transformation, <code>translate</code>. Now, let's learn a second one: <code>scale</code>.</p>
+<div class="examplebox" id="box1">
+<h2>Box 1: Scaling Up</h2>
+<p>A <code>scale</code> transformation makes things bigger or smaller by multiplying all of the coordinates by some value.</p>
+<p>If we want to double the size of things, we multiply all the coordinates by two. If we want to halve the size of things, we multiply all coordinates by 1/2.</p>
+<p>Here are some examples - in each case, same drawing. I am just changing the scale.</p>
+<canvas id="b01-1" width="100" height="60"></canvas>
+<canvas id="b01-2" width="100" height="60"></canvas>
+<canvas id="b01-3" width="100" height="60"></canvas>
+
+<p>The first is drawn without scaling, the second with <code>scale=2</code> (double), the third with <code>scale=.5</code>.</p>
+<p>To be a little more complete like we did with translation...</p>
+<p>Slider <input type="range" min="0" max="3" value="1" step=".1" id="s01"></input>
+has value <input type="text" id="sp01" value="FILL" style="width:50px" readonly></input>
+<canvas id="b01-4" width="100" height="60"></canvas>.</p>
+<p>Just like translation, you could have done this by doing something to each of the coordinates.
+With translation, we added, here we would multiply.</p>
+<p>So, you can think about <code>scale</code> as multiplying all the coordinates by the scaling factor. It is a <strong>transformation</strong>, or function that takes a point and returns a new point. So, <code>scale(s)</code> can be thought of as a function <code>f(x,y) =&gt; (sx,sy).</code></p>
+<p>However, we can also think of <code>scale</code> as changing the coordinate system that we use to interpret points. It changes the basis vectors. Rather than telling us to interpret the value of <code>x</code> as being pixels to the right, it tells us to interpret each unit of <code>x</code> as a different number of pixels to the right. (and likewise for y)</p>
+<p>You can think of <code>translate</code> a moving the piece of paper that we are going to draw on. You can think of <code>scale</code> as stretching the piece of paper that we draw on.</p>
+<p>This idea of thinking about transformations as things that alter the coordinate system (how we interpret object coordinates) rather than being functions that change points is an important concept in computer graphics. Once you get used to it, it makes lots of things easier. (you'll have to trust me). It will be important to be able to think about things both ways.</p>
+<p>Here are two quick reasons why thinking in terms of changing coordinates might make sense. First, when we do the transform operation (the <code>scale</code> or <code>translate</code> command) - they don't even have the objects/points to draw yet! We are simply setting up the coordinate system that future objects will be drawn into. Second, when we apply multiple transformations, it tells us how the changes occur. If we do a first transformation, it changes the coordinate system. The second transformation changes that resulting coordinate system. We'll see this in a bit.</p>
+</div>
+<div class="examplebox" id="box2">
+<h2>Box 2: Non Uniform Scales</h2>
+<p>The Canvas <code>scale</code> function allows us to specify separate scaling factors for box x and y. In the example above, I gave the same value to both. Just for completeness, here's a variant of that last example.</p>
+<p><input type="range" min="0" max="3" value="1" step=".1" id="s02x" width="100px"></input>
+= <input type="text" id="sp02x" value="FILL" style="width:50px" readonly></input>
+<input type="range" min="0" max="3" value="1" step=".1" id="s02y" width="100px"></input>
+= <input type="text" id="sp02y" value="FILL" style="width:50px" readonly></input>
+<canvas id="b02" width="100" height="60"></canvas>.</p>
+<p>We call a scale where all the dimensions have the same scale factor a <em>uniform</em> scale. We call a scale where all dimensions have an unequal value a <em>non-uniform</em> scale.</p>
+</div>
+<div class="examplebox" id="box3">
+<h2>Box 3: Center of Scaling</h2>
+<p>Since we're multiplying by the scaling factor, the point <code>(0,0)</code> does not change as we change the scale factor. However, all other points will change. This can make objects seem to move if we're not careful. This example is really similar to the ones above, except that rather than placing the square at the origin <code>(0,0)</code>, the square is placed at <code>(10,10).</code> Note how the square appears to move as you slide the slider.</p>
+<p>Slider <input type="range" min="0" max="3" value="1" step=".1" id="s03" readonly></input>
+has value <input type="text" id="sp03" value="FILL" style="width:50px" readonly></input>
+<canvas id="b03" width="100" height="80"></canvas>.</p>
+<p>This apparent motion can be inconvenient or annoying if you just want to make an object bigger. There is always exactly one position that doesn't change. It is called the <strong>center of scaling.</strong> It is at the center of the coordinate system. Looking ahead, we can change the coordinate system to be wherever we want so that scaling grows from whatever point we want. But in order to do that, we need to be able to put transformations together.</p>
+</div>
+<div class="examplebox" id="box4">
+<h2>Box 4: Multiple Scalings</h2>
+<p>We can apply multiple <code>scale</code> transformations. Each time, we stretch the coordinate system more before we either draw (or apply another <code>scale</code>). If we are just doing scaling, the scale factors multiply, and <em>scalar</em> (regular number) multiplication is commutative.</p>
+<p>Here's an example (using transparency). Look at the code: we scale, draw the red box, scale again, and draw the blue box. The blue box is scaled by both scalings (which is the same as multiplying them together).</p>
+<p><input type="range" min="0" max="2" value="1" step=".1" id="s04x" width="100px"></input>
+= <input type="text" id="sp04x" value="FILL" style="width:50px" readonly></input>
+<input type="range" min="0" max="2" value="1" step=".1" id="s04y" width="100px"></input>
+= <input type="text" id="sp04y" value="FILL" style="width:50px" readonly></input>
+<canvas id="b04" width="100" height="80"></canvas>.</p>
+<p>On the next page, we will combine translation and scaling transformations. When we start to combine things, order will start to matter.</p>
+</div>
+<div class="sumbox" id="boxs">
+<h2>Summary</h2>
+<p>We've learned to scale things. Now let's put that together with translation on <a href="A03-3-compose.html">page 3.</a></p>
+</div>
+    <!-- @@EndMDReplace: -->
+
+    <script src="A03-2-scale.js" type="module"></script>
+</body>
+</html>

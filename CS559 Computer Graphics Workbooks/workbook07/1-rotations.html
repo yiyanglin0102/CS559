@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Page 7-1: Rotations in 3D
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/1-rotations.md -->
+<h1 id="page-7-1-rotations-in-3d">Page 7-1: Rotations in 3D</h1>
+<div class="examplebox">
+<h2 id="box-1-topics-in-rotations">Box 1: Topics in Rotations</h2>
+<p>We discussed 3D rotations pretty extensively in class. You may want to review the lectures.</p>
+<p>The key topics to know (all covered in lecture):</p>
+<ol>
+<li>
+<p>Rotations around a single axis. Why is the 2D case easier, and how does that apply in 3D?</p>
+</li>
+<li>
+<p>The basic challenges of rotation in 3D. Why does it get so tricky?</p>
+</li>
+<li>
+<p>The main types of 3D rotation representations: Euler Angles, Axis-Angle, Quaternions, and Rotation Matrices. You don't need to know the details of each, but you should have the intuitions for each, and what they are good and bad at.</p>
+</li>
+<li>
+<p>An understanding of Euler Angles. How we use 3 rotations about fixed axes (often X,Y,Z) to represent arbitrary rotations. You should have a sense of the challenges of using this representation (gimbal lock, unintuitive interpretations, weird interpolations, ...)</p>
+</li>
+<li>
+<p>An understanding of Axis Angle representations. How we use a vector and an angle together to represent an arbitrary rotation.</p>
+</li>
+<li>
+<p>The basic ideas of using Quaternions for representing rotations. You don't need to know the details of how they work. You should have an intuition for why we like them so much.</p>
+</li>
+<li>
+<p>The properties of rotation matrices, and why they aren't necessarily a good way to compute with rotations.</p>
+</li>
+</ol>
+<p>We'll review some of the key points over the next 3 pages.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-rotations-about-one-or-more-axes">Box 2: Rotations about one or more axes</h2>
+<p>Rotations are rigid transformations (the distances between points are preserved) that keep the zero position constant.</p>
+<p><strong>All rotations have an axis.</strong> There is a line through space (that goes through the origin) for which points on the line do not move (are not changed by the transformation). The space "spins around" this <strong>axis of rotation.</strong></p>
+<p>The composition of any sequence of rotations is a rotation. Put simply, if you rotate object, rotate it again, then rotate it a third time, there will always be one rotation that gets you from the initial state to the final state. No matter how many rotations you put together.</p>
+<p>In a single axis (like in 2D):
+<script type="math/tex; mode=display"> R_z(a) \circ R_z(b) = R_z(a+b) </script>
+That is, the composition of rotations is the same as adding the angles. We can simply measure the amount of rotation about that axis.</p>
+<p>With different axes, this does not hold!
+<script type="math/tex; mode=display"> R_x(a) \circ R_y(b) = R_?(?) </script>
+And things in between cause problems:
+<script type="math/tex; mode=display"> R_x(a) \circ R_y(b) \circ R_x(c) \neq R_x(a+c) R_y(b)</script>
+</p>
+</div>
+<div class="sumbox">
+<h2 id="summary-rotations-in-3d">Summary: Rotations in 3D</h2>
+<p>That was a brief reminder of some of the points in class. The next pages will let you experiment with the demonstrations I showed. First, we'll look at Euler Angles on <a href="2-euler-toy.html">page 2</a>.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

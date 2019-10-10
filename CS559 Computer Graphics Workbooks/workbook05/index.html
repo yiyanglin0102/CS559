@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Workbook 5: Index Page
+</title>
+</header>
+<body>
+<!-- @@MDReplace: SOURCES/0-index.md -->
+<h1 id="workbook-5-curves-in-2d">Workbook 5 - Curves in 2D</h1>
+<p>In this workbook, we'll get beyond straight lines to consider curves in 2D.</p>
+<p>The workbook ends with a programming assignment (making a train). You may want to look ahead at where we're going (the train assignment) to help you appreciate why we're learning stuff first.</p>
+<p>Several pages have required exercises on them. But, as always, feel free to tinker with all of the provided example demos.</p>
+<p>Don't forget about the <code>README.md</code> and <code>QUESTIONS.md</code>. And to commit and push to GitHub!</p>
+<h2 id="required-reading">Required Reading</h2>
+<p>Note: you will want to mix the required reading, the optional reading, and the workbook together.</p>
+<p><strong>Textbook:</strong> Curves are covered in Chapter 15 of Fundamentals of Computer Graphics <a href="https://canvas.wisc.edu/files/7180032/download?download_frd=1">FCG4_Ch15.pdf</a>. This chapter is admittedly a bit mathematical (I can criticize it since I wrote it). Mix the reading with the lectures and the workbook to connect the intuitions. Chapter 20 of The Big Fun Book of Graphics <a href="https://canvas.wisc.edu/files/7180438/download?download_frd=1">Hart20-jan19.pdf</a> is strongly recommended, as it covers much of the same material in a  different way. We won't cover all the material in class. The required Sections are:</p>
+<ol>
+<li>FCG 15.1 - basic ideas of curves, including parameterizations and piecewise representations</li>
+<li>FCG 15.2 - curve properties (especially continuity)</li>
+<li>FCG 15.3 - polynomial pieces - you need to have the basic intuitions, however, you will not need to do the derivations yourself.</li>
+<li>FCG 15.4 - putting pieces together - this makes things sound more complicated than they are</li>
+<li>FCG 15.5 - cubics - again, you won't have to derive the different cubic types, but make sure you know what hermites and cardinals are</li>
+<li>FCG 15.6.1 - Bezier curves - very important, since they are what gets used in Canvas and many other things.</li>
+</ol>
+<p>We, unfortunately, will not cover B-Splines (15.6.2). So this section is optional. But it's incredibly useful.</p>
+<p>In Hart, you should read this to clarify and reinforce the required material above, but there isn't anything new, so this can be considered optional.</p>
+<ol>
+<li>Hart 20.0 - basics of curves, a good review of the terms discussed in FCG 15.1-15.3</li>
+<li>Hart 20.1 - the wiggle theorem - make sure you have the intuition that an nth degree polynomial has n-1 wiggles.</li>
+<li>Hart 20.2 - Lagrangian curves - this is also 15.3.6 in FCG - understand the basic idea to know why we don't use these things.</li>
+<li>Hart 20.3 - Hermite curves - these are in 15.3.4 and 15.5.2 of FCG. You won't need to derive them, but understanding what they are will be useful for Beziers and Cardinals, which we will use a lot.</li>
+<li>Hart 20.4 - Bezier curves - these are important, so seeing them more than once may help.</li>
+</ol>
+<p>The rest of the Chapter focuses on B-Splines and rational curves, which we won't cover in class.</p>
+<p><strong>Videos:</strong> A few years ago, I made some simple videos trying to explain Bezier curves - these may be helpful (they are optional):</p>
+<ul>
+<li>DeCastlejau 2 - <a href="https://mediaspace.wisc.edu/media/1_ht8bd4ii">Showing the algorithm for 3 points (a second degree curve)</a></li>
+<li>DeCastlejau 3 - <a href="https://mediaspace.wisc.edu/media/1_yfe2pejr">Showing the algorithm for 4 points (a third degree curve)</a></li>
+<li>DeCastlejau 4 - <a href="https://mediaspace.wisc.edu/media/1_b45evtd7">Shows the connection between the geometric constructions and the polynomial forms</a></li>
+</ul>
+<h2 id="exercises">Exercises</h2>
+<ul>
+<li><a href="1-curves.html">Page 1</a> - A small change to make</li>
+<li><a href="4-arclength.html">Page 4</a> - Simple exercise</li>
+<li><a href="8-shape.html">Page 8</a> - Two small programming exercises</li>
+<li><a href="9-train.html">Page 9</a> - The train! A programming assignment</li>
+</ul>
+<p>There are bonus point opportunities as part of the train programming assignment.</p>
+<h2 id="get-started">Get Started!</h2>
+<p>Don't forget to commit and push as you work!</p>
+<p>Get started on <a href="1-curves.html">page one.</a></p>
+<!-- @@EndMDReplace: -->
+</body>
+</html

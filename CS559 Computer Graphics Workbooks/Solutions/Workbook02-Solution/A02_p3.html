@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+    <!--
+        Workbook 2 for CS559 - Page 3 -
+        written January 2019, by Michael Gleicher
+
+        students are allowed (and) encouraged to read the HTML source files!
+
+        (however, this one is boring - you can just look at it in the browser)
+        you will need to edit the associate JS file: A02_p3.js
+    -->
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Assignment 02-03: Drawing with Canvas: Your Turn</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="Libs/style559.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="Libs/pygments.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="a02.css" />
+</head>
+<body>
+
+    <!-- @@MDReplace: NOT_FOR_STUDENTS/A02_p3_0.md -->
+<h1>Workbook 2, page 3: Canvas Drawing: Your Turn</h1>
+<p>Now that you've learned to draw, draw something!</p>
+<p>There are two exercises - you must make a picture for each. In the first one, you have to make the picture I ask for. In the second one, you can make anything you want.</p>
+<p>You should do these exercises by editing the file "A02_p3.js",
+we've actually started things for you.
+specifically, your code for exercise 1 should go into the function
+<code>wb2_pg3_ex1</code>, and your code for exercise 2 should go into the function
+<code>wb2_pg3_ex2</code>. Please put all of your code inside of these functions!</p>
+<p>You do not need to use Canvas concepts that we haven't learned about yet (transformations or curves). You can use images or text if you want (even though we won't learn about them in class). If you use an image file, make sure you add it to the GitHub repo!</p>
+<p>You should not use the Canvas SVG Path functionality.</p>
+    <!-- @@EndMDReplace -->
+
+
+    <div id="p3_ex1" class="examplebox">
+        <h2>Exercise 1: A Simple Picture</h2>
+        <p>Make a picture that contains:</p>
+        <ol>
+            <li> a circle</li>
+            <li> a triangle</li>
+            <li> a capsule (half circles connected by straight lines</li>
+            <li> a sawtooth / mountain (two triangles sticking out of a rectangle</li>
+        </ol>
+        <p>For each, have a solid line border and a filled color.</p>
+        <p>Try to make it look like this example. Note: I made this example using SVG.
+            Do not try to read the SVG (and in particular, don't copy the paths).
+            You don't have to match what I did exactly, but get the 4 basic shapes.
+            And do it in Canvas, by editing the <code>wb2_pg3_ex1</code> function
+            in the <code>A02_p3.js</code> file.
+        </p>
+        <!-- don't try to understand my SVG -->
+        <svg width="225px" height="175px">
+            <circle cx="50" cy="50" r="25" style="width:3; fill: #F8E; stroke:#846; stroke-width:5"></circle>
+            <polygon points="25,150, 75,150, 50,110" style="stroke-width:5; fill:sandybrown; stroke:darkgoldenrod" />
+            <path d="M 125 25 L 175 25 A 25 25 0 0 1 175 75 L 125 75 A 25 25 0 0 1 125 25 Z" style="stroke:darkred; stroke-width: 5; fill:lightpink" />
+            <path d="M 100 150 L 200 150 L 200 125 L 175 100 L 150 125 L 125 100 L 100 125 Z" style="stroke:black; fill:gray; stroke-width:5" />
+        </svg>
+        <p>
+            Put your picture in this Canvas element (it's id is "canvas1" and it is 400x200).
+        </p>
+        <canvas id="canvas1" width="400px" height="200px"></canvas>
+    </div>
+
+    <div id="p3_ex2" class="examplebox">
+        <h2>Exercise 2: Your own Picture</h2>
+        <p>
+            Make any picture you want to show off how well you've learned Canvas.
+            Make it by editing the <code>wb2_pg3_ex2</code> function
+            in the <code>A02_p3.js</code> file.
+            The Canvas element has id "canvas2" and size 500x500.
+        </p>
+        <p>
+        You can draw anything you want. But please show off that you know how to:
+        use styles, use transparency, use drawing order, and use complicated shapes.
+        The grader will check that Canvas has some of those things.
+        </p>
+        <p>
+        Also, you must "color in the lines" - don't change the HTML file (the canvas is 500x500).
+        And, just make a static picture - no interaction or animation.
+        We'll learn about that on the
+        <a href="A02_p4.html">next page</a>.
+        This is not the end of this workbook - be sure to go on to the other pages when you're done.
+        </p>
+        <p>
+        There is a chance for a bonus point if you make a picture that is particularly
+        cool and shows off that you can use all the Canvas features we discussed.
+        </p>
+        <canvas id="canvas2" width="500px" height="500px"></canvas>
+        <canvas id="canvas3" width="500px" height="500px"></canvas>
+    </div>
+
+    <div id="p3_sum" class="sumbox">
+      <p>Now you can go on to <a href="A02_p4.html">page 4</a></p>
+    </div>
+
+    <script src="A02_p3.js" type="module"></script>
+</body>
+</html>

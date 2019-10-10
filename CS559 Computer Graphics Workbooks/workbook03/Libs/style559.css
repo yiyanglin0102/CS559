@@ -1,0 +1,69 @@
+/*** Style Sheet for the 559 Tutorials ***/
+
+/** overall, use sans-serif fonts since they look nicer */
+body {
+    font-family: Calibri, Helvetica, sans-serif;
+    min-width:400px;
+    max-width:760px;
+}
+
+/** put each example into a box */
+.examplebox {
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 0px 10px 0px 10px;
+    margin: 15px 5px 15px 5px; 
+}
+
+/** make the summaries a little different */
+.sumbox {
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 0px 10px 0px 10px;
+    margin: 15px 5px 15px 5px; 
+}
+
+/** simple box for text */
+.simplebox {
+    border: 2px solid black;
+    padding: 5px 5px 5px 5px;
+    margin: 5px 5px 5px 5px; 
+    width: 500px;
+}
+
+.halfbox {
+    border: 2px solid black;
+    padding: 5px 5px 5px 5px;
+    margin: 5px 5px 5px 5px; 
+    width: 45%;
+}
+
+/** a warning box */
+.warnbox {
+    border: 2px solid darkgoldenrod;
+    background-color: #F0E59f;
+    padding: 10px;
+    margin: 10px;
+    width: 80%
+}
+
+/** basic button style so things aren't too ugly */
+/* for playing with the buttons */
+.basicbutton {
+    width:100px;
+    height:30px;
+    border-radius: 5px;
+    border: 2px solid black;
+    margin: 8px;
+    background-color: lightgrey;
+}
+.basicbutton:hover {
+    border: 4px solid black;
+}
+.basicbutton:active {
+    color: white;
+    background-color: darkgray;
+}
+
+
+

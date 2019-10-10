@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    WB4: 4-Matrix-Exercise:
+</title>
+</header>
+<body>
+<!-- @@MDReplace: SOURCES/4-Matrix-Exercise.md -->
+<h2 id="workbook-4-page-4-matrix-exercises">Workbook 4, Page 4 - Matrix Exercises</h2>
+<p>Over the past few pages, you saw the connection between the math of transformations the code we write to draw using Canvas. On this page, you'll get to try writing some code to test it out.</p>
+<p>For this page, you should edit the file <code>4-Matrix-Exercise.js</code>. The functions you have to change are at the beginning of the file. Feel free to read the rest of the code - but please don't change it.</p>
+<div class="examplebox">
+<h2 id="exercise-1-two-dots-two-ways">Exercise 1: Two Dots, Two Ways</h2>
+<p>Given two points, we want to map the square (0,0) - (10,10) such that the (0,0) corner appears at the first point, and top right corner (10,0) corner appears at the second point. The square should remain a square - it can turn and stretch uniformly, but it should not reflect (notice that the insides of the square are not symmetric).</p>
+<canvas id="twodots1" height="200" width="200"></canvas>
+
+<p>I wrote some UI code that draws the square, and draw a red dot for the first point and a green dot for the second point, and lets you move the points around. All you need to do is fill in the function <code>twoDots1</code> with the code that performs the transformation. It should consist of calls to <code>context.translate</code>, <code>context.rotate</code>, and <code>context.scale</code>. I put in a <code>context.translate</code> just to get you started. You can drag around the dots to make sure your code works (the graders will do it).</p>
+<p>Here are some snapshots of what this looks like when it is working.</p>
+<p><img alt="td1_ex1" src="Images/td0_1.png" /> <img alt="td1_ex2" src="Images/td0_2.png" /> <img alt="td1_ex3" src="Images/td0_3.png" /></p>
+<p>Now, do that again, but this time do it using <code>context.transform</code> - compute the 6 numbers that need to be passed. Do this in the <code>twoDots2</code> function. I put some example values in that don't work correctly.</p>
+<canvas id="twodots2" height="200" width="200"></canvas>
+
+
+
+</div>
+<div class="examplebox">
+<h2 id="exercise-2-two-dots-harder">Exercise 2: Two Dots, Harder...</h2>
+<p>This is same as box 1 - except that the corner opposite the upper left (e.g., the 10,10 corner) should appear at the green dot. Your choice how you make the transformation - but make sure it keeps the square a square. The function to edit is <code>twoDots3</code>.</p>
+<canvas id="twodots3" height="200" width="200"></canvas>
+
+<p>Here are some snapshots of what this looks like when it is working:</p>
+<p><img alt="td2_ex1" src="Images/td2_0.png" /> <img alt="td2_ex2" src="Images/td2_1.png" /> <img alt="td2_ex3" src="Images/td2_2.png" /></p>
+</div>
+<div class="examplebox">
+<h2 id="exercise-3-convert-to-transform">Exercise 3: Convert to Transform</h2>
+<p>In the code for this box (<code>drawBox3</code>), each of the squares is placed by a sequence of rotate, translate, and scale commands. Replace these with a single <code>transform</code> command that does the same thing. You should comment out all of the rotate, translate, and scale calls in <code>drawBox2</code>, and put proper numbers into the transform calls. The picture shouldn't change at all. Pay attention to the dots in the square.</p>
+<canvas id="box3canvas" height="200" width="400"></canvas>
+
+</div>
+<div class="examplebox">
+<h2 id="exercise-4-shearskew">Exercise 4: Shear/Skew</h2>
+<p>Shear (sometimes called skew) is a fundamental linear transformation. It is discussed in both textbooks (but specifically Section 6.1.2 of Fundamentals of Computer Graphics <a href="https://canvas.wisc.edu/files/7180025/download?download_frd=1">FCG4_Ch06.pdf</a>). Unfortunately, Canvas doesn't have it.</p>
+<p>Put "shear-x" transformation into the <code>shearX</code> function in <code>4-Matrix-Exercises.html</code>. The code for the following Canvas calls that function to test it. Since the <code>shearX</code> does nothing right now, you see squares here. If you implement things correctly, you should see sheared boxes. The test code does save and restore - you should make <code>shearX</code> work like <code>context.rotate</code> (except that its a function not a method).</p>
+<canvas id="box4shearX" width="400px" height="200px"></canvas>
+
+</div>
+<div class="sumbox">
+<h2 id="summary">Summary</h2>
+<p>OK, a little math programming... Now on to the <a href="5-Kinematics.html">next page</a>.</p>
+</div>
+<script src="4-Matrix-Exercise.js" type="module"></script>
+<!-- @@EndMDReplace: -->
+</body>
+</html

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Page 7-6: Exercise: Quadcopter / Multi-Rotor
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/6-quadcopter.md -->
+<h1 id="page-7-6-exercise-quadcopter-multi-rotor">Page 7-6: Exercise: Quadcopter / Multi-Rotor</h1>
+<div class="examplebox">
+<p>You have made a Quadcopter in 2D on a previous assignment. We'll do the same thing again, with a few twists.</p>
+<div class="warnbox">
+<p><strong>Summary:</strong> In <a href="quadcopter.html"><code>quadcopter.html</code></a> and <code>quadcopter.js</code> turn the flying donut into a quadcopter (with spinning rotors)</p>
+</div>
+<p>First, since this is 3D, we won't just see the vehicle from above, so you have a little more freedom in what you make. It needs to have multiple (spinning) propellers, but it could be a traditional helicopter (with a vertical rotor in the tail) or even a multi-engined propeller airplane.</p>
+<p>Second, in addition to the aircraft, you need to have a "radar dish" on the ground that always points towards the aircraft. This object should stay in the same place on the ground, but rotate so that it is always pointing towards the aircraft (tracking it). As the aircraft moves, the radar rotates. It doesn't have to be a radar dish (you can be creative), but it does have to have an obvious "top" that always points towards the aircraft.</p>
+<p>The goal of the assignment is to have you make a hierarchical object (aircraft with propellers) that flies around in 3D, and be able to point one object at the other. Other bells and whistles are nice (and can earn bonus points).</p>
+<p>Some requirements:</p>
+<ol>
+<li>The aircraft can be simple in shape, but it must have an obvious front that faces forward when flying.</li>
+<li>The propellers can be simple (a thin box can work), but they must have an obvious center that they spin around, and they must spin as the aircraft flies.</li>
+<li>Your scene must have a ground plane.</li>
+<li>Your scene must have at least one aircraft that flies in a circle. You can have the other aircraft fly in more complicated ways (see bonus points).</li>
+<li>You should have at least two aircraft flying. Both with spinning propellers.</li>
+<li>For each aircraft there should be an object on the ground that tracks it. These can be radar dishes, but they can have a different shape as well. Whatever they are, it should be obvious which direction they are pointing and that they "track" the aircraft (they continually point towards it as the aircraft flies around).</li>
+</ol>
+<p><em>Note: it will be better to have one aircraft, with a functional radar dish, than two aircraft and no radar dish. Of course, it's best to have two of each. Once you make one, it shouldn't be too hard to add another.</em></p>
+<p>The basic framework provides some lighting, a simple ground plane, and OrbitCamera controls. You are welcome to improve the lighting, and make the ground more interesting.</p>
+<p>You may load geometry from a file (using, for example THREE's OBJLoader). However, if you do this, you must describe in your readme file where the OBJ files come from. If you do not create the file yourself, be sure to give proper attribution, and confirm that it comes from a source that allows you to use it (i.e., it has a Creative Commons license). Don't forget to add any geometry files to the repository (we have made this mistake on a previous workbook!). Please do not give big files, or things that use features we haven't discussed in class yet (like Textures). You may only add object files (e.g., .obj).</p>
+<p>If you're curious how to make a radar dish, you can use the example on the <a href="https://threejs.org/docs/#api/en/geometries/LatheGeometry">TREEE.js LatheGeometry page</a>. Or you can make it some other way. A Cone would work at a minimum. It is more important that the object has the right behavior (it clearly points toward an aircraft).</p>
+<p>You should complete this assignment in the file <code>quadcopter.js</code> (which is loaded by <a href="quadcopter.html"><code>quadcopter.html</code></a>). We've given you some code to start - a basic ground plane, a camera, some lights, even a simple animation loop. We've put the <code>OrbitControls</code> for the camera into the scene. You don't have to use what we've put there (you can take out things if you want to put in better stuff - especially for the ground and lighting). However, please include <code>OrbitControls</code> in your result.</p>
+<p><strong>This part of the assignment does not use the framework code.</strong> Please build everything using THREE.js "from scratch" (or from the starter code). In other parts of this workbook, we'll introduce you to some framework code that should help in making bigger projects.</p>
+<p>We will reward exceptional projects with bonus points. Some things you can do:</p>
+<ol>
+<li>Have interesting aircraft, potentially with multiple types of aircraft. This means more than just finding a shape and loading it from a file (although, loading geometry is allowed).</li>
+<li>Have the aircraft have interesting behaviors. One has to fly in a circle. Others can fly in more complex patterns. For example, have a quadcopter that takes off, picks a random place to fly to, turns to face that direction, flies in that direction and lands when it gets to its destination. You could give it a spotlight that shines at its destination so we know where its going.</li>
+</ol>
+<p>If you do something you feel is worthy of bonus points, be sure to describe it. Sometimes interesting behaviors aren't obvious at a glance.</p>
+</div>
+<div class="sumbox">
+<p>After this exercise, move on to the <a href="7-framework.html">next page</a> to learn about the framework code we'll use for the next exercises (and future workbooks).</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

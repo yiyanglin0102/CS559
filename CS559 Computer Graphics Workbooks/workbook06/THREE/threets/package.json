@@ -1,0 +1,145 @@
+{
+  "_from": "@types/three@ts3.3",
+  "_id": "@types/three@0.93.22",
+  "_inBundle": false,
+  "_integrity": "sha512-z3gtO8D7icKFDd+T5M6mALazvxV2ScIeiWZNQE/sAxSCYCuZvTeBrIvCo7i4HKG1fPm2aRPMp0OYF4f0MHddsA==",
+  "_location": "/@types/three",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "@types/three@ts3.3",
+    "name": "@types/three",
+    "escapedName": "@types%2fthree",
+    "scope": "@types",
+    "rawSpec": "ts3.3",
+    "saveSpec": null,
+    "fetchSpec": "ts3.3"
+  },
+  "_requiredBy": [
+    "#DEV:/",
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/@types/three/-/three-0.93.22.tgz",
+  "_shasum": "3601929f36d4b3a5b7d3dd9851fec53feda8228c",
+  "_spec": "@types/three@ts3.3",
+  "_where": "C:\\Users\\gleicher\\AppData\\Local\\Microsoft\\TypeScript\\3.3",
+  "bugs": {
+    "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/issues"
+  },
+  "bundleDependencies": false,
+  "contributors": [
+    {
+      "name": "Kon",
+      "url": "http://phyzkit.net/"
+    },
+    {
+      "name": "Satoru Kimura",
+      "url": "https://github.com/gyohk"
+    },
+    {
+      "name": "Florent Poujol",
+      "url": "https://github.com/florentpoujol"
+    },
+    {
+      "name": "SereznoKot",
+      "url": "https://github.com/SereznoKot"
+    },
+    {
+      "name": "HouChunlei",
+      "url": "https://github.com/omni360"
+    },
+    {
+      "name": "Ivo",
+      "url": "https://github.com/ivoisbelongtous"
+    },
+    {
+      "name": "David Asmuth",
+      "url": "https://github.com/piranha771"
+    },
+    {
+      "name": "Brandon Roberge,\n//                 Qinsi ZHU",
+      "url": "https://github.com/qszhusightp"
+    },
+    {
+      "name": "Toshiya Nakakura",
+      "url": "https://github.com/nakakura"
+    },
+    {
+      "name": "Poul Kjeldager Sørensen",
+      "url": "https://github.com/s093294"
+    },
+    {
+      "name": "Stefan Profanter",
+      "url": "https://github.com/Pro"
+    },
+    {
+      "name": "Edmund Fokschaner",
+      "url": "https://github.com/efokschaner"
+    },
+    {
+      "name": "Roelof Jooste",
+      "url": "https://github.com/PsychoSTS"
+    },
+    {
+      "name": "Daniel Hritzkiv",
+      "url": "https://github.com/dhritzkiv"
+    },
+    {
+      "name": "Apurva Ojas",
+      "url": "https://github.com/apurvaojas"
+    },
+    {
+      "name": "Tiger Oakes",
+      "url": "https://github.com/NotWoods"
+    },
+    {
+      "name": "Ethan Kay",
+      "url": "https://github.com/elk941"
+    },
+    {
+      "name": "Methuselah96",
+      "url": "https://github.com/Methuselah96"
+    },
+    {
+      "name": "Dilip Ramirez",
+      "url": "https://github.com/Dukuo"
+    },
+    {
+      "name": "Julian Strecker",
+      "url": "https://github.com/JulianSSS"
+    },
+    {
+      "name": "Zhang Hao",
+      "url": "https://github.com/devilsparta"
+    },
+    {
+      "name": "Konstantin Lukaschenko",
+      "url": "https://github.com/KonstantinLukaschenko"
+    },
+    {
+      "name": "Daniel Yim",
+      "url": "https://github.com/danyim"
+    },
+    {
+      "name": "Philippe Suter",
+      "url": "https://github.com/psuter"
+    }
+  ],
+  "dependencies": {},
+  "deprecated": false,
+  "description": "TypeScript definitions for three.js",
+  "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped#readme",
+  "license": "MIT",
+  "main": "",
+  "name": "@types/three",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+  },
+  "scripts": {},
+  "typeScriptVersion": "2.8",
+  "types": "index",
+  "typesPublisherContentHash": "12114dab08e1eeb0ad36dc197cd5804fcedd897c8651967487caafed92b0d5bd",
+  "version": "0.93.22"
+}

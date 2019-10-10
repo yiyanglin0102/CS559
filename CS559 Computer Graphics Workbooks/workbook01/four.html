@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<!--
+    Workbook 1 for CS559 - Page 3 (three.html) -
+    written January 2019, by Michael Gleicher
+
+    students are allowed (and) encouraged to read the HTML source files!
+-->
+
+<header>
+    <meta charset="UTF-8"> 
+    <!-- use the CS559 Style Sheet -->
+    <link rel="stylesheet" href="Libs/style559.css">
+    <title>
+        Assignment 01-04: Getting Started - Your turn (Page Four)
+    </title>
+</header>
+
+<body>
+    <!-- the next line is a comment that directs how the 559 file management software works -->
+    <!-- @@MDReplace: NOT_FOR_STUDENTS/four.md -->
+<p>So far, this workbook has mainly been me writing code (and html),
+and you reading it. Hopefully, you also took the opportunity to
+do some extra reading (for example, reading some JavaScript references).
+And some tinkering (one way to understand my programs is to try to
+make changes to see how things work).</p>
+<p>To help you check that you are getting the concepts, here are a few
+little programming things to try. In each "box" I will ask you to do
+something. You should edit the "four.html" and "four.js" files
+accordingly to do it. These will be the things that the grader will check.</p>
+<p>These little exercises are simple - and not very interesting.
+But make sure you understand what you are doing, since they will
+be the building blocks for doing more interesting things later.</p>
+<p>And don't forget to edit the <code>README.md</code> file 
+(if we don't know your WiscID and GitHub ID, we can't give you credit),
+and the <code>QUESTIONS.md</code> file. </p>
+<p>And of course, to correctly use GIT to commit your work and push it
+back to the repository on GitHub.</p>
+<p>Note that for grading, you will get full points if you get at least
+a partially right program for each exercise.</p>
+    <!-- @@EndMDReplace -->
+
+    <div id='box01' class="examplebox">
+        <H2>Exercise 1: Sliders</H2>
+        <p>
+            In this box, make 3 sliders. Add event handlers such that the third
+            slider shows the difference in value between the first two.
+            So that slider3 = slider2 - slider1. Slider3 should move whenever
+            slider1 or slider2 are moved. Making it such that slider1 and/or slider2 move
+            when slider3 moves is a little trickier (and optional).
+        </p>
+        <p>
+            <strong>Hint:</strong> Box 4 on page three is a good starting point.
+            The lower of the two sliders there has a nicer behavior for this exercise.
+            Consider setting the <code>min</code> and <code>max</code>
+            properties of the sliders so that the third slider has the right range.
+            The <code>min</code> can be negative.
+        </p>
+    </div>
+    <div id="box02" class="examplebox">
+        <H2>Exercise 2: Start Stop</H2>
+        <p>
+            In this box, make a slider and two buttons. One labeled "start" the other labeled "stop".
+            When you press "start", the slider starts moving. When you press "stop" the slider stops.
+            This is sortof like the last slider in Box 6 on page three, except that you should
+            use two buttons, rather than one checkbox.
+        </p>
+        <p>
+            <strong>Hint:</strong> With buttons, the easier thing is to handle the
+            <code>onclick</code> events. The event handlers will need to pass information
+            to the animation loop. You'll have to store the state information somewhere.
+        </p>
+    </div>
+    <div id="box03" class="examplebox">
+        <H2>Exercise 3: Throb, not blink</H2>
+        <p>
+            The "blinking" in Box 7 of page three is really annoying. Instead let's make
+            something a little less annoying: instead of just changing to another color
+            in a flash, have the color slowly (but not too slowly) change from white to red,
+            then back to white. (it should repeat). 
+        </p>
+        <p>
+            <strong>Hint:</strong> A trick here is that HTML like colors as hex (so red is #FF0000).
+            You'll probably want to do your math with regular numbers and convert.
+            <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toString">here</a>
+            is a reference page that might be useful. 
+        </p>
+        <p>
+            If you want to try something more challenging, have it fade gradually between a list
+            of colors (just like page 3 switched between red, yellow, and green, you could make
+            yours slowly fade from red to yellow to green then back to red).
+        </p>
+        <p>
+            Here is <span id="ex3-span">some text to make throb.</span>
+        </p>
+    </div>
+    <script src="four.js" type="module"></script>
+</body>

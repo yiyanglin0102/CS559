@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Page 10-5: Procedural Textures
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/5-procedural.md -->
+<h1 id="page-10-5-procedural-textures">Page 10-5: Procedural Textures</h1>
+<script src="THREE/three.js"></script>
+
+<script src="THREE/OrbitControls.js"></script>
+
+<div class="examplebox">
+<h2 id="box-1-procedural-texture">Box 1: Procedural Texture</h2>
+<p>The idea of a texture is that we will compute a different color for each pixel. Since we can run a fragment shader on each pixel, we can do this.</p>
+<p>As with image-based textures, we need to have a good coordinate system. We can use the UV coordinates, or anything else.</p>
+<p>Here are two examples: for one, I'll use the world space XYZ as the texture coordinates, and for the second I'll use the object space XYZ as the texture coordinates. You should be able to tell which is which. For both, I'll convert X into the red channel (in a way that makes it go from 0-1) and Z into the green channel.</p>
+<div id="5-1"></div>
+<script src="5-1-xyz.js" type="module"></script>
+
+<p>Notice how one object moves through colors in the world, while the other has the colors attached to it. Read the vertex shader <code>xyz.vs</code> and the fragment shaders <code>xyz1.fs</code> and <code>xyz2.fs</code> to make sure you understand how we're determining colors. Try hacking them to do something different.</p>
+<p>You should also read the code for the example <code>5-1-xyz.js</code>. In order to make the objects move, I am using the framework. And I'm playing with various "features" of JavaScript to define the methods without making a new class. (watch for the use of non-lexical <code>this</code>).</p>
+<p>Usually, we'll use texture coordinates (UV) for the coordinates to define our textures. But I wanted you to have at least one XYZ example.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-a-more-realistic-procedural-texture">Box 2: A more realistic Procedural Texture</h2>
+<p>Here's a more "typical" procedural texturing example. Suppose we want a grid of dots. We could use an image texture, but then we would need a new image if we wanted to change the number of dots, the color of the dots, the size of the dots or the size of the dots. Instead, we can write a shader that computes, for every pixel, whether or not it is in a dot. We can make the things we want to control (color, number of dots, size of dot) uniform variables that we can set from our program. Like this:</p>
+<div id="5-2"></div>
+<script src="5-2-dots.js" type="module"></script>
+
+<p>Read through the shaders: <code>dots.vs</code> and <code>dots.fs</code> and understand what is happening and how the dots are getting drawn. You may also want to read through <code>5-2-dots.js</code> to see how the uniform parameters are being connected to sliders.</p>
+<p>If you look carefully, you will see evidence of "jaggies" - the circles aren't smooth and you can see the pixels, so they look ugly. Dealing with this problem (called aliasing) is an advanced topic - we'll get to it on a future page.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-3-exercise-5-1-your-turn-checkerboard">Box 3: Exercise 5-1: Your turn: Checkerboard</h2>
+<p>It's your turn to make a procedural texture. We'll start with something simple: make a checkerboard pattern. I've started things for you in the files <code>e51-check.vs</code> and <code>e51-check.fs</code> (note: as with all shaders, the shader files are in the Shaders directory). I've also done the JavaScript part for you, including a slider for the number of checks over the 0-1 range (see <code>5-3-checks.js</code>). You shouldn't have to modify the JavaScript file (but you can). Also, to make things more convenient, we've added a page <a href="5-3-checks.html"><code>5-3-checks.html</code></a> that is a minimal html page that tests this.</p>
+<div id="5-3"></div>
+<script src="5-3-checks.js" type="module"></script>
+
+<p>You should make this respond correctly to the <code>checks</code> uniform variable. Look at the dots for inspiration.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-4-exercise-5-2-your-turn-some-other-pattern">Box 4: Exercise 5-2 Your turn: Some other pattern</h2>
+<p>This time, you pick what pattern/texture you want to make! Something more complicated than a checkerboard. Look at the <a href="https://thebookofshaders.com/">Book of Shaders</a> for inspiration. Or try to make wood grain, or plaid, or some wallpaper pattern - as long as its more complicated than a checkerboard.</p>
+<p>Again, we've given you files to get started. If you need uniform variables, you'll need to make them yourself. The files are <code>e52-proc.vs</code> and <code>e52-proc.fs</code> as well as <code>5-4-proc.js</code>. And <a href="5-4-proc.html"><code>5-4-proc.html</code></a> if you want to look at it without this entire page.</p>
+<div id="5-4"></div>
+<script src="5-4-proc.js" type="module"></script>
+
+</div>
+<div class="sumbox">
+<h2 id="summary-procedural-textures">Summary: Procedural Textures</h2>
+<p>Procedural textures are one of the cooler things we can do with shaders. Let's look at a detail of using them on the <a href="6-aliasing.html">next page</a>.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

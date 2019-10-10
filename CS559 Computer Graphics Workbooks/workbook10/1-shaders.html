@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+
+<title>
+    Page 10-1: Shaders
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/1-shaders.md -->
+<h1 id="page-10-1-shaders">Page 10-1: Shaders</h1>
+<p>Shaders will be (or have been) discussed thoroughly in class. This is meant as a reminder (or maybe a cue to review the lecture notes, or ask a question in class if there is something you don't understand).</p>
+<p>This should also serve as a modest tutorial to review the concepts.</p>
+<div class="examplebox">
+<h2 id="box-1-learning-about-shaders">Box 1: Learning about Shaders</h2>
+<p>There are at least 4 different things that you have to understand in order to really use shaders effectively.</p>
+<ol>
+<li>
+<p>The basic concepts of what shaders are, and why they are the way they are. This really means understanding how the hardware works and where the shaders fit into the overall process of how drawing works. If you don't understand this basic stuff, shaders won't make sense. Unless you understand how the pieces work, the rules about writing shaders will seem arbitrary.</p>
+</li>
+<li>
+<p>The language that we write Shaders in. In some sense, this is a detail: shading languages are very similar, and differ only slightly in their syntax and built in functionality. For us, the language is GLSL (and GLSL-ES to be precise).</p>
+</li>
+<li>
+<p>The ways in which the shader programs communicate with other programs. This includes the interface between the "host" program (for us, in JavaScript) as well as how the different shaders talk to each other. Appreciating these basic mechanisms is important, since the communications can be a hassle.</p>
+</li>
+<li>
+<p>The ways in which a specific system uses the mechanisms of #3 in order to provide convenient access to the graphics information. For example, in THREE, there needs to be mechanisms for the shaders to know about the lights.</p>
+</li>
+</ol>
+<p>The most important thing for class is #1 - since if you understand what is going on, everything else will fall into place. GLSL (#2) will be a practical matter, since you will want to write some shaders. Connecting with the host program (#3) isn't that interesting - but it can be hard. Fortunately, THREE.JS will help make it easier (#4), but we'll just use the simple parts.</p>
+<p>In class we'll only really talk about <em>vertex</em> shaders and <em>fragment</em> shaders (also known as pixel shaders). There are other kinds of shaders, but they are optional and not used as often. But until you master these two, the others are even less likely to make sense.</p>
+<p>In fact, in class we'll focus on the fragment shaders. We'll need to write vertex shaders (since vertex and fragment shaders always appear in pairs), but most of the work we do will be on fragment shaders.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-things-you-need-to-know-before-starting">Box 2: Things You Need To Know Before Starting</h2>
+<p>You need to understand the basic concepts - shader programming will not make sense without them. Also, these basic concepts are what will still be true if you program in some other system. And we'll ask you about this stuff on the exam.</p>
+<p>Be sure to read enough of the required readings to understand the model of what shaders do and why they do it.</p>
+<p>Here are some concepts to make sure you understand:</p>
+<ol>
+<li>
+<p>The pipeline of how triangles go from a program to the screen. Knowing where the shaders fit into this process helps explain why they do what they do - and only what they do.</p>
+</li>
+<li>
+<p>The concepts of a <strong>vertex</strong> shader and a <strong>fragment</strong> shader (sometimes known as a pixel shader). You should know why we always need one of each.</p>
+</li>
+<li>
+<p>The different types of <strong>variables</strong> used to pass information to and from shaders. Understand <strong>uniform</strong>, <strong>attribute</strong>, and <strong>varying</strong> variables, and what each is used for.</p>
+</li>
+<li>
+<p>The need for <strong>attribute buffers</strong> (although we won't use them directly) to pass information about vertices.</p>
+</li>
+<li>
+<p>What kinds of things you can (and cannot) do in the shaders.</p>
+</li>
+<li>
+<p>What a <strong>fragment</strong> is - roughly it's a pixel (we used to call them "pixel shaders"), but fragments are a more correct term.</p>
+</li>
+</ol>
+<p>If you start by trying to learn the GLSL language, or trying to read a fragment shader, it will seem really arbitrary. These basics tell you the rules.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-3-overview-what-are-all-the-pieces">Box 3: Overview: What are all the pieces</h2>
+<p>There are a bunch of concepts - and then there's the places where they get used in a program. Here we'll try to make a connection.</p>
+<ol>
+<li>
+<p>Before we draw any triangles, we need to define the shader programs that will be run on the graphics hardware for every vertex (the <em>vertex shader</em>) and for every fragment (the <em>fragment shader</em>). In THREE, these shaders are defined as part of a Material, so we can have different programs for each Material. When we make a material, the compiler is run to compile the shader programs. In fact, when we change the material, the compiler may need to be run (which is why we need to be careful about changing materials). Most THREE materials have shaders that are provided, but there is the special <code>ShaderMaterial</code> that allows us to provide our own program.</p>
+</li>
+<li>
+<p>When we draw the triangles for an object (a set of triangles that a set of shaders will process), our host program needs to send those triangles to the graphics hardware. It does this by putting all of the information about the vertices into an <strong>attribute buffer</strong>, which is a data structure that stores the vertices in a way that makes it efficient to send to the graphics hardware. THREE takes care of this: if we define a <code>Geometry</code>, it builds the buffers for us; if we use a <code>BufferGeometry</code> we have to work with the data structures directly. The attribute buffer has all the information about our vertices: our shaders will be given the information about vertices one at a time.</p>
+</li>
+<li>
+<p>As the triangles are drawn, for each vertex, a <strong>vertex shader</strong> is run. The shader executions for each vertex are independent. The vertex shader is passed the <em>attributes</em> of the one vertex it is meant to process. This is why vertex splitting is a big deal: if a vertex is "split" (so it has different attributes for different triangles), it has to become two vertices so each one can be processed separately. <em>The result of vertex shading is that each vertex has some new properties associated with it, including a screen-space position.</em></p>
+</li>
+<li>
+<p>The vertices are re-assembled into triangles, and the rasterizer creates a list of fragments (pixels) that the triangle "covers". Each of these fragments are then sent to be shaded. After this stage, each fragment is processed independently. The properties of the vertices of the triangle are interpolated to provide values for each fragment.</p>
+</li>
+<li>
+<p>For each fragment, a <strong>fragment shader</strong> is run. The fragment shader sees the vertices independently (effectively one at a time, but in parallel). The fragment shader program processes one fragment - it gets the information about the fragment as <em>varying</em> variables (values that we determined by interpolating the vertices that made up the triangle that caused the fragment). The fragment shader can determine the color of the fragment, and it is allowed to change the depth. However, a fragments' position in the image cannot be changed (that would cause it to become a different fragment)!</p>
+</li>
+<li>
+<p>After the fragment is processed, the fragment is tested and (assuming it passes the tests), the color and depth values are written to the image. The most important test is the depth test (z-buffer), which checks that the fragment is not occluded by other fragments.</p>
+</li>
+</ol>
+<p>All this happens for all the triangles we've been drawing all semester. The only thing that is new is that we're going to write the shader programs in steps 3 and 5, rather than using the ones built in to THREE. In the past, you've used materials such as <code>MeshStandardMaterial</code> for which THREE has built in shader programs (you can try to read them if you want!).</p>
+</div>
+<div class="examplebox">
+<h2 id="box-4-so-what-do-shaders-actually-do">Box 4: So What Do Shaders Actually Do?</h2>
+<p>Reviewing Box 3...</p>
+<p>A <strong>vertex shader</strong> is a small program that runs on one vertex. (each vertex is independent). It receives as input the <strong>attributes</strong> of that vertex and things that a constant (the same over all vertices) called <strong>uniforms</strong>. The only thing a vertex shader can do is add new attributes to the vertices. It <strong>must provide the screen-position of the vertex.</strong> It may optionally provide other attributes (I'll call these output attributes, or <strong>varying</strong> variables) that can be used in later stages.</p>
+<p>A <strong>fragment shader</strong> is a small program that runs on one fragment (think of this as a pixel of a triangle). Each fragment is processed independently. It receives as input the properties of the fragment. These are determined by interpolating the "output attributes" (<strong>varying</strong> variables) from the vertices. The inputs to a fragment shader are these varying variables as well as the values that are constant over the whole object (the <strong>uniform</strong> variables). The output of the fragment shader are more properties of the fragment. The most important one is the color (the thing that will get written to the image, if the fragment makes it through the tests).</p>
+</div>
+<div class="sumbox">
+<h2 id="summary-vertex-and-fragment-shaders">Summary: Vertex and Fragment Shaders</h2>
+<p>Make sure that you understand what a vertex shader is and what a fragment shader is. If you don't, re-read this page, or read one of the recommended readings again.</p>
+<p>Now that we know what vertex and fragment shaders are, we can look at some simple examples on <a href="2-simpleshaders.html">Page Two</a>.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    WB4: 6-Flocking: Flocking Assignment
+</title>
+</header
+<body>
+<!-- @@MDReplace: SOURCES/6-Flocking.md -->
+<h1 id="programming-assignment-lots-of-flying-objects">Programming Assignment: Lots of Flying Objects</h1>
+<p>This page (and it's exercise and bonus problems) are more about graphics programming than fundamental graphics concepts.</p>
+<p>If you want to play with the end results, try some circa-2008 sample code <a href="http://pages.cs.wisc.edu/~gleicher/Hacks/Boids/">here</a>. Because your computer is probably 10,000 faster than the one I had in 2008, you probably want to lower the velocity. I don't recommend trying to read the code! It's archaic JavaScript.</p>
+<p>Basically, the methods you're going to experiment with have a bunch of simple objects that each make individual "steering" decisions, and maintain their speeds. This is sometimes referred to as "flocking." The first person to really write about it in the graphics literature was <a href="http://www.red3d.com/cwr/">Craig Reynolds</a> who not only wrote the original <a href="https://dl.acm.org/citation.cfm?id=37406">1987 paper</a> , but also maintains a good <a href="http://www.red3d.com/cwr/boids/">web page</a> with information about it.</p>
+<p>By the way the "creatures" that flock are sometimes referred to as "boids" since they aren't always birds (sometimes they are fish, or pedestrians, or ...).</p>
+<p>Creating flocking was a project in the old games class (in <a href="http://graphics.cs.wisc.edu/Courses/Games10/Main/Project1">2010</a> and <a href="http://graphics.cs.wisc.edu/WP/games12/2012/09/06/project-1-an-in-browser-game-with-flocking/">2012</a>). In fact, some of those old 2010 projects still run (the joy of web programming!) <a href="http://graphics.cs.wisc.edu/Courses/Games10/proj1/RaeShei/">(Ian and Irene's Asteroids Game)</a> <a href="http://graphics.cs.wisc.edu/Courses/Games10/proj1/HugoMills/">(Jeff and Chris' Sheep Herder Game)</a>.</p>
+<p>Those projects were multi-week things, with pairs of students. This assignment has lower ambitions. But, if you want to learn more about flocking, it can be fun.</p>
+<p>The goal in this page is to build a program that has a collection of simple objects that move around with "flocking behavior". Along the way, we'll try out some more JavaScript stuff.</p>
+<div class="examplebox">
+<h2 id="flying-boids">Flying Boids</h2>
+<p>As an initial step, we'll keep a collection of objects. Each one has a position, and a velocity. Unlike in previous Workbooks, I will create this using an actual JavaScript class. The code is in <code>flock.js</code> - you will do this exercise by changing this file (and possibly the <a href="7-flock.html">7-flock.html</a> file).</p>
+<p>Throughout this assignment, we'll maintain that each object (1) stays within the Canvas, and (2) has a constant speed (the magnitude of the velocity vector should remain constant). We'll do this by making the velocity vector always be a unit vector. Note: the real speed of movement will depend on the browser's redraw speed, so it might not actually be constant. It should be close enough.</p>
+<p>Right now, this is really simple. My initial boids just fly straight and wrap around. But you can make it cooler.</p>
+<p>First make these 3 simple changes - they will help you learn the code.</p>
+<ul>
+<li>Change the "Add" button such that when it is clicked, 10 new boids are placed at random locations with random directions (remember, the velocity vectors must have unit magnitude).</li>
+<li>Change the "Clear" button such that when it is clicked, all the boids are removed (this will be useful for starting over).</li>
+<li>Change things such that the boids are not drawn just as circles or squares. The objects should point in the direction they are going. You could add a marker to the circles (see my old <a href="http://pages.cs.wisc.edu/~gleicher/Hacks/Boids/">demo</a>), or change the shape to a triangle (that points in the direction of the velocity), or something fancier.</li>
+</ul>
+<p>Then make this first real improvement:</p>
+<ul>
+<li>Right now, the objects "wrap around" when they hit the edge. Change it so they "bounce" off the edge instead. So, for example, when an object hits the right edge, its velocity changes to that its moving to the left instead. If it hits a side wall, only the horizontal component of the velocity needs to change.</li>
+</ul>
+<p>Then another small change:</p>
+<ul>
+<li>After an object hits something, it changes color briefly. (e.g., they turn red after they hit something). They definitely hit walls, but later, you have them hit other things. This will require you to add state to the Boids. They should stay the "alternate" color for a few frames.</li>
+</ul>
+<p>Now for the more challenging things. Implementing these will earn bonus points. You can implement any (or all) of these things. (the <a href="http://pages.cs.wisc.edu/~gleicher/Hacks/Boids/">old demo</a> does the first two).</p>
+<ul>
+<li>If two objects collide, have them go off in opposite directions. You don't need to get the physics exact (since we're maintaining velocities) - a simple version is to draw a line between the center of the two objects, and have the objects move away from each other in the directions of the line. This should  go into the <code>steer</code> method of the boids.</li>
+</ul>
+<p>These additions are "steering" behaviors. They are implemented by having a boid on each step make a small adjustment to its direction vector. These decisions are completely local: there is no planning (it only decides what to do immediately), there is no central decision making (each boid decides on its own), and the boid can only make small changes to its direction (it keeps its velocity and cannot turn too sharply). Despite the fact that these steering behaviors are so limited, interesting effects (like flock formation) can emerge. All of these can be added to the <code>steer</code> method of the Boids.</p>
+<ul>
+<li>Implement "alignment" steering. On each step, the boid looks at the other nearby Boids and turns to go in the same direction as the average. This works best if the average is weighted (nearby ones have more weight).</li>
+<li>Implement "separation" steering. On each step, the boid tries to turn away from its neighbors to avoid hitting them.</li>
+<li>Implement "cohesion" steering. On each step, the boid looks at its neighbors and tries to steer to be in the middle of them.</li>
+<li>Implement "chasing" - some boids (it cannot be all of them), choose a target (another boid) and steer to follow it. You should draw the chaser and follower in some way that distinguishes them from the rest. You can make the chaser go a little bit faster than the others (rather than having a unit velocity vector, it could have one with length 2).</li>
+<li>Mouse attraction - have boids turn towards the mouse. They should turn gradually (there should be a limit to how fast they turn).</li>
+</ul>
+<p>The steering behaviors require tweaking - you need to tune the parameters to get them to work well. (try it with my old demo). You will probably want to add sliders to help you experiment with the parameters. For example, in my testing (to try out the assignment), I limited the turning to 1 or 2 degrees per step.</p>
+<p>A different category of enhancements is to add obstacles to the scene. You could put shapes into the Canvas (circles or rectangles are good enough), and have the boids stay outside of these regions. This means you need to have the boids collide with the edges (just as they do with the boundaries of the Canvas). You also need to make sure your method for randomly placing boids doesn't put things inside the shapes.</p>
+<p>Again, the <strong>requirements</strong> are:</p>
+<ol>
+<li>implement the add button</li>
+<li>implement the clear button</li>
+<li>change the drawing to have things facing forward</li>
+<li>bounce off the walls</li>
+<li>change color briefly after bouncing</li>
+</ol>
+<p>The bonus point opportunities are:</p>
+<ol>
+<li>Have objects bounce off of each other</li>
+<li>Implement one or more steering behaviors (you can get multiple bonus points for multiple steering behaviors)</li>
+<li>Implement obstacles</li>
+</ol>
+<p>You can do as many (or as few) of the bonus point challenges as you want.</p>
+<p>Be sure to describe what you did (especially if you implemented any bonus point features). Put instructions into the html (the file is <code>7-flock.html</code> and your <code>README.md</code>.</p>
+<p>You should do this exercise by editing the file <code>flock.js</code> and <a href="7-flock.html">7-flock.html</a>. Things actually run in the <a href="7-flock.html">7-flock.html</a>. The graders will look at these files.</p>
+<p>Some hints:</p>
+<ol>
+<li>Do the required changes in the order suggested. This will help you learn the code.</li>
+<li>Read the references on Craig Reynold's pages for ideas on how to do steering. <a href="http://www.red3d.com/cwr/steer/gdc99/">Here</a> is an advanced article (that includes the basic ideas).</li>
+<li>Many of the steering behaviors are easier if you represent the velocity as orientation, speed (rather than as x velocity, y velocity). You could change over all of the code. I found I was converting back and forth within the steer function. <code>Math.atan2</code> is your friend.</li>
+<li>When working with angles, be careful about wraparound! (angle + 360 degrees = angle)</li>
+<li>Be sure to document what you are trying to do so we appreciate what you did! (give a list of which requirements you did and which bonus things you did).</li>
+</ol>
+</div>
+<div class="sumbox">
+<h2 id="summary">Summary</h2>
+<p>This is the last page of this workbook (other than the page with flocking on it). Don't forget to do the <code>README.md</code> and <code>QUESTIONS.md</code></p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html

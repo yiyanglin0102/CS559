@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Page 8-3 - Texture Notes
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/3-textures.md -->
+<h1 id="page-8-3-texture-notes">Page 8-3 - Texture Notes</h1>
+<p>This page are some notes about texturing. The notes are meant to remind you about what you've learned in class and point you towards resources to learn more from. This is not a texture tutorial</p>
+<div class="examplebox">
+<h2 id="box-1-the-big-picture">Box 1: The Big Picture</h2>
+<p>Texturing is a way to add details to a scene without making the geometry more complex. Effectively, it provides a way to make a decision about appearance for every pixel on the screen - without having to make triangles that are pixel sized.</p>
+<p>The obvious catch is that we can't know the pixels ahead of time: a triangle may be big or small on the screen. We need to define the textures in a way that is independent of the actual pixels, and then compute the texture for each pixel.</p>
+<p>This means that texturing has two main parts: <strong>texture coordinates</strong> where we assign places on an object some coordinate system that can be used for determining appearance, in a way that when the object is drawn each pixel can know what its coordinates are; and <strong>texture lookup</strong> to determine the appearance for each pixel when the triangle is drawn.</p>
+<p>For both texture coordinates and texture lookup, there are many ways to do things. For now, we will use the most common case because it will allow us to make fancy looking objects easily. Later, we'll learn the details of how textures work, and see fancier kinds of textures.</p>
+<p>The specific kinds of textures we will consider will use: triangle coordinates for the texture coordinates, and image lookup for the texture lookup. Effectively, this will allow us to paste pictures (images) onto triangles (or groups of triangles)</p>
+<p>You may want to review the difference between an image and an object from <a href="http://graphics.cs.wisc.edu/WP/cs559-fall2014/2014/08/29/image-based-graphics-vs-object-based-graphics/">Tutorial: Image vs. Object (raster vs. vector)</a>.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-the-key-concepts">Box 2: The Key Concepts</h2>
+<p>The key concepts we learned about in class (Tuesday April 2nd):</p>
+<ul>
+<li>The idea of texture coordinates</li>
+<li>Why we need triangle coordinates, and the idea of UV coordinates on triangles</li>
+<li>The idea of image based texture lookup</li>
+<li>Why we need filtering for texture lookups</li>
+</ul>
+<p>You might want to review this in a textbook.
+Fundamentals of Computer Graphics Chapter 11 (<a href="https://canvas.wisc.edu/files/7180029/download?download_frd=1">FCG4_Ch11.pdf</a>) covers texturing, describing it in a very general way. Section 11.1 gives the main ideas, and 11.2 gives many different types of textures - we'll focus on what's described in 12.2.2. Sections 11.2.4 (perspective correct interpolation) and 11.3 (pixel lookups) are topics we will come back to.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-3-image-based-triangle-interpolated-textures-for-color-maps">Box 3: Image-Based, Triangle Interpolated Textures, for Color Maps</h2>
+<p>The specific kind of textures we're doing are:</p>
+<ol>
+<li>Triangle coordinate interpolation (for texture coordinates): We'll put UV values on each vertex of the triangle. The system will interpolate these values for each pixel.</li>
+<li>Image-Based Texture Lookup: Given the u,v coordinate for a pixel, we'll look up its value in an image.</li>
+<li>Color Maps: we'll use the value we looked up in the image as the color for the pixel. We may use this as the material color (so it is affected by lighting), or we might just use the color directly (so it won't be affected by lighting).</li>
+</ol>
+</div>
+<div class="examplebox">
+<h2 id="box-4-coming-attractions">Box 4: Coming Attractions</h2>
+<p>For each of the choices in the previous box, there are lots of other choices, and lots of details to consider. With THREE, we don't need to worry about the details: it will make reasonable choices for us. In the future, we will want more control over these choices, and we'll want to try different kinds of texturing.</p>
+<ol>
+<li><strong>Coordinates:</strong> we'll see different ways to determine texture coordinates in order to make solid materials (like wood and stone) or to achieve fancy effects like reflection.</li>
+<li><strong>Texture Lookup:</strong> we'll see how the image lookup process can cause problems, and how we can control the process to get better quality. We'll also look at alternatives to using pre-defined images (procedural textures).</li>
+<li><strong>Texture Use:</strong> rather than controlling the color, we can control other aspects of the appearance. We'll look at adjusting material properties, apparent shape, lighting, ...</li>
+</ol>
+</div>
+<div class="sumbox">
+<h2 id="summary-texturing">Summary: Texturing</h2>
+<p>This page should give you a reminder of what you've learned about texturing so far. On the <a href="4-textures-three.html">next page</a>, we'll review how this is applied in THREE.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

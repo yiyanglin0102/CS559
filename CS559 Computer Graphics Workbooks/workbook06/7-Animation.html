@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Workbook 6, Page 7: Animation
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/7-Animation.md -->
+<h1 id="workbook-6-page-7-animation">Workbook 6, Page 7: Animation</h1>
+<div class="examplebox">
+<h2 id="animation-and-three">Animation and THREE</h2>
+<p>Animating using THREE is very similar to how we've been doing other web animation. We use <code>requestAnimationFrame</code> to set up an animation loop that calls our drawing function, and as part of the drawing function we make any changes that we want to have in the picture and redraw the picture.</p>
+<p>Because THREE is a scene graph API, we make changes by adjusting the existing objects, rather than by recreating new graphics objects. This is particularly important because the act of creating an object might be expensive. For example, when we create a new material, we need to run the shader compiler to translate the material into code for the graphics hardware. Also, it is much better to re-use existing objects: even if creating them is cheap, we can avoid the overhead of re-sending the information to the graphics hardware.</p>
+<p>Sometimes, it isn't obvious whether a particular change will require a substantial change to the information sent to the hardware. For example, if you change a parameter of the shader, it may or may not need to be re-compiled. Or if you change the vertices of a geometry, it may or may not need to be re-organized to be sent to the graphics hardware. For reasons like this, THREE sometimes doesn't let you change things during drawing.</p>
+<p>In general, we prefer to animate transformation parameters (since these don't require rebuilding the data structures for the graphics hardware). After we learn how the graphics hardware works, this will make more sense. But for now, be aware that sometimes when you change values, you may not see the changes.</p>
+</div>
+<div class="sumbox">
+<p>One the <a href="8-Snowman.html">next page</a> we'll ask you to do some programming to make something in 3D using THREE.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Workbook 5 - Page 3 - Cubics
+</title>
+</header>
+<body>
+<!-- @@MDReplace: SOURCES/3-cubics.md -->
+<h1 id="workbook-5-page-3-cubics">Workbook 5, Page 3: Cubics</h1>
+<p>We will create complicated shapes by putting together simple pieces. We need to do this in a careful way, otherwise we won't get continuity.</p>
+<p>If we try to make shapes out of linear pieces (line segments), we can never do better than C(0) continuity. The common thing in computer graphics is to use cubic polynomial segments. That will allow us to get C(1) (or better) continuity, and also have a lot of flexibility in the shapes that we can create.</p>
+<p>We could use even higher degree polynomials (quartic polynomials, quintic polynomials, etc.). However, for many reasons, in computer graphics, cubics are usually sufficient.</p>
+<p>This material is covered in the book in Sections 15.3 through 15.5, and discussed in class. So, there isn't that much to say on this page.</p>
+<div class="examplebox">
+<h2 id="box-1-cubics-and-polynomial-notation">Box 1: Cubics and Polynomial Notation</h2>
+<p>We write a cubic polynomial as:
+<script type="math/tex; mode=display">
+\mathbf{ f }(u) = \mathbf{ a_0 } + \mathbf{ a_1 } u + \mathbf{ a_2 } u^2 + \mathbf{ a_3 } u^3
+</script>
+denoting the coefficients as <script type="math/tex">\mathbf{ a_0 }, \mathbf{ a_1 }, \mathbf{ a_2 }, \mathbf{ a_3 }</script> - in boldface since they are points. This is a nicer notation than writing (if our points are 2d):
+<script type="math/tex; mode=display">
+f_x(u) = a_{0x} + a_{1x} u + a_{2x} u^2 + a_{3x} u^3 \\
+f_y(u) = a_{0y} + a_{1y} u + a_{2y} u^2 + a_{3y} u^3 \\
+</script>
+Its useful to remember that we do have a separate function for each dimension.</p>
+<p>Trying to control the cubic by specifying the coefficients is not easy (e.g., what values for <script type="math/tex">\mathbf{ a_0 }, \mathbf{ a_1 }, \mathbf{ a_2 }, \mathbf{ a_3 }</script> gives a desired end position?). Therefore, we almost always specify using something more convenient - and compute the coefficients from these.</p>
+<p>Notice that a cubic segment has 4 coefficients. When we specify the cubic in some other way, we need to give enough information to compute these 4 things. If we give too little information or too much, it won't work exactly. Therefore, other representations will use 4 numbers too.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-hermite-forms-for-cubics">Box 2: Hermite forms for Cubics</h2>
+<p>One useful way to specify a cubic is <strong>Hermite</strong> form. Hermite forms are interpolating forms: we specify values that the curves have. With Hermite forms, we specify the values and derivatives for the curve at the beginning and end. We can have Hermite polynomials for different degrees. For example, a first degree Hermite polynomial is a line segment, where we specify the values at the ends. A quintic Hermite (5th degree) would specify the value and the first two derivatives at each end of the curve.</p>
+<p>For Hermite Cubics (the only kind we'll use in class), we specify the value of the curve at the beginning, the value of the curve at the end, the first derivative (tangent vector) of the curve at the beginning, and the tangent vector (first derivative) of the curve at the end.</p>
+<p><img alt="Hermite" src="Images/hermite.png" /></p>
+<p>Here we denote the first point as P0, the second point as P1, and their associated derivatives as P0' and P1'.</p>
+<p>Even though the derivatives are vectors, we still refer to them as <strong>control points.</strong> Since it is a cubic, it has 4 control points.</p>
+<p>We can derive formulas for the coefficients (the <script type="math/tex">\mathbf{ a_0 }, \mathbf{ a_1 }, \mathbf{ a_2 }, \mathbf{ a_3 }</script>) from the Hermite control points. This is done in the book - but we won't ask you to do these derivations in class (it used to be part of class).</p>
+<p>Here are the equations:
+<script type="math/tex; mode=display">
+\begin{aligned}
+f(u) = p_0 & \ u^0 + \\
+p_0' & \ u^1 + \\
+(-3 p_0 -2 p_0' + 3 p_1 - p_1') & \ u^2 + \\
+(2 p_0 + p_0' -2 p_1 + p_1') & \ u^3
+\\
+\end{aligned}
+</script>
+Writing it out like this, it should be clear that <script type="math/tex">a_0 = p_0</script>, <script type="math/tex">a_1 = p_0'</script>, etc. Since these are points (vectors) we should boldface them.</p>
+<p>I am not sure if these equations are ever written out like this in the book. The book uses matrix notation for writing out these equations. The connection to matrix notation becomes clearer if we format the equation a little differently:
+<script type="math/tex; mode=display">
+\begin{aligned}
+f(u) =
+( 1\ &p_0 + 0\ p_0'  + 0\ p_1 + 0\ p_1' ) \ u^0 + \\
+( 0\ &p_0 + 1\ p_0'  + 0\ p_1 + 0\ p_1' ) \ u^1 + \\
+(-3\ &p_0 - 2\ p_0'  + 3\ p_1 - 1\ p_1' ) \ u^2 + \\
+( 2\ &p_0 + 1\ p_0'  - 2\ p_1 + 1\ p_1' ) \ u^3 \\
+\\
+\end{aligned}
+</script>
+</p>
+<p>Which lets us write the equation as two matrix-vector multiplies:
+<script type="math/tex; mode=display">
+f(u)=
+\begin{bmatrix}
+u^0 & u^1 & u^2 & u^3
+\end{bmatrix}
+\begin{bmatrix}
+1&0&0&0\\
+0&1&0&0\\
+-3&-2&3&-1\\
+2&1&-2&1
+\end{bmatrix}
+\begin{bmatrix}
+p_0 \\ p_0' \\ p_1 \\ p_1'
+\end{bmatrix}
+</script>
+Note that this is one of the few times in class where I actually do a left-multiply of a row vector with a matrix.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-3-basis-functions">Box 3: Basis Functions</h2>
+<p>We can re-organize the equations from the previous box to group terms by control points, rather than by parameter powers. Note that this is just the equation above, just with the terms regrouped:
+<script type="math/tex; mode=display">
+\begin{aligned}
+f(u) = (1-3u^2+2u^3) & \ p_0 + \\
+(u-2u^2+u^3) & \ p_0' + \\
+(3 u^2-2u^3) & \ p_1 + \\
+(-u^2+u^3) & \ p_1'
+\end{aligned}
+</script>
+</p>
+<p>Notice that we now have a function of u for each control point. We could re-write this as:
+<script type="math/tex; mode=display">
+f(u) = b_0(u)\ p_0 + b_1(u)\ p_0' + b_2(u)\ p_1 + b_3(u)\ p_1'
+</script>
+These new functions are called <strong>basis functions</strong>.</p>
+<p>Basis functions are a very convenient way to write curve equations.</p>
+<p>Polynomial curves can be written as basis functions. Writing them this way makes it clear that we are taking a linear combination of the control points.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-3-cardinal-forms-for-cubics">Box 3: Cardinal forms for Cubics</h2>
+<p>Sometimes, it's inconvenient to have to specify the derivatives (tangent vectors) for cubics. With a <strong>cardinal spline</strong>, we specify a set of points to be interpolated and compute the derivatives at these points as a function of other points. Specifically, for point <script type="math/tex">p_i</script>, we set it's derivative 
+<script type="math/tex">p_i' </script> to be a scaled version of the vector between the next and previous points, so:
+<script type="math/tex; mode=display">
+p_i' = s ( p_{i+1} - p_{i-1} )
+</script>
+for some scaling factor s. For historical reasons, we talk about this scaling factor as the "tension" (t) and compute it as <script type="math/tex"> s = (1-t)/2 </script>.</p>
+<p>For the most common case where t=0, or s=1/2, we call these curves Catmull-Rom splines. The "Catmull" refers to Ed Catmull, who was the founder of Pixar, and invented an amazing number of things in computer graphics (many of which we will learn over the course of the semester).</p>
+<p>Note that with a cardinal spline, to connect between two points (say p1 and p2), we need to have the points before and after these points (p0 and p3).</p>
+<p>Cardinal splines are a simple way to create C(1) continuous, interpolating curves.</p>
+<p>Note that we don't need to derive the equations for cardinal splines. Once we know how to compute the derivatives at each point, we can just use the equations for Hermite forms for each piece of the curve.</p>
+</div>
+<div class="sumbox">
+<h2 id="summary">Summary</h2>
+<p>This introduced the basics of using cubic polynomials. Look in the book to see the details, and the derivations.</p>
+<p>On the <a href="4-arclength.html">next page</a>, we'll discuss arc-length parameterizations. And then on <a href="5-bezier.html">page 5</a> we'll move on to Bezier curves. Bezier curves can be of any degree, but we'll mainly use them as a convenient way to do cubics. For example, Canvas uses cubic Bezier curve segments.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html

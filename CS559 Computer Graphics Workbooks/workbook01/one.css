@@ -1,0 +1,47 @@
+/** CSS file for Workbook 1 - page "one" */
+/** note that CSS files can have comments - using "code style" comments */
+
+/* this defines a style for a class */
+.blueText {
+    color:blue;
+    background-color:lightblue;
+}
+
+/* this defines a style for an ID */
+#blueText {
+    color: blueviolet;
+    background-color: lightpink;
+}
+
+/* a simple box style to play with */
+.onebox {
+    border: 2px solid darkorange;
+    border-radius: 2px;
+    width:150px;
+    padding: 0px 10px 0px 10px;
+    margin: 15px 5px 15px 5px; 
+    background-color: lightgoldenrodyellow;
+    color:darkorange;
+}
+
+/* for playing with the buttons */
+.onebutton {
+    width:100px;
+    height:30px;
+    border-radius: 5px;
+    border: 2px solid black;
+    margin: 8px;
+}
+.onebutton:hover {
+    border: 4px solid black;
+}
+.onebutton:active {
+    color: white;
+    background-color: blue;
+}
+#button12 {
+    background-color: lightgreen;
+}
+#button12:active {
+    background-color: darkgreen;
+}

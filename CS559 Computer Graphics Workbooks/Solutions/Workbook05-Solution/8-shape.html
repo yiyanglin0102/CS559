@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Workbook 5 - Page 8 - Shape Exercises
+</title>
+</header>
+<body>
+<!-- @@MDReplace: SOURCES/8-shape.md -->
+<h1 id="workbook-5-page-8-shape-and-ui-exercises">Workbook 5 - Page 8 - Shape and UI exercises</h1>
+<p>This workbook has two simple exercises to warm up for the bigger programming task on the next page. Do these exercises by editing the file <code>8-shape.js</code></p>
+<div class="examplebox">
+<h2 id="exercise-81-a-picture">Exercise 8.1: A Picture</h2>
+<p>Make a picture in the box below using Canvas drawing commands. Your picture must use curves (cubic Bezier curves - with the Canvas <code>bezierCurveTo</code> function). In the <code>8-shape.js</code> file, put your code into the <code>exercise81</code> function.</p>
+<canvas id="box8-1" width="400px" height="400px"></canvas>
+
+</div>
+<div class="examplebox">
+<h2 id="exercise-82-try-out-the-ui">Exercise 8.2: Try out the UI</h2>
+<p>To write the demos, I wrote some utility routines that augment a Canvas. One is called "runCanvas" - it puts a time slider and a start/stop checkbox on a Canvas. The other is called "dragPoints" - it keeps track of a list of points and allows the user to drag them around.</p>
+<p>With dragPoint, click near a point to drag it. Shift-Click to add a new point (at the end of the list). Ctrl-Click (or Meta-Click on a Mac) to delete a point. DragPoint needs the function you use to redraw the Canvas, and the list of points (it will change it as needed). Your redraw function needs to draw the dots for the points.</p>
+<p>You've actually been using this for a while in my demos. But now, make sure you can use the code. Have a draw function that connects the points into a polygon. You also should draw circles for the points so you know where to click. Change the initial value for the points so the program draws a hexagon when it is loaded.</p>
+<canvas id="box8-2" width="400px" height="400px"></canvas>
+
+</div>
+<div class="sumbox">
+<h2 id="summary-on-to-the-train">Summary: On to the train!</h2>
+<p>That was a warmup for the real programming task: the train on <a href="9-train.html">page 9</a>.</p>
+</div>
+<script type="module" src="8-shape.js"></script>
+<!-- @@EndMDReplace: -->
+</body>
+</html

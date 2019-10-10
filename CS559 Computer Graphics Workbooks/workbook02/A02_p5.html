@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+    <!--
+        Workbook 2 for CS559 - Page 45 -
+        started January 2019, by Michael Gleicher
+
+        students are allowed (and) encouraged to read the HTML source files!
+
+        (however, this one is boring - you can just look at it in the browser)
+        but you need to edit the associated JavaScript file A02_p5.js
+    -->
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Assignment 02-05: Make your own interaction</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="Libs/style559.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="Libs/pygments.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="a02.css" />
+</head>
+<body>
+
+    <!-- @@MDReplace: NOT_FOR_STUDENTS/A02_p5.md -->
+<h1>Workbook 2, page 5: Try Canvas Programming</h1>
+<p>This workbook has two programming exercises.</p>
+<p>The first one is required. Completing it correctly is part of
+"completing" the workbook.</p>
+<p>The second one is optional. Doing it correctly gets you bonus points.
+You cannot get bonus points for exercise 2 if you don't have a solution
+to exercise 1.</p>
+<p>You should do these exercises by editing the file "A02_p5.js",
+we've actually started things for you.
+specifically, your code for exercise 1 should go into the function
+<code>wb2_pg5_ex1</code>, and your code for exercise 2 should go into the function
+<code>wb2_pg5_ex2</code>. Please put all of your code inside of these functions!</p>
+    <!-- @@EndMDReplace -->
+
+    <div id="box1" class="examplebox">
+        <!-- @@MDReplace: NOT_FOR_STUDENTS/A02_p5_1.md -->
+<h2>Exercise 1: Canvas Event Programming</h2>
+<p>In the Canvas element box (with id <code>ex1canvas</code>) inside this box, please
+give the following behavior:</p>
+<ol>
+<li>
+<p>When the user clicks in the element, a circle appears under the mouse.
+Circles get added (so the user can make lots of circles).</p>
+</li>
+<li>
+<p>If a circle is under the mouse, it changes color.</p>
+</li>
+</ol>
+<p>All of your code for this exercise should go into the function <code>wb2_pg5_ex1</code>
+in the file <code>A02_p5.js</code> - we've started things for you.</p>
+<p><strong>Hints:</strong></p>
+<ul>
+<li>The examples on page 4 should give you lots of ideas. Those did rectangles, not circles. But a lot of other things are the same.</li>
+<li>You will need to keep a list of circles (so you can check if the mouse is inside of them)</li>
+<li>You can do this in a purely event driven style (using <code>onclick</code> and <code>onmousemove</code>) or with an animation loop</li>
+<li>You can make the circles all the same size (pick a radius - like 10 pixels)</li>
+<li>You can decide if the mouse is over a circle by checking to see if the distance between the mouse and the center of the circle is less than the circle's radius</li>
+<li>Making the behavior correct at the edge of the box is hard, since you may not get <code>mousemove</code> events when the mouse is outside the box.</li>
+<li>Get part 1 to work first (making circles on click). Then get part 2 to work.</li>
+<li>Getting the mouse position relative to the element requires knowing where the element is. Read the example code on page 4 to see a way to do this.</li>
+</ul>
+        <!-- @@EndMDReplace -->
+        <canvas id="ex1canvas" height="400px" width="400px"></canvas>
+    </div>
+
+    <div id="box2" class="examplebox">
+        <!-- @@MDReplace: NOT_FOR_STUDENTS/A02_p5_2.md -->
+<h2>Exercise 2: Fireworks</h2>
+<p>This is a <em>bonus</em> exercise: if you do it correctly, you will get bonus
+points. But don't try it until you get exercise 1 working.</p>
+<p>And put all your code into the function <code>wb2_pg5_ex2</code>.</p>
+<p>Your job is to make something that looks like simple fireworks.</p>
+<ol>
+<li>When the user clicks the mouse in the rectangle, a circle starts at the bottom edge of the screen and travels to the mouse position.</li>
+<li>When the circle gets to the position of the click, it changes to a bunch of small squares that start moving outward from that position. They move until they get to the edge of the screen (or they can "fade out") after a while.</li>
+<li>You need to be able to have multiple fireworks happening at the same time (the user should be able to click to shoot a new one before the first one is done).</li>
+</ol>
+<p>You can start simple and add extra, more complex things:</p>
+<ul>
+<li>have the circles start at random locations on the ground (but make sure they "explode" at the mouse positions)</li>
+<li>add some random fireworks in addition to the ones created by clicks</li>
+<li>randomize the colors (so each firework is a different color)</li>
+<li>make things follow projectile motion (have downward acceleration due to gravity)</li>
+<li>or other creative things (although, the "shooting at the mouse position and having it explode there" is a requirement)</li>
+</ul>
+<p>Roughly, you will get 1 bonus point for #1 (shooting circles to specific locations), 1 bonus point for #2 (having them "explode" at that location), and more points for extra features and creativity.</p>
+        <!-- @@EndMDReplace -->
+        <canvas id="ex2canvas" height="400px" width="400px"></canvas>
+    </div>
+
+    <div id="sumbox" class="sumbox">
+        <!-- @@MDReplace: NOT_FOR_STUDENTS/A02_p5_sum.md -->
+<h2>Summary: Canvas Exercises</h2>
+<p>That's the main programming part for this week, however, on <a href="a02_p6.html">page 6</a> we
+have one last detail to discuss.</p>
+        <!-- @@EndMDReplace -->
+    </div>
+
+    <script src="A02_p5.js" type="module"></script>
+</body>
+</html>

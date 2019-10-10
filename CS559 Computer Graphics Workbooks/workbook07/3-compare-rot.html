@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Page 7-3: Comparing Incremental Rotations
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/3-compare-rot.md -->
+<h1 id="page-7-3-comparing-incremental-rotations">Page 7-3: Comparing Incremental Rotations</h1>
+<div class="examplebox">
+<h2 id="box-1-a-simple-example-that-isnt-so-simple">Box 1: A simple example that isn't so simple</h2>
+<p>The real learning goal of this page is to get you to think about axis angle representations. But to do that, I'll use the example we looked at in class: trying to understand what is going on in the first spinning cube demo we did (in class, but also in Workbook 6 on the first page).</p>
+<p>The code is in <code>3-compare-simple.js</code> (it's the same as in lecture, and on page 1 of workbook 6). The key lines are:</p>
+<div class="codehilite"><pre><span></span><span class="kd">function</span> <span class="nx">animate</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">cube</span><span class="p">.</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">x</span> <span class="o">+=</span> <span class="mf">0.01</span><span class="p">;</span>
+    <span class="nx">cube</span><span class="p">.</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">z</span> <span class="o">+=</span> <span class="mf">0.01</span><span class="p">;</span>
+    <span class="nx">renderer</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span> <span class="nx">scene</span><span class="p">,</span> <span class="nx">camera</span> <span class="p">);</span>
+    <span class="nx">requestAnimationFrame</span><span class="p">(</span> <span class="nx">animate</span> <span class="p">);</span>
+<span class="p">}</span>
+<span class="nx">animate</span><span class="p">();</span>
+</pre></div>
+
+
+<div id="simple" style="width: 50%"></div>
+<p>Notice that this animation loop causes a somewhat wobbly and complicated motion, even though it moves through a simple progression in Euler Angles (.01,0,.01), (.02,0,.02), ... THREE's built in Euler Angles are XYZ.</p>
+<p>What is going on here is that each time we change the X rotation, which changes the meaning of the Z rotation. So we don't get a simple motion as we might have liked.</p>
+<p>For the first Euler angles, that first step would be: <script type="math/tex"> R_x(.01) \circ R_z(.01) </script> (rotation about X followed by a rotation about Z). If we wanted to continue another step, we could repeat that, composing those same rotations again.
+<script type="math/tex; mode=display">
+R_x(.01) \circ R_z(.01) \circ R_x(.01) \circ R_z(.01) \neq R_x(.01+.01) \circ R_z(.01 + .01)
+</script>
+The left side of that inequality would be uniform steps. The right side is what we did when we just added to the Euler Angles. Since you read <a href="1-rotations.html">page one</a>, you were reminded that just because <script type="math/tex">R_x(a) \circ R_x(b) = R_x(a+b)</script>, this doesn't work when there's a rotation about Z stuck in between.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-a-simpler-rotation">Box 2: A Simpler Rotation</h2>
+<p>What if we wanted to keep rotating in the direction we started rotating in on that first step? We could on every frame apply the transformations. We could change the two angle additions to:</p>
+<div class="codehilite"><pre><span></span><span class="nx">cube</span><span class="p">.</span><span class="nx">rotateX</span><span class="p">(</span><span class="mf">.01</span><span class="p">);</span>
+<span class="nx">cube</span><span class="p">.</span><span class="nx">rotateZ</span><span class="p">(</span><span class="mf">.01</span><span class="p">);</span>
+</pre></div>
+
+
+<p>But a thing to note is that this does not lead to a simple progression of the Euler Angles. In fact, after the second step, we would get a configuration that requires a bit of the Y rotation.</p>
+<p>We can think of this as follows: the sequence of rotations <script type="math/tex">R_x(.01)</script> and <script type="math/tex">R_z(.01)</script> is equivalent to a single rotation about some other axis. (The Axis is the vector (.712,-0.0178,.712) if you really want to know - but I'll explain how to figure that out in a moment).</p>
+<p>So, if we wanted to just keep spinning around that axis, we could instead write</p>
+<div class="codehilite"><pre><span></span><span class="nx">cube</span><span class="p">.</span><span class="nx">rotateOnAxis</span><span class="p">(</span><span class="nx">axis</span><span class="p">,</span><span class="nx">angle</span><span class="p">);</span>
+</pre></div>
+
+
+<p>where <code>axis</code> is the vector we figured out before, and angle is an amount to rotate about that axis.</p>
+<p>In the demo below, you can see these three different versions. For the Euler addition thing, you can see it wobbling all over the place. For the two rotation composition motions, you see the same consistent motion around an axis. I've drawn the axis as a white line to make it clearer. I've computed <code>axis</code> and <code>angle</code> to be the same step as the Euler increment. Over the course of many steps, you'll see they become a little bit different because of rounding errors.</p>
+<p>Try starting from zero and going a step at a time. On the first step, all three are the same. But after that, notice how on each step, the Euler incrementing version has a simple increment of the Euler Angles, but the axis angle representation changes (the axis changes on each frame). In contrast, the other two (which, as expected, have the same motion) keep the same axis and step around it uniformly.</p>
+<p>Now, you might wonder, given the Euler angles (like the step increment above) how do I convert it to axis angle? The good news is that THREE has a lot of code to help with doing these conversions. However, for this specific one, I first need to convert to a different form (called a <em>Quaternion</em>), because this is what THREE supports the best. In the code (file <code>3-compare-rot.js</code>, by the way), you can see a function called "axisAngle" that converts an Euler Angle to axis angle form. It will make sense after we talk about Quaternions on the next page.</p>
+<p>However, play with the rotation toy below before going on to the <a href="4-quaternions.html">next page</a> to learn about Quaternions.</p>
+</div>
+<div class="examplebox">
+<p>After playing with the incremental comparison toy, go on to the <a href="4-quaternions.html">next page</a> where we'll see how we extend axis angle representations into Unit Quaternions.</p>
+</div>
+<script src="THREE/three.js"></script>
+
+<script src="THREE/OrbitControls.js"></script>
+
+<script src="3-compare-simple.js" type="module"></script>
+
+<script src="3-compare-rot.js" type="module"></script>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

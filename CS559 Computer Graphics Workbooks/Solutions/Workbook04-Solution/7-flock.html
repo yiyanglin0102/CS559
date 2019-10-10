@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<header>
+  <title>WB4: 7-Flock: Student Flocking Assignment</title>
+  <link rel="stylesheet" href="Libs/style559.css">
+</header>
+<body>
+  <canvas id="flock" height="600px" width="600px" style="border:2px solid black"></canvas><br>
+  <input type="range" width="100px" min="0" max="5" step=".1" value="2" id="speed"></input><br>
+  <button id="add">Add 10</button><button id="clear">Clear</button><br>
+  
+  This slider controls the maximum angle the Boids can turn (in radian):<br>
+  Maximum angle: <input type="range" width="100px" min="0.02" max="3.14" step="0.01" value="0.3" id="max_angle"></input><br>
+  This slider contros the maximum radius the Boids can "see" (in px) and determines which Boids count as "nearby neighbors":<br>
+  Maximum radius: <input type="range" width="100px" min="10" max="300" step="1" value="150" id="nearby_distance"></input><br>
+  These buttons provide example configurations of the weights below:<br>
+  <button id ="alignment">Only Alignment</button>
+  <button id ="separation">Only Separation</button>
+  <button id ="cohesion">Only Cohesion</button>
+  <button id ="chasing">Only Chasing</button>
+  <button id ="mouse">Only Mouse Down</button>
+  <button id ="balanced">Balanced</button>
+  <button id ="none">None</button><br>
+  These sliders control the amount of steering due to alignment, separation, cohesion and mouse click (and hold):<br>
+  Alignment weight: <input type="range" width="100px" min="0" max="1" step=".1" value="0" id="weight_alignment"></input><br>
+  Separation weight: <input type="range" width="100px" min="0" max="1" step=".1" value="0" id="weight_separation"></input><br>
+  Cohesion weight: <input type="range" width="100px" min="0" max="1" step=".1" value="0" id="weight_cohesion"></input><br>
+  Chasing weight: <input type="range" width="100px" min="0" max="1" step=".1" value="0" id="weight_chasing"></input><br>
+  Mouse weight: <input type="range" width="100px" min="0" max="1" step=".1" value="0" id="weight_mouse"></input><br>
+  <script src="flock.js" type="module"></script>
+</body>
+</html>

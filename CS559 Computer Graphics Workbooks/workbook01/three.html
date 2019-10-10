@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+
+<!--
+    Workbook 1 for CS559 - Page 3 (three.html) -
+    written January 2019, by Michael Gleicher
+
+    students are allowed (and) encouraged to read the HTML source files!
+-->
+
+<header>
+    <meta charset="UTF-8">
+    <!-- use the CS559 Style Sheet -->
+    <link rel="stylesheet" href="Libs/style559.css">
+    <title>
+        Assignment 01-03: Getting Started - Changing the Page (Page Three)
+    </title>
+</header>
+
+<body>
+    <!-- the next line is a comment that directs how the 559 file management software works -->
+    <!-- @@MDReplace: NOT_FOR_STUDENTS/three.md -->
+<p>On the previous page, we saw a little bit of JavaScript
+and saw how it can be attached to a web page.</p>
+<p>On this page, we'll continue. We'll use JavaScript to change
+page content, and make buttons and sliders do things.</p>
+<p>The real goal is to learn the ideas of event-driven and
+animation-loop-driven programming. 
+Soon, we'll use these two programming styles to write graphics
+programs. But for now, we'll just use them to do silly things
+with the contents of a simple web page.</p>
+<p>In the process, we'll get to see buttons, sliders, and animation.</p>
+<p>The things we're doing on this page are simple and/or silly, but the idea is
+to practice on easy things before getting to doing graphics
+(next week!). </p>
+<p>For this page, all of the JavaScript code is in a single file
+called "three.js" (not to be confused with the three.js library)
+that we'll put everything for all the boxes in. Again, be sure
+to read along in the code what you see in the web page.</p>
+<p>Like the previous pages, this one doesn't ask you to do much other
+than to read. However, you might want to change things to see
+what happens when you make changes. Remember, if you mess things
+up, you can always use GIT to help you get back to an older version.</p>
+    <!-- @@EndMDReplace -->
+
+    <div id="box1" class="examplebox">
+        <h2>Box 1: Changing the page</h2>
+        <p>
+            JavaScript has complete access to the web page. It can read and write to it.
+            To make this easier, we need to name parts so we can find them.
+            So, I can <span id="box1-span">put text into the HTML that you won't see!</span>
+        </p>
+        <p>
+            If you look at the HTML, you'll see what is in the HTML is not what you
+            see on the screen, because the JavaScript code finds the text and changes it.
+            The initial text (in the HTML file) appeared, but it was changed so fast
+            that you never got to see it. (it might have been changed so fast that It
+            never actually showed on the screen). This might be a good excuse to practice with
+            the debugger again: stop the program before the statement that changes the text,
+            and you'll see what the page was like before - then step and see how it gets
+            changed.
+        </p>
+    </div>
+    <div id="box2" class="examplebox">
+        <H2>Box 2: Button Events</H2>
+        <p>
+            We saw this on the last page, but when a button is clicked
+            it calls the <code>onclick</code> handler.
+            More generally, when something happens (to almost any element),
+            it creates an event.
+            We can tie a function (called a handler) to the event, and do things
+            when the event happens.
+            In these examples, I will have some buttons, and have the handlers change
+            things on the web page.
+            Be sure to look at the HTML and JavaScript to see what is going on.
+            There is a lot of discussion in the comments
+        </p>
+        <div>
+            <button id="box2-button1" class="simplebutton">1</button>
+            <button id="box2-button2" class="simplebutton">2</button>
+            <button id="box2-button3" class="simplebutton">3</button>
+        </div>
+        <ul>
+            <li id="box2-li1">Button 1 was not pressed yet</li>
+            <li id="box2-li2">Button 2 was not pressed yet</li>
+            <li id="box2-li3">Button 3 was not pressed yet</li>
+        </ul>
+        <p>
+            An obvious, but important thing here is that our code only gets
+            run when an event happens. Otherwise, we don't do anything.
+            This is called <em>event-driven</em> programming.
+        </p>
+        <p>
+            Different kinds of HTML elements generate differnt kinds of events.
+        </p>
+    </div>
+    <div id="box3" class="examplebox">
+        <H2>Box 3: Slider Events</H2>
+        <p>
+            Just like buttons, sliders generate different kinds of events.
+            With each of these sliders, I am catching a different event.
+            See if you can figure out the difference.
+        </p>
+        <div>
+            <input id="box3-slider1" type="range" min="0" max="100" step="1"><br />
+            <input id="box3-slider2" type="range" min="0" max="100" step="1"><br />
+            <input id="box3-slider3" type="range" min="0" max="100" step="1"><br />
+        </div>
+        <ul>
+                <li id="box3-li1">Slider 1 was not used yet</li>
+                <li id="box3-li2">Slider 2 was not used yet</li>
+                <li id="box3-li3">Slider 3 was not used yet</li>
+            </ul>
+       </div>
+    <div id="box4" class="examplebox">
+        <H2>Box 4: Sliders as Outputs</H2>
+        <p>
+            It's useful that sliders are both inputs and outputs - if you set
+            the value of a slider, it changes it. Observe (and look at the code).
+        </p>
+        <div>
+            <input id="box4-slider1" type="range" min="0" max="100" step="1"><br />
+            <input id="box4-slider2" type="range" min="0" max="100" step="1"><br />
+        </div>
+    </div>
+    <div id="box5" class="examplebox">
+        <H2>Box 5: Animation and RequestAnimationFrame</H2>
+        <p>
+            Thus far, we can do things in response to the user.
+            Our code runs in response to an event happening.
+            This is important in the web browser, because we want the browser to do
+            other things, rather than just waiting around for the user to happen.
+            Therefore, most web programming is event-based.
+        </p>
+        <p>
+            But what happens if we want things to happen without the user doing anything?
+            For example, when we want to animate something (have it move on its own).
+        </p>
+        <p>
+            We might make a loop - having things move each step, over and over until its
+            done. This is bad because we have to handle events in the loop. (or ignore the user)
+        </p>
+        <p>
+            Instead, the web paradigm is to use events - but have events that are not tied to
+            user actions. Our program requests an event some time in the future.
+        </p>
+        <p>
+            <code>RequestAnimationFrame</code> requests an "event" for the next
+            screen redraw - it's basically saying "call me in approximately 16ms"
+            (if something happens every 16 milliseconds, that means it happens 60 times per second, which is a common target rate).
+        </p>
+        <p>
+            This is now.
+            <span id="box5-rs1">This will be changed in the future.</span>
+            You probably never saw that change (since it happened a few ms)
+            after the document finished loading.
+        </p>
+        <p>Here we'll chain two of them. <span id="box5-rs2"></span></p>
+        <p>
+            Note that the timings on those might be weird: the browser might have
+            had other work to do (like loading the page), so it might take it a while
+            before it generates the event.
+        </p>
+        <p>
+            Here's a more typical use of <code>requestAnimationFrame</code>,
+            every time we finish one change, we schedule the next. Look at the code.
+        </p>
+        <p>
+            <input type="range" min="0" max="100" id="box5-slider">
+        </p>
+    </div>
+    <div id="box6" class="examplebox">
+        <H2>Box 6: Animation Loop Programming</H2>
+        <p>
+            Here is another example.
+            Notice how the first slider doesn't need
+            to ever create an event. When the second slider
+            is updated, it polls the first (looks at its value).
+        </p>
+        <p>
+            Change the first slider to affect how the second one moves.
+        </p>
+        <p>
+            <input type="range" min="-5" max="5" value="1" id="box6-slider1">
+            <input type="range" min="0" max="100" id="box6-slider2">
+        </p>
+        <p>
+            Or with a checkbox (buttons are mainly good at generating events):
+        </p>
+        <p>
+            speed: <input type="checkbox" id="box6-check">
+            <input type="range" min="0" max="100" id="box6-slider3">
+        </p>
+        <p>
+            Or, even this.... (which isn't that much different)
+        </p>
+        <p>
+            go: <input type="checkbox" id="box6-check2">
+            <input type="range" min="0" max="100" id="box6-slider4">
+        </p>
+        <p>
+            The thing to notice here is that the "loop" runs even if
+            the slider isn't moving! In this case, it's pretty wasteful.
+            But it gets at the main idea of animation loop programming:
+            the loop keeps going, and each iteration it checks to see if
+            something happened. In contrast, event-loop programming only
+            does things when something happens.
+        </p>
+    </div>
+    <div id="box7" class="examplebox">
+        <h2>Box 7: one more silly example</h2>
+        <p>
+            Of course, in an animation loop we don't have to limit ourselves to moving sliders.
+            We can change anything (in the future, we'll change graphics).
+        </p>
+        <p>
+            Also, we will often put all of our "changes" into a single function, so there
+            is only one <code>requestAnimationFrame</code>. That function might call other functions.
+        </p>
+        <p>
+            And, since we don't know how fast the loop will go (since the browser might do some
+            work between calls, or the stuff we do might take some time), we need to look at the
+            actual "clock time" to make sure that things go at the right speed.
+        </p>
+        <p>
+            Here's a silly example where I make something blink (the hard way). The trick is I want
+            it to change color every 250ms (not faster). Look at the code.
+            <span id="box7-span1">Some text to blink</span>
+        </p>
+        <p>
+            OK, that was horrible. Let me try to see if
+            <span id="box7-span2">this is any better?</span>
+            Or, maybe <span id="box7-span3">even this one</span>
+        </p>
+        <p>
+            Those are all really annoying looking - I'll let you try something better
+            on the next page...
+        </p>
+    </div>
+    <div id="sumbox" class="examplebox">
+        <H2>Summary:</H2>
+        <p>
+            Some important things in this lesson:
+        </p>
+        <UL>
+            <li>The difference between event-driven and polling (animation-loop)
+                programming.
+            </li>
+            <li>
+                How we do animation loops and even handling in JavaScript for HTML.
+            </li>
+            <li>
+                How we make use of the values of input elements (sliders, buttons)
+                in animation loop programs.
+            </li>
+            <li>
+                How we look at the "clock time" to set the rate at which things change.
+            </li>
+        </UL>
+        <p>
+            Next week, we'll use these ideas for graphics programming. But for this week,
+            go on to <a href="four.html">page 4</a> where you can try this out for yourself.
+        </p>
+    </div>
+    <!-- now run the JavaScript - be sure to load as a module so it works as ES6 -->
+    <script src="three.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Workbook 6, Page 6: Materials
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/6-Materials.md -->
+<h1 id="workbook-6-page-6-materials">Workbook 6, Page 6: Materials</h1>
+<div class="examplebox">
+<h2 id="box-1-materials">Box 1: Materials</h2>
+<p>Materials are the abstraction in THREE that controls how the shapes look - what colors the pixels of the triangles ultimately are shown in the resulting image.</p>
+<p>In the future, we'll learn about how Materials contains programs that tell the graphics hardware how to color each pixel. And we'll see how we can make new materials by writing programs for the hardware.</p>
+<p>For now, we should notice a few parts of what materials can do:</p>
+<ol>
+<li>Materials can have a color. In the future, we'll see how we can use materials to give objects multiple colors.</li>
+<li>Materials can react with lights. The color that we see in the image is the interaction of the lights and the material (and is affected by the object shape).</li>
+<li>Materials can provide advanced effects that consider other objects - such as shadows and reflections. But we aren't doing to do that now. Materials provide <strong>local</strong> effects - the color of the point depends only on that point (and the lights), not what happens at other points. And they sometime provide global effects (light shadows and reflections) that depend on other objects.</li>
+</ol>
+<p>So, for now, think about materials as things like "shiny red plastic" or "wood with blue (matte or not-shiny) paint". In the future, we can add other things like woodgrain patterns and mirror reflections.</p>
+<p>One thing to notice: because Materials have the programs the hardware uses for coloring pixels, they are specialized to the kind of objects being drawn. Since we will always be drawing meshes, we'll use the Mesh materials.</p>
+</div>
+<div class="examplebox">
+<h2 id="threes-built-in-materials">THREE's built in Materials</h2>
+<p>THREE provides a bunch of built in materials. Again, notice these all are for use with <code>Mesh</code> objects. Here are the ones we'll focus on for now:</p>
+<ul>
+<li>BasicMaterial - (actually class <code>MeshBasicMaterial</code>) colors the pixels with the object's color, ignores lighting.</li>
+<li><code>MeshLambertMaterial</code> - computes a simple dull appearance. We'll learn the math in class. Note: this material only computes the lighting at the vertices, so it may not give expected results on large polygons.</li>
+<li><code>MeshPhongMaterial</code> - this uses the classic lighting model that we have taught in graphics classes historically. We'll learn the math for this one. It lets us control various aspects of the appearance.</li>
+<li><code>MeshStandardMaterial</code> -  a fancier material that is easier to control than the Phong model (determine the parameters to get specific appearances). Since we don't have to implement it ourselves, we might as well use the fancier thing since it looks better. It has lots of parameters to control advanced effects.</li>
+<li><code>MeshPhysicalMaterial</code> - an even fancier material.</li>
+</ul>
+<p>There are two special materials (<code>MeshDepthMaterial</code> and <code>MeshNormalMaterial</code>) that are useful for debugging. They show object properties in the colors.</p>
+<p>Materials have different properties (like color or shininess). Those properties can be set either for the whole object, or can be provided as a "map" that allows us to control how different parts of the object look. For now, we won't consider maps - we'll learn about them later in the class.</p>
+<p>Here are the main properties of <code>MeshStandardMaterial</code> that we will use to get different appearances (see the <a href="https://threejs.org/docs/#api/en/materials/MeshStandardMaterial">documentation</a> for a full list):</p>
+<ul>
+<li><code>color</code></li>
+<li><code>emissive</code> - this is basically the "ambient lighting"</li>
+<li><code>metalness</code> - is the material metallic or not</li>
+<li><code>roughness</code> - how shiny is the object</li>
+</ul>
+<p>In the exercise, you can try these out.</p>
+</div>
+<div class="examplebox">
+<h2 id="exercise-materials">Exercise: Materials</h2>
+<p>Make each sphere have a different, non-white, material. Use different settings of <code>MeshStandardMaterial</code>. Experiment with different values to get different appearances. To get the points for this exercise, the materials should be non-white, and should appear different. Note: there is a point light source near (but to the right of) the camera and a directional light source shining down (both lights are white).</p>
+<p>All you need to change are the 9 materials. The program is in <code>6-materials.js</code>.</p>
+<div id="materials"></div>
+<script src="THREE/three.js"></script>
+<script src="THREE/OrbitControls.js"></script>
+<script src="6-Materials.js" type="module"></script>
+
+</div>
+<div class="sumbox">
+<p>We'll discuss animation on the <a href="7-Animation.html">next page</a> a little before moving on to the programming parts.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+    <!--
+        Workbook 2 for CS559 - Page 4 -
+        written January 2019, by Michael Gleicher
+
+        students are allowed (and) encouraged to read the HTML source files!
+
+        (however, this one is boring - you can just look at it in the browser)
+    -->
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Assignment 02-04: Animation and Interaction with Canvas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="Libs/style559.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="Libs/pygments.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="a02.css" />
+</head>
+<body>
+    
+    <!-- @@MDReplace: NOT_FOR_STUDENTS/A02_p4.md -->
+<h1>Workbook 2, Page 4: Animation and Interaction with Canvas</h1>
+<p>Back on <a href="A02_p1.html">page one</a> we saw animation with Canvas and SVG,
+and interaction with SVG. Now we will look at animation and
+interaction with Canvas in more detail.</p>
+<p>The tricky thing is that with Canvas, we don't store the objects.
+That means we don't have anything to change - it's up to the program
+to keep track of things and adjust them accordingly.
+Similarly, for interactions, there are no objects to generate events.
+The graphics "objects" only exist in our program, so we are responsible
+for creating events.</p>
+<p>We'll look at some implications of needing to represent objects in
+our own programs on this page.</p>
+    <!-- @@EndMDReplace -->
+
+    <div id="box1" class="examplebox">
+    <!-- @@MDReplace: NOT_FOR_STUDENTS/A02_p4_1.md -->
+<h2>Box 1: Animation with Canvas</h2>
+<p>When we animate, we need to change the image for each "frame".
+With SVG, we modify the elements that change - and the picture gets
+updated accordingly.
+With Canvas, we have to update the picture ourselves.</p>
+<p>In general, we will do this by (1) clearing the canvas and (2) redrawing
+everything. Notice that this is wasteful: we redraw things that didn't change.
+If we really care about performance, we would try to figure out what
+changed and only change those parts.
+With graphics, figuring out what changed and only changing those parts can be
+hard (especially with 3D).
+For example, moving one object might let us see new things behind.
+The complexity of keeping track of what has changed may outweigh the extra
+effort to redraw things that didn't change.</p>
+<p>In almost all cases in this class, we will just clear the whole canvas
+and draw everything. We'll just be careful to try to make "drawing everything"
+as fast as possible (which can be easier, since we don't need to think about
+what not to draw).</p>
+<p>So, if you notice that things are wasteful, you're being observant.</p>
+<p>Here's an example (that we will come back to later):</p>
+<canvas id="box1canvas" width="240px" height="90px"></canvas>
+
+<p><svg id="box1svg" width="240px" height="90px"></svg></p>
+<p>Notice that we can use the same animation loop for both elements.
+Notice how for the Canvas, we clear the canvas and redraw everything.
+For SVG, we only change the things that move (it may or may not decide
+to redraw everything)</p>
+    <!-- @@EndMDReplace -->
+    </div>
+    
+    <div id="box2" class="examplebox">
+    <!-- @@MDReplace: NOT_FOR_STUDENTS/A02_p4_2.md -->
+<h2>Box 2: Events for Canvas</h2>
+<p>With SVG, because the graphics elements are HTML element, we
+can assign events to them. In this example, 
+I will handle all the <code>onclick</code> events for each of the objects.
+(try clicking on the rectangles - you can even click on the moving one!).</p>
+<p><svg id="box2svg" width="240px" height="90px"></svg></p>
+<p>With Canvas, this is much trickier, because the only element is the
+Canvas element itself! We need to figure out where the mouse is,
+and then check each object to see if it should get the event, and then
+do the appropriate thing.</p>
+<p>To make this easier, we'll change how we write the code.
+If you look at the drawing function for box1, the rectangles
+are not actually represented (except in the code).
+Instead, we'll make objects for each rectangle so we'll have a list
+of them. We'll use this list for drawing, and we'll also use this
+list for doing other things.</p>
+<p>The list of objects is sometimes called a <strong>display list.</strong></p>
+<canvas id="box2canvas" width="240px" height="90px"></canvas>
+
+<p>While the display list idea is simple - keep a list of graphics objects -
+it is worth looking at the implementation since it uses a lot of
+JavaScript tricks.</p>
+<p>If you look at the code, you'll see a drawing routine that takes a
+list of rectangles - and draws them all. The rectangles are stored
+as JavaScript objects - which might seem a little weird if you're
+used to objects in languages like Java or C++. These are generic
+objects - we never define a class. We just stick the member values
+we want into them. So, for example, the line:</p>
+<div class="codehilite"><pre><span></span><span class="nx">box2rects</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">35</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="o">:</span><span class="mi">20</span><span class="p">,</span><span class="s2">&quot;h&quot;</span><span class="o">:</span><span class="mi">20</span><span class="p">,</span><span class="s2">&quot;color&quot;</span><span class="o">:</span><span class="s2">&quot;black&quot;</span><span class="p">});</span>
+</pre></div>
+
+
+<p>makes a new rectangle object (with <code>x=0</code>, <code>y=35</code>, etc.) and puts it
+at the end of the <code>box2rects</code> array.</p>
+<p>Once we have the display list, it is relatively straightforward to
+get the desired event behavior. We have one event handler for the
+Canvas element. This has to figure out where the mouse is
+(which requires us to know where the Canvas element is).
+The function <code>clickRectList</code> then checks this position against
+all of the rectangles.</p>
+<p>Fortunately, all of the objects are rectangles, and checking to see if the
+mouse position is inside of them is easy</p>
+<p>This code is a little bit tricky - so take the time to understand it.</p>
+    <!-- @@EndMDReplace -->
+    </div>
+
+    <div id="box3" class="examplebox">
+    <!-- @@MDReplace: NOT_FOR_STUDENTS/A02_p4_3.md -->
+<h2>Box 3: Interaction without events</h2>
+<p>As long as we have an animation loop running, we can get by without
+events for some things by polling: checking the input device on
+every iteration. </p>
+<p>Move the mouse around inside this canvas:</p>
+<canvas id="box3canvas" height="300px" width="300px"></canvas>
+
+<p>And of course, don't forget a  <button id="box3but">button</button></p>
+<p>Make sure you understand that example (including transparency), but here's a different version (try clicking):</p>
+<canvas id="box3fun" height="300px" width="300px"></canvas>
+
+<p>Be sure to understand how this works - including how we know if the mouse is pressed. 
+Notice how each rectangle not only stores it's position, but also its velocity.
+And also notice that rectangles do get removed - we don't just keep making more.</p>
+<p>You will be required to use all of these ideas on the next page.</p>
+    <!-- @@EndMDReplace -->
+    </div>
+        
+
+    <div id="summary" class="sumbox">
+    <!-- @@MDReplace: NOT_FOR_STUDENTS/A02_p4_sum.md -->
+<h2>Summary: Interaction and Animation with Canvas</h2>
+<p>There are a few big ideas on this page:</p>
+<ol>
+<li>We make <em>display lists</em> to represent graphics objects. If the underlying API does not do it for us, we have to manage it ourselves.</li>
+<li>The web browser likes to work in an event-driven model. If we want to do things in a polling (animation-loop) style, we have to adapt.</li>
+</ol>
+<p>These are concepts we'll use a lot as we make more complicated graphics programs.</p>
+<p>Make sure you understand the code! It not only shows the concepts, but it also uses a lot of JavaScript idioms.</p>
+<p>On the <a href="A02_p5.html">next page</a> we'll let you try doing some of this stuff on your own.</p>
+    <!-- @@EndMDReplace -->
+    </div>
+            
+        
+            
+    <script src="A02_p4.js" type="module"></script>
+</body>
+</html>

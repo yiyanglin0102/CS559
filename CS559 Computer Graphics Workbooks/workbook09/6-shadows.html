@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+
+<title>
+    Page 9-6 - Shadow Maps
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/6-shadows.md -->
+<h1 id="page-9-6-shadow-maps">Page 9-6 - Shadow Maps</h1>
+<div class="examplebox">
+<p>In class, we'll learn how shadow maps work. (maybe not before this workbook is due). Fortunately, you don't have to implement them (there are some tricky details), since they are build into THREE.</p>
+<p>Shadow maps are different than other kinds of maps. They are pictures made from cameras positioned at the light sources. We don't use them for colors (or surface properties), we use them for depth testing (to see if the camera at the light source can see each point in the scene). The lookups are depth tests that turn light on and off. This will be explained in class, and is discussed in Section 11.4.4 of the required reading.</p>
+<p>Implementing shadow maps can be tricky. Fortunately, they are built into THREE.</p>
+<p>THREE makes it pretty easy to use shadow maps. All you need to do is:</p>
+<ol>
+<li>Make sure that your renderer has <code>shadowMapEnabled</code> set to true.</li>
+<li>Make sure that you set the appropriate properties for objects. Some objects should cast shadows, and some objects should receive shadows. You need to use the <code>castShadow</code> and <code>receiveShadow</code> of objects.</li>
+<li>Make sure your lights are set to <code>castShadow</code>. It's easiest to use shadows with spot lights (for reasons we'll discuss in class).</li>
+</ol>
+<p>That's pretty much it. There are plenty of parameters and options you can tune to make things look the way you want.</p>
+<p>For this exercise, all you need to do is make shadows in the scene below. Note: you'll have to make your own spotlight. You are welcome to remove my objects and put in your own. The file is <code>6-shadows.js</code>. Of course, you can use this as an opportunity to experiment with more lights and shadows.</p>
+<p>After you've done this exercise, go on to the <a href="7-multipass.html">last page of the workbook</a>.</p>
+</div>
+<script src="THREE/three.js"></script>
+
+<script src="THREE/OrbitControls.js"></script>
+
+<script src="6-shadows.js" type="module"></script>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

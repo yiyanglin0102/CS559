@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+    <!--
+        Workbook 2 for CS559 - Page 1 File -
+        written January 2019, by Michael Gleicher
+
+        students are allowed (and) encouraged to read the HTML source files!
+
+        (however, this one is boring - you can just look at it in the browser)
+    -->
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Assignment 02-01: Web Graphics APIs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="Libs/style559.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="a02.css" />
+</head>
+<body>
+
+    <!-- @@MDReplace: NOT_FOR_STUDENTS/A02_p1_0.md -->
+<h1>Workbook 2, Page 1: Web Graphics APIs</h1>
+<p>First things first, the "kind" of graphics we will be doing is 
+"object-based" or "vector" or "primitive-based" graphics, as opposed
+to "image-based" graphics. 
+Read the <a href="http://graphics.cs.wisc.edu/WP/cs559-fall2014/2014/08/29/image-based-graphics-vs-object-based-graphics/">Tutorial: Image vs. Object (raster vs. vector)</a>.
+The tutorial is from 2014, but it still applies 
+(except that in class, we won't be doing much image-based graphics).</p>
+<p>For most of this class, we will be doing non-image-based graphics. 
+The other category is harder to name (I used the term "object-based"),
+but the basic idea is that we create pictures not by describing the color
+of each pixel (as image-based graphics would do), but rather by using
+a set of "primitives" (basic objects) that we put together to make pictures.</p>
+<p>For doing (2D) graphics on web pages, there are two main APIs: <em>Canvas</em> and <em>SVG</em>.
+In class, we'll mainly be using Canvas, but we will look at SVG as well.
+For the purposes of this workbook, SVG is important because it represents a
+very different kind of API than Canvas. They both do similar things, 
+but they do it in very different ways.</p>
+<p>The distinction I'd like to make in graphics APIs is <em>immediate</em> vs. <em>retained</em> mode.</p>
+<ul>
+<li>
+<p><strong>Immediate</strong> mode APIs draw immediately. When you make a function call to create, for example, a rectangle, the rectangle gets drawn immediately. The system colors the pixels right away. In practice, you may not see the changes immediately (more on that in a bit). But, when you make a drawing call (like to the rectangle function), conceptually, the system colors the pixels. It forgets why it colored the pixels after its done doing it. <strong>Canvas</strong> is an immediate mode API.</p>
+</li>
+<li>
+<p><strong>Retained</strong> mode APIs create a list of objects that are drawn on demand. Function calls create objects in some storage (e.g., a list of objects), and eventually this list is drawn. The system remembers the objects, and refers to these when coloring the pixels. <strong>SVG</strong> is a retained mode API. Retained mode APIs are sometimes called <em>display-list</em> APIs since they keep a list of things to display.</p>
+</li>
+</ul>
+<p>This distinction will become clearer as we work through some examples. </p>
+    <!-- @@EndMDReplace -->
+
+    <div id="box1" class="examplebox">
+        <h2>Box 1: Graphics Elements</h2>
+        <p>
+        Web pages are made up of elements - like paragraphs, headings, and buttons.
+        To do graphics, we make special elements that give us a rectangular region that
+        we can draw in.
+        For the Canvas API (and actually some other APIs), we create "canvas" elements
+        using the "canvas" tag.
+        For SVGs, we create "svg" elements using the SVG tag.
+        </p>
+
+        <p>
+        Here I will make one of each, side by side (look at the HTML source!):
+        <div>
+            <canvas id="canvas1" width="150px" height="100px" style="border:2px solid #F00"></canvas>
+            <svg id="svg1" width="150px" height="100px" style="border:2px solid #F00"></svg>
+        </div>
+        Note that these are normal HTML elements. We can give them ids (and classes),
+        as well as styling them (here I gave them red borders).
+        In fact, we can use CSS to style them - if you look at the style sheet for this workbook
+        <code>a02.css</code>, you will see that I am styling all of the other ones
+        on this page to have a thin black border.
+        </p>
+        <p>
+            By themselves, these elements are pretty boring - we need to write some
+            JavaScript to make them more interesting.
+            (SVGs will have an alternative, but we'll get to that later)
+        </p>
+        <p>
+          It may not be obvious in these examples, but in both SVG and Canvas,
+          Y is measured downwards - this is different than you might be
+          used to. We'll come back to talk about this later.
+        </p>
+    </div>
+
+    <div id2="box2" class="examplebox">
+        <h2>Box 2: Drawing 2 ways</h2>
+        <p>
+            Now I am going to use those same boxes, but draw in them.
+            The HTML is basically the same as box 1 (except that the style comes from CSS).
+            The difference is that the JavaScript is going to add a rectangle to each.
+            Be sure to go look at the JavaScript in A02_p1.js (which gets loaded at the end).
+        </p>
+        <div>
+            <canvas id="canvas2" width="150px" height="100px" ></canvas>
+            <svg id="svg2" width="150px" height="100px" ></svg>
+        </div>
+        <p>
+            Understanding the details of how each of those works we can do later,
+            but observe the key difference (when you look at the code).
+            In Canvas, we use the "fill" command to fill in the pixels of the
+            rectangle, while in SVG we create a "rect" element and add it to
+            the SVG element.
+        </p>
+        <p>
+            In this simple example, things don't seem too different.
+        </p>
+    </div>
+    <div id="box3" class="examplebox">
+        <h2>Box 3: Moving Squares</h2>
+        <p>
+            Now, let's animate those squares. This is very similar to box 2, except
+            that we'll create an animation loop to move the squares.
+        </p>
+        <div>
+                <canvas id="canvas3" width="150px" height="100px" ></canvas>
+                <svg id="svg3" width="150px" height="100px" ></svg>
+        </div>
+        <p>
+            Have a look at the JavaScript for this box, especially the <code>onTick</code>
+            function that moves things (remember animation loops from Workbook 1?).
+        </p>
+        <p>
+            This example hopefully highlights the difference between the <em>immediate</em> mode
+            API (Canvas) and the <em>retained</em> mode API (SVG).
+            In retained mode, the primitives (in this case the square) are
+            represented as data. To move them, we change the data structure.
+            In immediate mode, the primitives are drawn - they are only represented
+            in the code. To animate things, we need to erase the picture and re-draw
+            the picture.
+        </p>
+        <p>
+            In some ways, immediate mode is easier: we draw what we want, when we
+            want. We can use whatever data structures we want to represent things.
+            In other ways, retained mode is easier: we can created objects, and then
+            alter them as needed.
+        </p>
+    </div>
+    <div id="box4" class="examplebox">
+        <H2>Box 4: Understanding SVG</H2>
+        <p>
+            The basic idea of SVG in the web browser is that each graphics object
+            (like the square) is an HTML element in the DOM - just the same as
+            anything else (paragraphs, buttons, scripts, ...).
+            Adding the rectangle to the SVG element is just like adding a button
+            to a paragraph.
+        </p>
+        <p>
+            Since the graphics elements are just like any other HTML element, we
+            can do the same basic things: assign them an id, give them classes,
+            use style sheets, etc. We can even create them right in the html using
+            tags. They generate events just like many other kinds of HTML elements.
+            Try moving the mouse over the rectangles on the right. Then
+            look into the JavaScript to see that this works just like any other event.
+            Also notice that the classes (where the colors come from) are defined
+            in <code>a02.css</code>.
+            <div>
+                <svg width="150px" height="100px" style="border:1px solid #000">
+                        <rect id="svgrect1" x="30" y="30" width="30" height="30" style="fill:#F00"></rect>
+                        <rect id="svgrect2" x="90" y="50" width="30" height="30" class="lightbluewithborder"></rect>
+                    </svg>
+                <svg width="150px" height="100px" style="border:1px solid #000">
+                    <rect id="svgrect3" x="30" y="30" width="30" height="30" class="lightbluewithborder"></rect>
+                    <rect id="svgrect4" x="90" y="50" width="30" height="30" class="lightbluewithborder"></rect>
+                </svg>
+
+            </div>
+        </p>
+    </div>
+    <div id="sumbox" class="examplebox">
+    <!-- @@MDReplace: NOT_FOR_STUDENTS/A02_p1_sum.md -->
+<h2>Summary: Two APIs</h2>
+<p>On this page, you got to see two different ways to do graphics
+on web pages. One using Canvas (an immediate mode API), and the
+other using SVG (a retained mode API).</p>
+<p>We'll learn to draw something more interesting than a rectangle
+using Canvas in the next pages.</p>
+<p>However, in order to learn more about SVG, you need to look at
+other tutorials. You can start with the tutorials from
+CS559 in 2014 (these are the first two, there will be more for concepts
+in the coming weeks):</p>
+<ul>
+<li><a href="http://graphics.cs.wisc.edu/WP/cs559-fall2014/2014/08/30/getting-started-with-svg/">Tutorial:SVG:1 getting started</a></li>
+<li><a href="http://graphics.cs.wisc.edu/WP/cs559-fall2014/2014/09/04/svg2-coordinate-systems/">Tutorial:SVG:2 coordinates</a></li>
+</ul>
+<p>It seems like in modern browsers, you don't need to use the namespace in html.
+We do use it in the code (see the <code>createElementNS</code> usage in boxes above).</p>
+<p>We will go on to talk more about Canvas on the <a href="A02_p2.html">next page</a>. </p>
+    <!-- @@EndMDReplace -->
+</div>
+    <script src="A02_p1.js" type="module"></script>
+</body>
+</html>

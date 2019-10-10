@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Workbook 6, Page 4: Primitive Objects and Basic Transformations
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/4-ObjectsTransforms.md -->
+<h1 id="workbook-6-page-4-primitive-objects-and-basic-transformations">Workbook 6, Page 4: Primitive Objects and Basic Transformations</h1>
+<div class="examplebox">
+<h2 id="box-1-objects">Box 1: Objects</h2>
+<p>Objects in THREE are subclasses of <a href="https://threejs.org/docs/index.html#api/en/core/Object3D"><code>Object3D</code></a>. This same base class is used for all the things we put into the world: lights, camera, the actual "things" we see.</p>
+<p>The nice part of this is that all objects get the same common functionality.</p>
+<p>The main kind of "thing" we'll put in the world is a <a href="https://threejs.org/docs/index.html#api/en/objects/Mesh"><code>Mesh</code></a>. A Mesh basically is a collection of triangles (in the form of a <code>Geometry object</code>).</p>
+<p>To make a Mesh, we first need to create a <code>Geometry</code> object, and then we can create a <code>Mesh</code> by pairing it with a <code>Material</code>. THREE has many different kinds of <code>Geometry</code> objects built in (such as Boxes, Circles, Cones, Spheres, ...). Look at the Documentation for the list. We can also make our own Geometry by defining the triangles in the correct way. We'll do that later in the class.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-transformations">Box 2: Transformations</h2>
+<p>Objects in 3D have associated transformations as part of the <code>Object3D</code> class. You can read about it <a href="https://threejs.org/docs/#manual/en/introduction/Matrix-transformations">here</a>.</p>
+<p>Each object has its own transformation. The transformation is between the coordinate system of the parent object (so everything is relative). If we place the object in the world, (by adding it to the <code>Scene</code>), the transformation is relative to the world coordinate system.</p>
+<p>Each object has a matrix inside of it that stores its transformation. We can access that matrix. However, we usually don't change the matrix directly: the matrix is computed as needed from the 3 transformations applied to the object: Translate, Scale, and Rotate.</p>
+<p>One slightly confusing thing: objects have both "transformation" functions (that apply transformations to the current transformation) as well as the ability to set the position and/or rotation to a particular value. If you use a <code>translate</code> command, the position gets updated - and the way it is updated is affected by the current rotation. Or, you can just set the position to a particular value.</p>
+<div id="box2"></div>
+
+<p>In this example (see box2 in <code>4-Objects.js</code>), the purple cube is first rotated by 45 degrees, and then its position is set (to have X=2). The position given is the position the object gets. The red cube is also rotated 45 degree, and then undergoes a <code>translateX</code> which causes it to be moved by 2 units along the X axis.  But since the X axis was rotated, the motion is along this direction. The <code>translateX</code> (and its counterparts) all translate in the current coordinate system of the object.</p>
+<p>The ability to either set positions and orientations or apply translations and rotations gives a lot of flexibility. Sometimes its easier to describe how you want the object to move, other times its easier to specify where you want it to be.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-3-loading-objects">Box 3: Loading Objects</h2>
+<p>If we want an object that isn't built in, THREE gives us the ability to load it from a file.</p>
+<p>A common file format for 3D models (as collections of triangles) is the <code>obj</code> file format. The THREE loader is part of their "examples" - we include it in the parts of THREE we provide for class, but the documentation isn't very complete.</p>
+<p>The trick with loading an object is that it may take time. So when we start the loader, we also provide a function that gets called when loading is finished. This function needs to set the object up (put it into the scene, position and scale it, ...). Here's an example (see <code>box3</code>):</p>
+<div id="box3"></div>
+
+<p>The relevant code:</p>
+<div class="codehilite"><pre><span></span>    <span class="kd">let</span> <span class="nx">loader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">OBJLoader</span><span class="p">();</span>
+    <span class="nx">loader</span><span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="s1">&#39;OBJ/astronaut.obj&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">astronaut</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="nx">astronaut</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+            <span class="nx">astronaut</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">);</span>
+            <span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">astronaut</span><span class="p">);</span>
+            <span class="c1">// note that we have to render </span>
+            <span class="nx">renderer</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">scene</span><span class="p">,</span> <span class="nx">camera</span><span class="p">);</span>
+        <span class="p">});</span>
+</pre></div>
+
+
+<p>Notice that this code creates a loader, and then asks the loader to load the file <code>OBJ/Astronaut.obj</code>. In this call it passes another (anonymous) function that will be called when loading is complete. This function is passed the loaded object. Note how the function positions the object (setting its position), scales it, and places it into the scene. We didn't have to rotate the object since it was already oriented the right way. Also, notice that we have to do the <code>render</code> to draw the object <strong>after</strong> the object is loaded.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-exercise-4-stacking-boxes">Box: Exercise 4: Stacking Boxes</h2>
+<p>In the <code>4-Objects-ex.js</code> file, there is a scene that has 5 boxes. Change the positions of the boxes so they are a stack (with the smaller boxes on top of the bigger boxes). Pay attention to both the initial sizes of the boxes and their scaling. The result should be a stack of 5 boxes on top of the ground (each box on top of the next larger box).</p>
+<div id="boxex"></div>
+<script src="4-Objects-ex.js" type="module"></script>
+
+
+</div>
+<div class="sumbox">
+<p>Now that we have objects, let's discuss the cameras and lights on <a href="5-LightsCamera.html">Page 5</a>.</p>
+</div>
+<script src="THREE/three.js"></script>
+
+<script src="THREE/OrbitControls.js"></script>
+
+<script src="THREE/OBJLoader.js"></script>
+
+<script src="4-Objects.js" type="module"></script>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

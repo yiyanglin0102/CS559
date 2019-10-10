@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Workbook 5 - Page 4: Arclength Parameterizations
+</title>
+</header>
+<body>
+<!-- @@MDReplace: SOURCES/4-arclength.md -->
+<h1 id="4-arc-length-parameterizations">4: Arc-Length Parameterizations</h1>
+<p>Arc length parameterization is discussed in Section 15.1.1 of Fundamentals of Computer Graphics - but this is a more intuition based description.</p>
+<div class="examplebox">
+<h2 id="box-1-arc-length-and-non-arc-length">Box 1: Arc-length and non-arc length</h2>
+<p>We usually like to define our parameterizations such that each piece goes from 0 to 1. But this means that if we move at a constant speed in the parameter, the pen would move at a variable speed. An arc-length parameterization is a parameterization where the pen moves at a constant speed even if the parameter does.</p>
+<p>For an example, consider a set of line segments that go around a rectangle. Let the 4 corners be <strong>p0, p1, p2</strong> and <strong>p3</strong>, and let the rectangle be (20,20) to (120,40) (so it is 20 pixels high and 100 pixels wide). The most obvious parameterization has each line segment with a unit parameterization. The top segment would be 0-1, the right segment would be 1-2, the bottom segment would be 2-3, and the left segment will be 3-4. Each segment takes the same amount of "parameter", so if we change u at a constant rate, the pen will be moving 5 times faster in the horizontal segments than in the vertical ones. This is the red dot in the animation. (click the checkbox to start the animation, or scrub with the slider)</p>
+<canvas width="280px" height="120px" id="arc1"></canvas>
+
+<p>The green dot takes the same amount of time (t=0 to 4) to move around the rectangle, but it moves at a constant speed on the screen.</p>
+<p>A way to think about it: consider measuring distance along the curve (starting at the zero point). The total curve (the perimeter of the rectangle) is 240 units. We can measure how far we've moved along the curve (from 0 at the start to 240 when we complete the loop). We could use this distance as the parameter (interpreting the parameter as "move this many distance units along the curve"). This is an <em>arc-length parameterization.</em> Because we're measuring distance with the parameter, if we move a certain amount of parameter, we will always move the same amount of distance along the curve.</p>
+<p>Of course, we can scale things so that the units of distance match the range we have of the parameter - we can scale the parameter that goes from 0-4 so that each unit of parameter means 60 units of distance. But, the speed remains constant as we go around the rectangle. Each animation step is .05 units of parameter, and goes 3 pixels of distance (60 * .05). This is the same if we're on a long horizontal, or a short vertical. In contrast, using the per-segment parameterization, the speed was 5 pixels per step on the horizontals (100 * .05), and 1 pixel per step on the verticals (20 * .05).</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-another-arc-length-example">Box 2: Another Arc-Length Example</h2>
+<p>Here's an even simpler example: a single, straight line segment in 1D. We have two parameterizations: f(u)=u and g(u)=u*u. Since u is in the range 0 to 1, both begin and end in the same place, and sweep out the same set of points (if we took infinitely small steps). With the two functions, the "pen" traces out the same curve (a line), but with different timings.</p>
+<canvas width="340px" height="40px" id="arc2"></canvas>
+
+<p>You should note that f (red dot) is an arc-length parameterization, while g (green dot) is not. F moves at a constant rate (assuming a constant rate for u), and g starts out slowly and speeds up.</p>
+<p>The speed of the pen (how fast the dot moves for a given change in the parameter) is determined by the magnitude of the derivative of the position with respect to the parameter. For an arc-length parameterization, this is constant. Note that <script type="math/tex"> \partial f / \partial u = 1 </script> - so f has the same derivative everywhere, so it meets this definition. In contrast, <script type="math/tex"> \partial g / \partial u = 2u </script> which depends on u, and therefore changes as we move around the curve.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-3-arc-length-re-parameterizations">Box 3: Arc Length Re-Parameterizations</h2>
+<p>Arc-length parameterizations are often useful, especially when we are doing animation and want to have things move at a constant speed. However, it is usually easier to define curves in a way that is not an arc-length parameterization. We can then get an arc-length parameterization by <em>re-parameterizing</em>, define a function that converts from an arc-length parameterization to the given parameterization.</p>
+<p>For example, in box 2, we could define a "reparameterization function" <script type="math/tex"> u=\sqrt{s}</script> that allows us to convert an arc-length parameterization of the line into the parameterization given by the function g.</p>
+<p>For a polyline (a connected set of line segments, as in Box 1), we can implement re-parameterization by building a table. For different values of the parameter (I'll use t as the parameter that goes from 0-4, and u as the parameter that goes from 0-1 for each individual segment), we can compute its distance from the start:</p>
+<table>
+<thead>
+<tr>
+<th>t</th>
+<th>distance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>100</td>
+</tr>
+<tr>
+<td>2</td>
+<td>120</td>
+</tr>
+<tr>
+<td>3</td>
+<td>220</td>
+</tr>
+<tr>
+<td>4</td>
+<td>240</td>
+</tr>
+</tbody>
+</table>
+<p>Now, given a distance, we can figure out the appropriate value of t. For example, if we want to know the parameter value for s=170, we can see that it falls between 120 and 220 in the table. Since it's half-way between 120 and 220, we know that it should be half-way between the corresponding t values (since we are doing linear interpolation). So, s=170 corresponds to t=2.5.</p>
+<p>This works out easily for line segments, since we know that linear interpolation works (half-way in distance is half-way in parameter space), and that we only need entries in the table for the break points (where we switch segments), since linear interpolation holds between them.</p>
+<p>For more complicated, non-linear functions, we can approximate the reparameterization function by sampling: we pick a set of values for t, compute the positions for each of these parameter values (which we can do because we have the parametric function), and then use the polyline connecting these points to approximate the distance. The larger the number of values of t we sample, the better the approximation that we get.</p>
+<p>Here's an example for a parabola <script type="math/tex">f(u)=(100*u,100*u^2)</script>:</p>
+<table>
+<thead>
+<tr>
+<th>t</th>
+<th>x</th>
+<th>y</th>
+<th>distance (to previous)</th>
+<th>total distance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>N/A</td>
+<td>0</td>
+</tr>
+<tr>
+<td>.2</td>
+<td>20</td>
+<td>4</td>
+<td>20.4</td>
+<td>20.4</td>
+</tr>
+<tr>
+<td>.4</td>
+<td>40</td>
+<td>16</td>
+<td>23.3</td>
+<td>43.7</td>
+</tr>
+<tr>
+<td>.6</td>
+<td>60</td>
+<td>36</td>
+<td>28.3</td>
+<td>72.0</td>
+</tr>
+<tr>
+<td>.8</td>
+<td>80</td>
+<td>64</td>
+<td>34.4</td>
+<td>106.4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>100</td>
+<td>100</td>
+<td>41.2</td>
+<td>147.6</td>
+</tr>
+</tbody>
+</table>
+<p>If we wanted to know where halfway in distance was (s=147.6/2=73.8), we look it up in the table and see that it's between t=.6 and t=.8. Since it is (73.8-72)/(106.4-72)=.052 of the way between rows, we can approximate that as .052*.2 (.2 is the step between rows of t)+.6 = .61.</p>
+<p>You'll get to try implementing this to arc-length parameterize the train track when you get to the end of the workbook.</p>
+</div>
+<div class="examplebox">
+<h2 id="exercise-arc-length-parameterize-me">Exercise: Arc Length Parameterize Me!</h2>
+<p>Function <code>myTri</code> in <code>4-arclength.js</code> goes around a 5,12,13 right triangle, but not in an arc-length parameterization. That's the red dot. Fill in the function <code>myTriAL</code> that goes around the same triangle, but with an arc length parameterization. You only need to modify <code>myTriAL</code>. You may use other functions defined in the file.</p>
+<canvas id="arcex" height="140px" width="280px"></canvas>
+
+</div>
+<div class="sumbox">
+<h2 id="summary-arc-length-parameterization">Summary: Arc-Length Parameterization</h2>
+<p>Hopefully, you now have an intuition for what arc-length parameterization is, so you can read the mathematical definition in the textbook, and implement it for your train (when you get there).</p>
+<p>Now, on to <a href="5-bezier.html">Page 5</a>!</p>
+</div>
+<script type="module" src="4-arclength.js"></script>
+<!-- @@EndMDReplace: -->
+</body>
+</html

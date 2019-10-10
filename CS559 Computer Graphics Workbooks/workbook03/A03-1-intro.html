@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+    <!--
+        Workbook 3 for CS559 - page one -
+        written January 2019, by Michael Gleicher
+
+        students are allowed (and) encouraged to read the HTML source files!
+
+        (however, this one is boring - you can just look at it in the browser)
+    -->
+
+<header>
+        <meta charset="UTF-8">
+        <!-- use the CS559 Style Sheet -->
+        <link rel="stylesheet" href="Libs/style559.css">
+        <link rel="stylesheet" href="a03.css">
+        <link rel="stylesheet" href="Libs/pygments.css">
+        <title>
+            Assignment 03: Index Page
+        </title>
+</header>
+<body>
+    <!-- @@MDReplace: SOURCES/intro.md -->
+<h2>Workbook 3 - page 1, Translate Transformations</h2>
+<p>In the previous workbook, we commented on the idea of a coordinate system (you may want to review the <a href="http://graphics.cs.wisc.edu/WP/tutorials/points-vectors-and-coordinate-systems-why-are-points-and-vectors-different/">Tutorial: Points, Vectors, Coordinates</a>). Recall that in Canvas and SVG, we interpret a coordinate (x,y) by starting at the top left corner of the canvas element and measuring x units ("html pixels") to the right, and y units down.</p>
+<p>The JavaScript for this page is in <code>A03-1-intro.js</code> - you will want to read it as you read the text.
+The HTML is not so important.</p>
+<div class="examplebox" id="box1">
+<h2>Box 1: The idea of transformation</h2>
+<p>Let's start with a really simple example.</p>
+<p>Here, I'll draw a simple object: a square with a triangle inside of it. Notice that this shape involves two primitives (a square and a triangle), 7 "points" (the corners of the 2 polygons), and a whole bunch of pixels (all the pixels that get colored when things get drawn).</p>
+<canvas id="i01" width="150px" height="60px"></canvas>
+
+<p>Which is drawn with pretty simple code:</p>
+<div class="codehilite"><pre><span></span><span class="kd">function</span> <span class="nx">drawTriSquare</span><span class="p">(</span><span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">fillStyle</span> <span class="o">=</span> <span class="s2">&quot;goldenrod&quot;</span><span class="p">;</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">fillRect</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">fillStyle</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span><span class="p">;</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span><span class="mi">25</span><span class="p">);</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span><span class="mi">35</span><span class="p">);</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="mi">35</span><span class="p">,</span><span class="mi">30</span><span class="p">);</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">fill</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Now, suppose that I want to move this shape around with a slider. I need to redraw it in different positions. I don't need to move all the pixels (since we figure them out from the points), but I do need to move all the points.</p>
+<p>Let me show you two ways to do this. Be sure to look at the JavaScript file as well.</p>
+<p><input id="sl01" type="range" min="0" max="90" value="0"></input></p>
+<h3>Way 1: Parametric Geometry</h3>
+<p>The obvious way to do this is to just replace every position in our code with a parameter so we can move it around:</p>
+<canvas id="i01-1" width="150px" height="60px"></canvas>
+
+
+<div class="codehilite"><pre><span></span><span class="kd">function</span> <span class="nx">drawTriSquareParameter</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span><span class="nx">xval</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">fillStyle</span> <span class="o">=</span> <span class="s2">&quot;goldenrod&quot;</span><span class="p">;</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">fillRect</span><span class="p">(</span><span class="mi">20</span><span class="o">+</span><span class="nx">xval</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">fillStyle</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span><span class="p">;</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="mi">25</span><span class="o">+</span><span class="nx">xval</span><span class="p">,</span><span class="mi">25</span><span class="p">);</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="mi">25</span><span class="o">+</span><span class="nx">xval</span><span class="p">,</span><span class="mi">35</span><span class="p">);</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="mi">35</span><span class="o">+</span><span class="nx">xval</span><span class="p">,</span><span class="mi">30</span><span class="p">);</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">fill</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Notice that I had to (carefully) change every <code>x</code> coordinate in the code to use a new x value. Each coordinate <code>(x,y)</code> was changed to <code>(x+xval,y)</code>.</p>
+<h3>Way 2: Transformations</h3>
+<p>Instead, rather than moving the points, we move the coordinate system.</p>
+<canvas id="i01-2" width="150px" height="60px"></canvas>
+
+
+<div class="codehilite"><pre><span></span><span class="kd">function</span> <span class="nx">drawTriSquareTransform</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span><span class="nx">xval</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">translate</span><span class="p">(</span><span class="nx">xval</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+    <span class="nx">drawTriSquare</span><span class="p">(</span><span class="nx">context</span><span class="p">);</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">restore</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>This code deserves careful understanding, from the inside out.</p>
+<ul>
+<li>Notice that it calls <code>drawTriSquare</code> - the original drawing code from the beginning which draws the shape at the "default" position. I didn't need to change that code at all. It just draws things with the same coordinates as it used in the original example. When we switch to a different Canvas, we get a different coordinate system. We will move the coordinate system so that things end up in the right place.</li>
+<li>The line that says <code>translate(xval,0)</code> moves the origin of the coordinate system <code>xval</code> units along the X axis (of the coordinate system). This means that things that are drawn will be drawn into this (updated) coordinate system. The coordinate (0,0) is no longer the top left corner of the Canvas: it is <code>xval</code> units to the right (since the X axis is going to the right in the original coordinate system).</li>
+<li>We encountered <code>save</code> and <code>restore</code> in the last workbook. The coordinate system is part of the context (just like the styles we used in Workbook 2). We need to <code>save</code> the current context before we make changes so that we can return the context to its original state. Because <code>translate</code> tells how much to move the coordinate system, if we don't put it back to where we started, each time we apply the translation, the movements will add up.</li>
+</ul>
+<p>You can think about <code>translate</code> as applying an addition of the translation amount to each of the coordinates that are used for drawing. All drawing commands take coordinates and apply the "current translation" to it before using it. This is built in to all the drawing commands. Part of the context is to keep track of the "current translation."</p>
+<p>More generally, translate is a specific type of <strong>transformation</strong>. A transformation is a function that takes a point and returns a new point. So, <code>translate(a,b)</code> can be thought of as a function <code>f(x,y) =&gt; (x+a,y+b)</code>. This function is applied to all coordinates when we're drawing.</p>
+<p>However, we can also think of <code>translate</code> (or any transformation) as changing the <em>coordinate system</em> that we use to interpret the coordinates for drawing. For various reasons (that may not be obvious until you've been doing graphics for a while), this is a more convenient way to think about things.</p>
+</div>
+<div class="examplebox" id="box2">
+<h2>Box 2: Repeat after me...</h2>
+<p>Remember: <code>translate</code> moves the current coordinate system (relative to the current coordinate system). Understanding this idea is important. Try to understand it now, when we're dealing with a single, simple transformation (translation). Soon, we add more types.</p>
+<p>Because transformations (including translate) change the <em>current</em> coordinate system, they combine (this is known as <em>composition</em>). If you move the coordinate system to the right, and then you move it to the right again, you've moved it twice as much to the right.</p>
+<p>Also, because we can make many different coordinate systems, we can draw the same object multiple times. With translation, we can make it appear in different places. In the future, we can create other differences. Look at this example:</p>
+<canvas id="i02" width="180px" height="60px"></canvas>
+
+
+<div class="codehilite"><pre><span></span>    <span class="nx">drawTriSquare</span><span class="p">(</span><span class="nx">context2</span><span class="p">);</span>
+    <span class="nx">context2</span><span class="p">.</span><span class="nx">translate</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+    <span class="nx">drawTriSquare</span><span class="p">(</span><span class="nx">context2</span><span class="p">);</span>
+    <span class="nx">context2</span><span class="p">.</span><span class="nx">translate</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+    <span class="nx">drawTriSquare</span><span class="p">(</span><span class="nx">context2</span><span class="p">);</span>
+    <span class="nx">context2</span><span class="p">.</span><span class="nx">translate</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+    <span class="nx">drawTriSquare</span><span class="p">(</span><span class="nx">context2</span><span class="p">);</span>
+</pre></div>
+
+
+<p>Notice how in the code, the translations add (since I don't save and restore). We'll discuss this more in Box 4 below.</p>
+<p>This idea of re-using the same "object" over and over is known as <strong>instancing</strong>. Here, the object is only represented in code (since we're using an immediate mode API). Later, we'll see it in a retained mode API. Either way, we define it once, and re-use it over and over.</p>
+</div>
+<div class="examplebox" id="box3">
+<h2>Box 3: Using Transformations for Convenient Coordinates</h2>
+<p>Right from the beginning we saw the advantages of working in convenient coordinates. The fact that we program in Canvas relative to the Canvas element (instead of the coordinate system of the window) means we don't need to worry about where on the screen the Canvas element is.</p>
+<p>Don't take this concept for granted: the ability to work in convenient coordinate systems is really important. It becomes <em>useful</em> because we can change coordinate systems easily.</p>
+<p>Often, it is useful to define objects such that the object origin is at 0,0. This way, all coordinates in the object's definition at relative to the object. When the object is placed into some other coordinate system, things will get moved appropriately.</p>
+<p>So, from the original example, you might notice that the "object" of the triangle in square is positioned at 20,20. The insides had to be positioned relative to that (I had to know 25,25 was the corner of the triangle).</p>
+<p>Instead, we have a convention that all objects are drawn with their origin at 0,0. This makes it easier to define objects, but also to use them. There is still a question of where the "origin" should be (for this example, I'll call it the upper left of the square). So, we can do:</p>
+<canvas id="i03" width="180px" height="180px"></canvas>
+
+<p>For this one, you have to go look at the code. But make sure you understand why this one uses save and restore, while Box 2 did not.</p>
+<p>Also, this example uses JavaScript modules. This is a good opportunity to learn about them. Read about them in your favorite JavaScript book, or try <a href="https://github.com/nzakas/understandinges6/blob/master/manuscript/13-Modules.md">this chapter in Understanding ES6</a>.</p>
+</div>
+<div class="examplebox" id="box4">
+<h2>Box 4: Multiple Translations</h2>
+<p>We aren't limited to just one translation. After we do a first translation, we can do a second translation, and a third, and so forth.</p>
+<p>The way to think about this: the first translation moves the initial coordinate system. The second translation moves that coordinate system (the result of the first movement). The third translation moves that coordinate system. And so forth. Using the paper analogy... each translation moves the piece of paper from wherever it is. When we draw, we draw on the piece of paper wherever it is.</p>
+<p>We already took advantage of that in the code above (Box 2), where I translated, drew something, translated again, drew some more. You can think of this as keeping your pen in the same place and moving the piece of paper.</p>
+<p>The process of combining transformations is called <strong>composition.</strong> When we apply one transformation after the other, the result is the composition of the two.</p>
+<p>When the transformations are translation, the composition process is simple: we just add things up. Since addition is commutative (remember that word from high school algebra?), the order that we do the additions (or translations) doesn't matter. However, this is not true for transformations in general. When we start to combine transformations we will see cases where order matters.</p>
+</div>
+<div class="examplebox" id="boxe">
+<h2>Exercise 1: Fix my code</h2>
+<p>The canvas has a triangle in it. When the button is pressed, the triangle should move to the right.
+When the button is released, the triangle should move to its original position. Right now, each time it jumps farther to the right!</p>
+<p>Understand why the initial code is wrong (it's in the A03-1-intro.js file) and does what it does.
+Fix it without using negative numbers. Note: if you move the mouse outside of the button, the <code>mouseup</code> event is missed. You don't have to fix that problem.</p>
+<p><button id="boxe-jump">Jump Right</button><canvas id="boxe-canvas" height="40px" width="150px"></p>
+<p>You should only change the <code>boxEdraw</code> function, and not use negative numbers.</p>
+<p>SPOILER HINT: (read this only after trying to fix it yourself). Remember that the translation is part of the drawing context. We need to worry about save and restore.</p>
+<p>Even if you needed the hint, the grader will check that you made this work correctly.</p>
+</div>
+<div class="sumbox" id="summary">
+<h2>Summary - Transformations and Coordinate Systems</h2>
+<p>Hopefully, you now have an idea of what we mean by using transformations to change the coordinate system.
+We only did simple changes (moving the coordinate system with <code>translate</code>), but we'll see some other transformations next, and why these things are so useful.</p>
+<p>On to <a href="A03-2-scale.html">page two</a>!</p>
+</div>
+    <!-- @@EndMDReplace: -->
+    
+    <script src="A03-1-intro.js" type="module"></script>
+</body>
+</html>

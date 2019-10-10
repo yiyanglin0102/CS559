@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Page 7-2: Euler Angles Toy
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/2-euler-toy.md -->
+<h1 id="page-7-2-euler-angles-toy">Page 7-2: Euler Angles Toy</h1>
+<div class="examplebox">
+<h2 id="box-1-euler-angles">Box 1: Euler Angles</h2>
+<p>We use the term "Euler Angles" to refer to the representation of a 3D rotation as a sequence of 3 rotations about fixed axes. For example, we can represent a rotation in 3D as a sequence of 3 rotations: one about the X axis, one about the Y axis, and one about the Z axis. The important point is these axes are <strong>fixed:</strong> we decide them ahead of time. I have chosen X, Y then Z. Once I've chosen them, I need to stick with these 3 axes in this order.</p>
+<p>This representation comes from a theorem that mathematician Leonhard Euler had: <em>any</em> rotation in 3D can be represented as a sequence of rotations about fixed axes. The theorem is very general: any set of axes can work (providing no two consecutive axes are parallel).</p>
+<p>Once we choose a convention (a set of axes and their order), we only need 3 numbers to represent an arbitrary 3D rotation: the amount of rotation around each axis.</p>
+<p>A thing that makes Euler Angles tricky is that the different rotations interact. The first rotation changes the coordinate system (frame) that the next rotation takes place in, so we need to interpret each of the angles with respect to the others. If only one of the axes is non-zero, things are easy.</p>
+<p>In class, we showed a bunch of complicated situations that come up :</p>
+<ol>
+<li>In some circumstances, you can get into a configuration where there are only two possible directions to rotate (you can cause a particular change to happen). This is called <strong>gimbal lock.</strong> For XYZ Euler angles this occurs when the rotation about the Y axis is 90 degrees, causing the X axis to align with the Z axis (and perform the same motion).</li>
+<li>Different sets of angles may represent the same rotation. That means that interpolating between two close things might lead to weird paths, or that comparing sets of angles is hard.</li>
+<li>In general, it can be hard to know what changes to the different rotations will do.</li>
+</ol>
+<p>To demonstrate these things in class, I built an interactive toy. I've included it at the bottom of this page. While you are welcome to read the code, I don't recommend it. You should play with the toy to see how Euler angles work.</p>
+<p>In the view, you'll see three objects. For the ones on the left and right, there is a choice drop down to let you choose the axes and their order. Then you can use the sliders to adjust the angles and see what happens. There are buttons that put things into gimbal lock, and another one that creates two rotations that are the same rotations, but with very different parameters - interpolation between the two yields a crazy path. The center object will interpolate between the left and right (but only if they are using the same axes and order).</p>
+<p>I recommend that you spend some time playing with the Euler Angle toy (below) to build up your intuitions about how Euler Angles work, and the problems they have.</p>
+<p>Then you can move on to the <a href="3-compare-rot.html">next page</a> to consider some alternatives.</p>
+</div>
+<script src="THREE/three.js"></script>
+
+<script src="THREE/OrbitControls.js"></script>
+
+<script src="2-euler-toy.js" type="module"></script>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

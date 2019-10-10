@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Page 8-1 - Meshes: What you need to know
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/1-meshes.md -->
+<h1 id="page-8-1-meshes-what-you-need-to-know">Page 8-1 - Meshes: What you need to know</h1>
+<p>We discussed meshes in class. Here are the things you need to know.</p>
+<div class="examplebox">
+<h2 id="box-1-mesh-concepts">Box 1: Mesh Concepts</h2>
+<p>The main concepts you need to know (from class):</p>
+<ul>
+<li>What is a mesh (as a collection of triangles)</li>
+<li>Why we avoid "Triangle Soup"</li>
+<li>What is a good mesh<ul>
+<li>avoiding T-Junctions</li>
+<li>good triangles</li>
+<li>consistent orientations</li>
+</ul>
+</li>
+<li>Indexing vertices for efficiency</li>
+<li>Vertex and Face Properties</li>
+<li>The need for Vertex Sharing</li>
+<li>The need for fancy representations<ul>
+<li>You don't need to know a fancy representation (like Winged-Edge) but you should have a sense why they are important.</li>
+</ul>
+</li>
+<li>Efficiency tricks (strips and fans)<ul>
+<li>We'll only touch on these briefly</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="examplebox">
+<h2 id="box-2-meshes-in-threejs">Box 2: Meshes in THREE.js</h2>
+<p>Confusingly, THREE.JS uses the term <a href="https://threejs.org/docs/#api/en/core/Geometry">Geometry</a> to mean a collection of triangles, and uses the term <a href="https://threejs.org/docs/#api/en/objects/Mesh">Mesh</a> to mean a Geometry (collection of triangles) that has a material associated with it, and all of the other stuff that a "Graphics Object" has (e.g., transformations and hierarchy). A THREE <code>Mesh</code> "has-a" <code>Geometry</code>, but a <code>Geometry</code> is the collection of triangles that is more like the common graphics usage of the term.</p>
+<p>Three has two types of Geometry. The regular <code>Geometry</code> class and the <code>BufferGeometry</code> class. We can't really talk about <code>BufferGeometry</code> until we learn about buffers, so we'll use regular old <code>Geometry</code> for now. A warning: most examples in THREE use <code>BufferGeometry</code>, so it can be hard to find good examples. The examples in this workbook should be good enough to help you get started.</p>
+<p><code>Geometry</code> stores a Mesh as vertex-indexed set of faces (where the faces are triangles). The <code>Geometry</code> class <a href="https://threejs.org/docs/#api/en/core/Geometry">(documentation)</a> stores a list of vertices (as <code>Vector3</code> positions). It also stores a list of Faces (as <a href="https://threejs.org/docs/#api/en/core/Face3"><code>Face3</code></a>). Each face, refers to 3 vertices (by their index in the vertex array).</p>
+<p>Faces have properties you would expect - like a color and a normal. However, they also contain properties of the vertices (colors and normals). This allows for "vertex splitting" (the same vertex can have different properties for different faces). Vertices don't have properties like color or normals by themselves (only inside of faces). To make things more confusing, texture coordinates (which are properties of vertices that are split like colors and normals) are stored in a completely different manner.</p>
+<p>THREE has materials specifically designed to work with meshes. If you want materials such as <code>MeshStandardMaterial</code> to use vertex or face colors, you need to tell it to do so. As far as I can tell, if you tell <code>MeshStandardMaterial</code> that you want to use vertex colors, but you provide face colors instead, that's OK. Vertex colors override face colors (if you are in vertex color mode).</p>
+<p>For normals, you can provide a normal for either the face or for each vertex on the face. THREE has a way to automatically compute the face normals (so they are normal to the triangle).</p>
+</div>
+<div class="examplebox">
+<h2 id="box-3-example-mesh-colors">Box 3: Example: Mesh Colors</h2>
+<p>In this example, I've made a Mesh (<code>Geometry</code>) with two triangles. For the first one, it uses the material color (yellow). For the second one, I've given it face colors. For the third, I'm using vertex colors.</p>
+<div id="color-tris"></div>
+
+<p>Be sure to read the code in <code>1-colortriangles.js</code> and understand how the meshes are put together.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-4-example-mesh-normals">Box 4: Example: Mesh Normals</h2>
+<p>This example uses the same two triangles. Except that this time, the normals are done differently for each of the 3 versions. On the left, THREE  computes the normals for me (see the line <code>geometry.computeFaceNormals();</code>). In the middle one, I assign each vertex on each face a normal value. This is the same normal that would have been computed for each triangle. The triangle on the right has the vertices in the middle (along the edge between the two triangles) pointing forward - to give the same normals as if it were a smooth, curved piece (rather than two triangles with a crease). Because the lights are on the sides, the middle of this object is dark. But, as you move it, notice your the lighting behaves as if this were a curved object.</p>
+<div id="normal-tris"></div>
+
+<p>Be sure to read the code in <code>1-normaltriangles.js</code> and understand how the meshes are put together.</p>
+</div>
+<div class="sumbox">
+<h2 id="summary-meshes">Summary: Meshes</h2>
+<p>This is a reminder of what we learned about Meshes, and an example of how to make a very simple one (with two triangles). On the <a href="2-mesh-exercise.html">next page</a>, you'll get to try to make a more interesting mesh.</p>
+</div>
+<script src="THREE/three.js"></script>
+
+<script src="THREE/OrbitControls.js"></script>
+
+<script src="1-colortriangles.js" type="module"></script>
+
+<script src="1-normaltriangles.js" type="module"></script>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

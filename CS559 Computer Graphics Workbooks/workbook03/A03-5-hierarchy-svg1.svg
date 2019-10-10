@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="300px" width="300px" viewBox="-100 -100 200 200">
+<!-- create the group - draw it untransformed so its not in a def -->
+<g id="square">
+    <rect x="-10" y="-10" height="20" width="20" fill="#cab2d6" stroke-width="0" />
+    <polygon points="0,0 0,-10, 10,0" fill="#6a3d9a" stroke-width="0" />
+    <rect x="-10" y="-10" height="20" width="20" fill="None" stroke-width="3" />
+</g>
+<!-- the same two transformations, just in different order -->
+<use transform="translate(50,0) rotate(45)" stroke="blue" xlink:href="#square" />
+<use transform="rotate(45) translate(50,0)" stroke="green" xlink:href="#square" />
+</svg>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Workbook 6, Page 2: Elements of 3D Graphics Programming
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/2-3D.md -->
+<h1 id="workbook-6-page-2-elements-of-3d-graphics-programming">Workbook 6, Page 2: Elements of 3D Graphics Programming</h1>
+<p>On this page, we'll try to understand what those programs on the prior page actually did. This page is somewhat redundant with all of the THREE.js tutorials out there, but I am going to try to organize it to emphasize how the things that we need to do in the API will connect with the graphics concepts we'll learn about in class (and exist no matter what the API is).</p>
+<div class="warnbox">
+<p><strong>Warning:</strong> In order to make THREE work nicely with Visual Studio Code's TypeScript type checker, I have to use a different name for the THREE library (this is discussed in Box 2 of <a href="1-three.html">page 1</a>). For this workbook, I am using <code>T</code> since it is short to type. So when you read the code or in the snippets on this page, you'll see <code>T.method</code> rather than <code>THREE.method</code>. </p>
+</div>
+<div class="examplebox">
+<h2 id="box-1-elements-of-3d-drawing">Box 1: Elements of 3D Drawing</h2>
+<p>THREE.js is a scene-graph API, like SVG. We create pictures by creating "scenes" with graphics objects in them. We animate those scenes by altering the objects.</p>
+<p>To draw in 3D with a scene graph API we need to have the following pieces in place:</p>
+<ol>
+<li>We need to create a space on the screen that we can draw into. In THREE, this is called a <strong>renderer.</strong> The renderer not only contains a Canvas element (to give us a rectangle on the web page), it also keeps track of all the information about how drawing will happen.</li>
+<li>We need to define the transformation between the 3D space of the world and the 2D space of the Canvas we're drawing into. In THREE this is called a <strong>camera.</strong> The main thing the camera does is provide a transformation between the 3D coordinates of the world and the 2D coordinates of the Canvas. In graphics, this is sometimes called the Viewing Transformation.</li>
+<li>We need to have a scene in which we store graphics objects. THREE calls this the <strong>scene</strong>.</li>
+<li>We need to create graphics objects. THREE calls these <strong>Objects</strong>. Almost always, the objects we draw are collections of triangles. Collections of triangles are called <strong>Meshes.</strong> In THREE, there is a notion of the definition of the shape of the triangles, called a <strong>Geometry</strong> which we then use in a Mesh object.</li>
+<li>We need to know what the appearance of the object is. In graphics, we often describe appearance as the <em>material</em> that the object is made out of. In THREE, they call these <strong>Materials</strong> as well.</li>
+<li>Since most kinds of materials can only be seen if there is a light source shining on them, we need to place lights in our scene - otherwise we'll just have a dark image!</li>
+</ol>
+<p>So, basically, in order to do anything, we need to be able to do those six steps. THREE has nice abstractions for all of them. Different APIs may do things differently, but all six of those pieces need to be in place.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-the-most-basic-drawing">Box 2: The most basic drawing</h2>
+<p>OK, here's the simplest picture I can make:
+<div id="b2div"></div></p>
+<p>Here's the code (it's in function <code>box2</code> in <code>2-3D.js</code>):</p>
+<div class="codehilite"><pre><span></span>  <span class="c1">// create the window that we want to draw into - this will</span>
+  <span class="c1">// create a Canvas element - we&#39;ll set it to be</span>
+  <span class="kd">let</span> <span class="nx">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">WebGLRenderer</span><span class="p">();</span>
+  <span class="nx">renderer</span><span class="p">.</span><span class="nx">setSize</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">200</span><span class="p">);</span>
+  <span class="c1">// put the canvas into the DOM</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;b2div&quot;</span><span class="p">).</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">renderer</span><span class="p">.</span><span class="nx">domElement</span><span class="p">);</span>
+
+  <span class="c1">// make a &quot;scene&quot; - a world to put the box into</span>
+  <span class="kd">let</span> <span class="nx">scene</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">Scene</span><span class="p">();</span>
+
+  <span class="c1">// This transforms the world to the view</span>
+  <span class="c1">// in this case a simple scaling</span>
+  <span class="kd">let</span> <span class="nx">camera</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">OrthographicCamera</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+
+  <span class="c1">// we are going to make our box out of green &quot;stuff&quot;</span>
+  <span class="c1">// this green stuff shows up as green even if there is no lighting</span>
+  <span class="kd">var</span> <span class="nx">material</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">(</span> <span class="p">{</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0x00ff00</span> <span class="p">}</span> <span class="p">);</span>
+
+  <span class="c1">// make a box - note that we make the geometry (a collection of triangles)</span>
+  <span class="c1">// and then make a mesh object out of that geometry - which attaches the</span>
+  <span class="c1">// triangles to a material</span>
+  <span class="kd">let</span> <span class="nx">geometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">BoxGeometry</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">mesh</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">geometry</span><span class="p">,</span> <span class="nx">material</span><span class="p">);</span>
+
+  <span class="c1">// now we need to put that box into the world</span>
+  <span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">mesh</span><span class="p">);</span>
+
+  <span class="c1">// now we just need to draw the scene with the camera</span>
+  <span class="nx">renderer</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span> <span class="nx">scene</span><span class="p">,</span> <span class="nx">camera</span> <span class="p">);</span>
+</pre></div>
+
+
+<p>In this picture, we use a <code>BasicMaterial</code> which shows up as its given color, ignoring any lighting.</p>
+<p>The viewing transform is set by <code>OrthographicCamera</code> which basically scales the X and Y axis to fit the Canvas. We set the range of x from -2 to 2 and y from -2 to 2. The center is at the center of the window (since we go from -2 to 2), and y is up (-2 is top). We also map the range of z from -2 to 2. The negative Z axis goes into the screen (so we have a right handed coordinate system).</p>
+<p>The box geometry has sides of length 1. By default, the box is placed with its center at the origin.</p>
+<p>The mesh attaches the geometry to a material, making an object, that we place into the scene.</p>
+<p>The <code>renderer.render</code> call draws the scene using the camera.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-3-is-this-really-3d">Box 3: Is this really 3D?</h2>
+<p>I could have drawn the same square using the 2D canvas. How can I convince you this is really 3D?</p>
+<p>In this picture, I am going to make another box - this time out of yellow stuff, and put the box behind (and a little to the right) of the green box.</p>
+<div id="b3div"></div>
+
+<p>The code I added was:</p>
+<div class="codehilite"><pre><span></span>    <span class="kd">let</span> <span class="nx">yellowStuff</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">(</span> <span class="p">{</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0xffff00</span> <span class="p">}</span> <span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">mesh2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">geometry</span><span class="p">,</span><span class="nx">yellowStuff</span><span class="p">);</span>
+    <span class="nx">mesh2</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">;</span>
+    <span class="nx">mesh2</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">z</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">mesh2</span><span class="p">);</span>
+</pre></div>
+
+
+<p>You can see the whole thing in function <code>box2</code> in <code>2-3D.js</code>. Some things to notice here:</p>
+<ol>
+<li>I made a yellow material to use (in addition to the green material).</li>
+<li>I made a second object (mesh), but I used the same geometry as the first box.</li>
+<li>I set the object's <code>position</code> in order to translate it. Objects have basic transformations built in.</li>
+<li>I translated the new object 1 unit along the -z axis (<code>z=-1</code>) - remember that the negative Z axis goes into the screen (or the positive Z axis comes out of the screen). That way the yellow box is behind the green one.</li>
+<li>Objects in front block out objects in back. This is called visibility testing. Later, we'll learn about the Z-buffer algorithm that is being used to do this.</li>
+</ol>
+<p>OK, to be sure that it really is doing visibility, and not just showing the last object added, change the z position of the yellow cube to have value <code>z=1</code> so it is in front of the green object.</p>
+<p>Hopefully, you noticed that THREE objects have their own transforms that allow us to rotate, translate and scale them. If you look at the <a href="https://threejs.org/docs/index.html#api/en/core/Object3D">documentation for <code>Object3D</code></a> (which is the base class of objects), you will see that objects have a <code>matrix</code> inside of them (actually multiple matrices, for reasons we'll learn about later). These matrices get built from the transformation data (e.g., <code>position</code>, <code>scale</code>, and <code>rotation</code>), so generally we don't deal with the matrices directly.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-4-who-turned-the-lights-off">Box 4: Who turned the lights off?</h2>
+<p>In the previous boxes, we used a <code>BasicMaterial</code> which just shows up as a color. It doesn't respond to light. In the real world, different parts of the object get different amounts of light, so they appear different colors/brightnesses. This is one way that we can interpret 3D shape.</p>
+<p>If we switch to using <code>StandardMaterial</code> rather than <code>BasicMaterial</code>, we will get lighting effects. However if we try it, we'll first just get a black Canvas:</p>
+<div id="b4diva"></div>
+
+<p>Because we don't have any lights on, and we can't see. This is a mistake that all graphics programmers make at some point. So here I'll add not one, but two lights:</p>
+<div id="b4divb"></div>
+
+<p>The lights are just like other objects, they get added to the scene.</p>
+<div class="codehilite"><pre><span></span>    <span class="kd">let</span> <span class="nx">ambientLight</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">AmbientLight</span> <span class="p">(</span> <span class="mh">0xffffff</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">);</span>
+    <span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">ambientLight</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">pointLight</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">PointLight</span><span class="p">(</span> <span class="mh">0xffffff</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="nx">pointLight</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span> <span class="p">);</span>
+    <span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span> <span class="nx">pointLight</span> <span class="p">);</span>
+</pre></div>
+
+
+<p>First, I made an <code>AmbientLight</code> with color <code>0xffffff</code> (white) and intensity <code>.5</code> - an ambient light source is a special kind of light that shines in all directions equally. It's useful because it will light everything.</p>
+<p>The second light is a <code>PointLight</code>, also with the white color. A point light is like a light bulb. The rays of light shine outwards from a particular location. I use the object's position to move it into the right place (just as I can move the cubes).</p>
+<p>We'll learn more about lights later.</p>
+<p>One of the things that is interesting about THREE is that all objects - whether they are graphics objects (Meshes), lights and cameras are treated the same way.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-5-getting-a-better-view">Box 5: Getting a better View</h2>
+<p>Until now, the transform for mapping the world onto the screen just flattened things on the Z axis. Instead, we might want to look at our world from a little bit higher up, so we can look down on the two cubes in order to see their shape better. We also will want a more "regular" camera that has perspective (things that are far away look smaller).</p>
+<div id="b5div"></div>
+
+<p>Here we changed the camera to:</p>
+<div class="codehilite"><pre><span></span>    <span class="kd">let</span> <span class="nx">camera</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">PerspectiveCamera</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+    <span class="nx">camera</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">);</span>
+    <span class="nx">camera</span><span class="p">.</span><span class="nx">lookAt</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+
+
+<p>You can see I made a <code>PerspectiveCamera</code> (the normal kind of camera). I positioned the camera at <code>(3,5,5)</code> (up and to the right of the cubes, and still in front of them). The <code>lookat</code> function set the rotation of the object (in this case the camera) so that the Z axis points towards a given point. In this case, I point the camera at the origin, since that's where the green cube is centered.</p>
+<p>We'll learn a lot more about cameras later.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-6-spinning">Box 6: Spinning</h2>
+<p>In order to animate things, we need to create an animation loop (like we did with Canvas), and redraw the image each time (using  <code>renderer.render</code>). We don't need to re-create the objects: we just need to move them a little. Here's an example:</p>
+<div id="b6div"></div>
+
+<p>The code (in the <code>box6</code> function) should look like the animation loop code you saw for 2D Canvas programming, except that rather than redrawing all of the objects, we simply change the ones we want to move and then use <code>renderer.render</code> to redraw everything.</p>
+<p>Note the line <code>mesh1.rotateY(0.02).</code> This line updates the transformation of the <code>mesh1</code> object (the green cube), by post-multiplying it with a small rotation about the Y axis (vertical). The rotation gets added to the previous rotation (we never reset the objects transformation back to the start).</p>
+<p>There was another addition in this version: try dragging with the left mouse button in the window. You'll see the camera "orbits" around the center, letting you look around. This is called an <code>OrbitControl</code> and is provided by THREE. The controls themselves aren't the easiest to use, but they are simple and do let you look around (getting this right is hard). You can also use the middle and right mouse buttons to control the camera (middle zooms, right translates).</p>
+<p>There are a few catches to using THREE's orbit controls (you can see the <a href="https://threejs.org/docs/#examples/controls/OrbitControls">documentation</a>):</p>
+<ol>
+<li>You must include the <code>OrbitControls.js</code> file from your HTML after you load THREE. It adds itself to the THREE "namespace."</li>
+<li>Your program must run an animation loop - the <code>OrbitControl</code> object updates the camera based on the mouse movements, but doesn't cause redraws to happen. There are ways around this, but the animation loop is the easier way.</li>
+<li>You need to set up the <code>OrbitControl</code> after you make your camera and renderer.</li>
+</ol>
+</div>
+<div class="sumbox">
+<h2 id="summary-the-basics-of-three">Summary: The Basics of THREE</h2>
+<p>This should give you the basic ideas of how we make things with THREE. You might want to look at a THREE tutorial which will show off more stuff, or start to look at the THREE documentation. Or, you can wait till the next pages which will give more details.</p>
+<p>The <a href="3-Scene.html">next page</a> will talk more about 3D Worlds and THREE's scenes.</p>
+</div>
+<script src="THREE/three.js"></script>
+
+<script src="THREE/OrbitControls.js"></script>
+
+<script src="2-3D.js" type="module"></script>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

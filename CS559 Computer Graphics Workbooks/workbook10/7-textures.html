@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Page 10-7: Using Textures
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/7-textures.md -->
+<h1 id="page-10-7-using-textures">Page 10-7: Using Textures</h1>
+<script src="THREE/three.js"></script>
+
+<script src="THREE/OrbitControls.js"></script>
+
+<div class="examplebox">
+<h2 id="box-1-image-based-textures-and-shaders">Box 1: Image-Based Textures and Shaders</h2>
+<p>Shaders can look up values (usually colors) in images. This is how we implement traditional texture mapping.</p>
+<p>First, we need to put the image file into a uniform variable. More specifically, we don't only need an image, but also all the machinery that can read values from it. For example, we might use a mipmap. The GLSL data type is called a <code>sampler2D</code>.</p>
+<p>Setting up a <code>sampler2D</code> from the host side is compilated. Fortunately, THREE does it for us. All we need to do is create a Texture and assign it to a uniform variable.</p>
+<p>Then, in our shader program we refer to this <code>sampler2D</code> uniform using the <code>texture2D</code> function, which looks up a position in the texture.</p>
+<p>Here's a simple example.</p>
+<div id="7-1"></div>
+<script src="7-1-texture.js" type="module"></script>
+
+<p>You can look at <code>7-1-texture.js</code> and the shaders (<code>text.vs</code> and <code>text.fs</code>) to see how it works. Notice how the uniform is set up in the JS file, and then accessed in the fragment shader.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-a-more-complex-example">Box 2: A more complex example</h2>
+<p>In this example, I'll make a planet. I'll have a texture with blue (ocean) and green (land) and I'll put it on a sphere.</p>
+<p>Then, I'll add mountains - I'll use the green brightness as a height, and use that to displace the vertices of the sphere. I'll have to do this in the vertex shader.</p>
+<div id="7-2"></div>
+<script src="7-2-world.js" type="module"></script>
+
+<p>The interesting part of this is the vertex shader <code>world.vs</code>. Note how I look up values in the texture, and use the amount of green to move the vertices in the normal direction.</p>
+<p>This is the opposite of a normal map: there is no lighting, but I am really moving the geometry. It is a displacement map.</p>
+<p>You can also look at <code>7-2-world.js</code> and <code>world.fs</code> - but these are pretty much the same as prior examples.</p>
+</div>
+<div class="sumbox">
+<h2 id="summary-textures-in-shaders">Summary: Textures in Shaders</h2>
+<p>Now that we've seen how to use textures in shaders, we have all the main pieces. Now it's just time to make some shaders on the <a href="8-alltogether.html">next page</a></p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

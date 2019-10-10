@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Workbook 5 - Page 5: Bezier Curves
+</title>
+</header>
+<body>
+<!-- @@MDReplace: SOURCES/5-bezier.md -->
+<h1 id="workbook-5-page-5-bezier-curves">Workbook 5, Page 5: Bezier Curves</h1>
+<p>A warning: Bezier is properly spelled with an accent over the first e. Getting that right on the web is tough.</p>
+<div class="examplebox">
+<h2 id="box-1-cubic-bezier-curves">Box 1: Cubic Bezier Curves</h2>
+<p>Hermite cubics are convenient because they make it easy to build C(1) curves from pieces. We just need to match the end of one segment to the beginning of the next.</p>
+<p>But, if you wanted to make a user interface for a Hermite cubic, you'd have a problem: how do you specify the derivative? The end points are points in the space of the curve, but the derivatives are something different.</p>
+<p>A simple solution might be to do something like what we did to draw the tangent vectors in Box 2 of Page 1: we can create a new point that is at the end of the tangent vector if the tangent vector starts at the curve end point. There's another issue that the tangent vector is probably too long to be convenient, so we need to scale it down. When I drew the tangents on page 1, I scaled them by 40%, but that was arbitrary. And we can point the end tangent backwards so we have symmetry. In other words, we can map the four "controls" of a Hermite cubic (<script type="math/tex">\mathbf{ h0 }, \mathbf{ h1 }, \mathbf{ h0 }', \mathbf{ h1 }'</script>) to four "control points" as:
+<script type="math/tex; mode=display">
+\mathbf{ p0 } = \mathbf{ h0 } \\
+\mathbf{ p1 } = \mathbf{ h0 } + \frac{1}{3} \mathbf{ h0 }' \\
+\mathbf{ p2 } = \mathbf{ h1 } - \frac{1}{3} \mathbf{ h1 }' \\
+\mathbf{ p3 } = \mathbf{ h1 } \\
+</script>
+</p>
+<p>Or, as a picture...</p>
+<p><img alt="BezierAndHermite" src="Images/bez1.png" /></p>
+<p>These curve pieces are cubic Bezier segments.</p>
+<p>Note that the picture in the book (Figure 15.10) is wrong: since the tangent arrows are 3 times the difference in the control points, they should be longer, not shorter.</p>
+<p>The connection between cubic Bezier segments and Hermite segments makes them easy to convert. If we have a Hermite segment (or can get one, from some other cubic form), we can easily convert to Bezier form.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-general-bezier-curves">Box 2: General Bezier Curves</h2>
+<p>Cubic Bezier curves are a specific case: Bezier curves can be created for any degree. A first degree (two points) Bezier curve is a line segment. We can have degree 2 (quadratic, 3 points), degree 3 (cubic, 4 points), or any higher degree Bezier curves.</p>
+<p>Bezier curves have many useful properties. These are described in the book, but they are so important, I will repeat them here:</p>
+<ol>
+<li>A Bezier curve can be constructed for any number of points <script type="math/tex">n>1</script>.</li>
+<li>A Bezier curve with n control points is an n-1 degree polynomial.</li>
+<li>Bezier curves are parameterized for u in the range 0 to 1.</li>
+<li>A Bezier curve <strong>interpolates</strong> its first and last points. That is, at u=0, it has the value of its first point and for u=1 it has the value of its last point.</li>
+<li>Bezier curves are <strong>symmetric</strong>. If you reverse the order you get the same curve backwards (the parameter goes in the opposite direction).</li>
+<li>The first derivative at the beginning of the curve (u=0) is proportional to the vector between the first and second point. By symmetry, the first derivative at the end of the curve (u=1) is proportional to the vector between the last points. The scaling factor is the degree of the curve. So for a cubic curve, the tangent vector is three times the vector between the first two points.</li>
+<li>The Bezier curve is bounded by the <strong>convex hull</strong> of its control points. If you make a polygon from the control points, the curve stays inside of it.</li>
+<li>Bezier curves are <strong>affine invariant</strong> - the affine transform of a Bezier curve is the curve created by performing the transform on the control points.</li>
+<li>Bezier curves are <strong>variation diminishing.</strong> A Bezier curve has fewer "wiggles" than it does control points.</li>
+</ol>
+</div>
+<div class="examplebox">
+<h2 id="box-3-bezier-curves-in-canvas">Box 3: Bezier Curves in Canvas</h2>
+<p>The HTML Canvas API provides both quadratic and cubic Bezier curves. It allows you to use these curves as pieces of longer paths.</p>
+<p>One thing that is slightly surprising about Bezier segments in Canvas is that they take one fewer control point as an argument as the curve needs. The first control point is always the most recent pen position. So, if you want to give the four points of a Bezier segment, you need to do a <code>moveTo</code> first to get that first point:</p>
+<div class="codehilite"><pre><span></span><span class="nx">context</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="nx">ax</span><span class="p">,</span><span class="nx">by</span><span class="p">);</span>
+<span class="nx">context</span><span class="p">.</span><span class="nx">bezierCurveTo</span><span class="p">(</span><span class="nx">bx</span><span class="p">,</span><span class="nx">by</span><span class="p">,</span><span class="nx">cx</span><span class="p">,</span><span class="nx">cy</span><span class="p">,</span><span class="nx">dx</span><span class="p">,</span><span class="nx">dy</span><span class="p">);</span>
+</pre></div>
+
+
+<p>This is actually convenient because we often want to connect segments together.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-4-connecting-bezier-segments">Box 4: Connecting Bezier Segments</h2>
+<p>In Computer Graphics, we typically create complicated shapes by connecting low-degree pieces. Most often, we use cubics.</p>
+<p>With Bezier curves, we can control the continuity when we put two segments (each a Bezier curve) together.</p>
+<ul>
+<li>We can get C(0) continuity by making sure that the last control point of the first segment is the same as the first control point of the second segment.</li>
+<li>We can get G(1) continuity by having the last two points of the first segment and the first two points of the second segment be co-linear.</li>
+<li>We can get C(1) continuity by having the vector between the last two points of the first segment be equal to the vector between the first two points of the second segment.</li>
+</ul>
+</div>
+<div class="sumbox">
+<h2 id="summary-bezier-curves">Summary: Bezier Curves</h2>
+<p>Bezier curves are discussed in the book in Chapter 15.6.1. Here, we focused on the specific kinds of Bezier curves we see in Canvas. We see the connection with Hermite (and therefore Cardinal) cubics and how they are drawn in Canvas. The list of properties is in the book, but they are important.</p>
+<p>On the <a href="6-decastlejau.html">next page</a> we will look at a geometric construction for Bezier curves that will help provide intuitions for their properties.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html

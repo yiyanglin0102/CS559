@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Page 7-5: Hierarchical Modeling in THREE
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/5-hierarchy.md -->
+<h1 id="page-7-5-hierarchical-modeling-in-three">Page 7-5: Hierarchical Modeling in THREE</h1>
+<div class="examplebox">
+<h2 id="box-1-hierarchical-modeling-in-three">Box 1: Hierarchical Modeling in THREE</h2>
+<p>In THREE, objects (instances of <code>Object3D</code>) can contain other objects. Rather than adding an object directly to the scene, we can add an object to another object. This parent object can be added to the scene (or to another object). In order to be in the scene, an object either needs to be added to the scene, or added to some object who has a parent that is part of the scene (recursively).</p>
+<p>In the previous workbook (and in class), we learned that in THREE, every object (technically, every instance of <code>Object3D</code>, which is the base class for just about everything), has its own transformation associated with it.</p>
+<p>This transformation is relative to the object's <em>parent</em>. If the object is simply placed in the scene, the transformation is relative to the scene (the scene is not actually an <code>Object3D</code>). However, if the object is a child of some other object, then its transformation is relative to that object. If you transform the parent, the children are transformed as well.</p>
+<p>When an object has a parent, its transformation is composed with the parent transformation. In class we talked about how this trickles along the tree of object containment.</p>
+<p>In THREE, there are special <code>Group</code> objects <a href="https://threejs.org/docs/index.html#api/en/objects/Group">(documentation)</a>. These objects have no geometry themselves - they exist only to serve as the parents for other objects.</p>
+<p>The three documentation for <code>Object3D</code> <a href="https://threejs.org/docs/index.html#api/en/core/Object3D">(here)</a> says:</p>
+<blockquote>
+<p>Note that this can be used for grouping objects via the .add( object ) method which adds the object as a child, however it is better to use Group for this.</p>
+</blockquote>
+<p>It is unclear why it is better, or when you have to use a group rather than simply adding a child object to some regular object.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-what-about-saverestore">Box 2: What about save/restore?</h2>
+<p>When we did hierarchical modeling in 2D Canvas, we had to worry about saving and restoring transformations. We talked about how we use the "transformation stack" to implement hierarchy.</p>
+<p>When we use a scene graph API like THREE, the steps of applying and saving transformations are taken care of as part of the scene graph traversal process. Basically, in order to do drawing, the tree must be traversed to visit all objects. As part of this process, the transformations are applied appropriately. The algorithm for doing this involves saving the state before descending down the tree to a child node, and restoring the state when returning to a higher level node in the tree. This is usually (but not always) implemented using a matrix stack. The books (FCG 12.2 (<a href="https://canvas.wisc.edu/files/7180030/download?download_frd=1">FCG4_Ch12.pdf</a>) and Hart Chapter 7 (<a href="https://canvas.wisc.edu/files/7180430/download?download_frd=1">Hart07-jan19.pdf</a>)) discuss this if you're curious. But for now, THREE will take care of it for us.</p>
+</div>
+<div class="sumbox">
+<h2 id="summary-hierarchical-modeling-in-threejs">Summary: Hierarchical Modeling in THREE.JS</h2>
+<p>Now we've seen how hierarchical modeling works in THREE. On the next pages, you'll get to try it. First, to make a Quadcopter again (like you did in 2D), and then to use the CS559 code framework. Be sure to do all three exercises.</p>
+<p>Start with the <a href="6-quadcopter.html">Quadcopter on the Next Page</a>, and then read about the <a href="7-framework.html">CS559 Code Framework</a> before the last two exercises.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

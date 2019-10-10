@@ -1,0 +1,122 @@
+let thePoints = [ [-10,-10], [-10,10], [10,10], [10,-10]];
+
+export class CircularTrack extends GrObject {
+    constructor(params={}) {
+        let radius=params.radius||6;
+       
+        // let radius = params.radius || 6;
+        // let width = params.width || 1;
+        // let ring = new T.RingGeometry(radius*width+3,radius*width-3,20,3);
+        // let material = new T.MeshStandardMaterial({ side:T.DoubleSide,map:roadTexture,roughness:0.8});
+        // let mesh = new T.Mesh(ring, material);
+        // mesh.rotateX(Math.PI/2);
+        // let ring2 = new T.RingGeometry(radius-width,radius+width,64,3);
+        // let material2 = new T.MeshStandardMaterial({side:T.DoubleSide, color:"black",roughness:0.3});
+        // let mesh2 = new T.Mesh(ring2, material2);
+        // mesh2.translateY(0.01);
+        // mesh2.rotateX(Math.PI/2);
+        // let group = new T.Group();
+        // group.add(mesh);
+        // group.add(mesh2);
+        // group.translateX(params.x || 0);
+        // group.translateY(params.bias || 0.1); // raise track above ground to avoid z-fight
+        // group.translateZ(params.z || 0);
+        // super(CircularTrack,group);
+        let n = thePoints.length;
+        // Small helper functions
+        // The function to increment (decrement) the index without running out of bound
+        function incr(i = 0) {return (i + 1) % n;}
+        function decr(i = 0) {return (i - 1 + n) % n;}
+        // The function to calculate derivative at point i coordinate j
+        // See Workbook Page 3 Box 3 for the formula
+        function deriv(i = 0, j = 0) {return 0.5 * (thePoints[incr(i)][j] - thePoints[decr(i)][j]);}
+        // Compute the derivatives for the cardinal spline
+        let theDerivs = [];
+        for (let i = 0; i < n; i ++) theDerivs[i] = [deriv(i, 0), deriv(i, 1)];
+        // The function to calculate control point at point i coordinate j
+        // If sign is 1, add 1/3 of the derivative, if sign is -1, subtract 1/3 of the derivative
+        // See Workbook Page 5 Box 1 for the formula
+        function control(i = 0, j = 0, sign = 1) {return thePoints[i][j] + sign * 1.0 / 3.0 * theDerivs[i][j];}
+        // Compute the control points for the Bezier curves
+        // See Workbook Page 5 Box 1 for the formula
+        let theControls = [];
+        for (let i = 0; i < n; i ++) theControls[i] = [control(i, 0, 1), control(i, 1, 1), control(incr(i), 0, -1), control(incr(i), 1, -1)];
+        // The function to calculate the position along the curve
+        function position(u = 0, i = 0, j = 0) {return thePoints[i][j] + theDerivs[i][j] * u + (-3 * thePoints[i][j] - 2 * theDerivs[i][j] + 3 * thePoints[incr(i)][j] - theDerivs[incr(i)][j]) * u * u + (2 * thePoints[i][j] + theDerivs[i][j] - 2 * thePoints[incr(i)][j] + theDerivs[incr(i)][j]) * u * u * u;}
+        // The function to calulate the velocity along the curve
+        function velocity(u = 0, i = 0, j = 0) {return theDerivs[i][j] + 2 * (-3 * thePoints[i][j] - 2 * theDerivs[i][j] + 3 * thePoints[incr(i)][j] - theDerivs[incr(i)][j]) * u + 3 * (2 * thePoints[i][j] + theDerivs[i][j] - 2 * thePoints[incr(i)][j] + theDerivs[incr(i)][j]) * u * u;}
+        // Define the new parameterization
+        function distance(p1 = [0, 0], p2 = [0, 0]) {return Math.sqrt((p2[0] - p1[0]) * (p2[0] - p1[0]) + (p2[1] - p1[1]) * (p2[1] - p1[1]));}
+        // Draw the track and calculate the arc-length parameterization
+        let theStops = [];
+        let theDistances = [];
+        let theVelocities = [];
+        let dist = 0;
+        let totalDist = 0;
+        let seg = 0;
+        let di = 0.001;
+        let m = n / di;
+        // The function to normalize a vector to a fixed length
+        function normalize (p = [1, 0], l = 1) 
+        {
+            let norm = Math.sqrt(p[0] * p[0] + p[1] * p[1]);
+            if (norm == 0) return [0, 0];
+            return [p[0] / norm * l, p[1] / norm * l];
+        }
+        // Compute the distance table
+        for (let i = 0; i < m; i ++)
+        {
+            seg = Math.floor(di * i);
+            // Sample the positions
+            theStops[i] = [position(di * i - seg, seg, 0), position(di * i - seg, seg, 1)];
+            theDistances[i] = [di * i, totalDist];
+            // Compute the distance between consecutive samples
+            if (i > 0) dist = distance(theStops[i], theStops[i - 1]);
+            // Accumulate the distances
+            totalDist += dist;
+            // Also compute and normalize the velocities to draw the double tracks
+            theVelocities[i] = normalize([velocity(di * i - seg, seg, 0), velocity(di * i - seg, seg, 1)], 5);
+        }
+        let group = new T.Group();
+
+        function arcu(x = 0)
+        {
+            seg = 0;
+            // Find the segment x corresponds to by incrementing until x exceeds the total-distance-so-far the first time
+            while (x > theDistances[seg][1] && seg < m - 1) seg ++;
+            // Since di is set to be very small, interpolation is not done
+            return theDistances[seg][0];
+        }
+        let u = 0;
+    
+        for (let i = 0; i <= totalDist - 2; i += 2)
+            {
+                u = arcu(i);
+                seg = Math.floor(u);
+                let geometry = new T.BoxGeometry( 0.1, 0.1, 2 );
+                geometry.translate(position(u - seg, seg, 0),0,position(u - seg, seg, 1));
+                let material = new T.MeshStandardMaterial({color: "black",roughness:0.75, side:T.DoubleSide});
+            let mesh = new T.Mesh(geometry, material)
+            group.add(mesh);
+            }
+        group.position.set(0,0,0);
+        super("Truck",group);
+        this.x = params.x || 0;
+        this.z = params.z || 0;
+        this.y = params.bias || 0.1;
+        this.r = radius;
+        
+
+       
+    }
+    eval(u) {
+        let p = u * 2 * Math.PI;
+        return [this.x + this.r * Math.cos(p), this.y, this.z + this.r * Math.sin(p)];
+    }
+    tangent(u) {
+        let p = u * 2 * Math.PI;
+        // unit tangent vector - not the real derivative
+         return [Math.sin(p), 0, -Math.cos(p)];
+        // return [p, 0, p];
+    }
+}

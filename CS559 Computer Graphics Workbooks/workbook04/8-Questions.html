@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    WB4: 6-Flocking: Flocking Assignment
+</title>
+</header
+<body>
+<!-- @@MDReplace: SOURCES/8-Questions.md -->
+<h1 id="workbook-4-page-8-questions">Workbook 4, Page 8 - Questions</h1>
+<p>Note: please answer the questions in the <code>QUESTIONS.md</code> file!</p>
+<div class="examplebox">
+<h2 id="question-1-scaling">Question 1: Scaling</h2>
+<p>A non-uniform scale about a specified center can be implemented as (where cx, cy, sx and sy are scalar/number variables):</p>
+<div class="codehilite"><pre><span></span>context.translate(cx, cy);
+context.scale(sx,sy);
+context.translate(-cx, -cy);
+DRAW STUFF
+</pre></div>
+
+
+<p>It could also be written as:</p>
+<div class="codehilite"><pre><span></span>context.translate(dx,dy);
+context.scale(ex,ey);
+</pre></div>
+
+
+<p>or</p>
+<div class="codehilite"><pre><span></span>context.scale(fx,fy);
+context.translate(gx,gy);
+</pre></div>
+
+
+<p>Where dx,dy, ex,ey, fx,fy, gx, and gy are all scalars that can be computed as a function of cx, cy, sx, and sy.</p>
+<p>Give those expressions (note: there are 8 you need to provide).</p>
+</div>
+<div class="examplebox">
+<h2 id="question-2-this-time-as-a-matrix">Question 2: This time as a matrix</h2>
+<p>The transformation in the previous question could be written as a single matrix (whose elements are computed from cx, cy, sx and sy). Write the 3x3 matrix corresponding to the scale about center from Question 1. Write the matrix in row-major array form (so it's a list of 9 expressions).</p>
+</div>
+<div class="examplebox">
+<h2 id="question-3-matrix-computations">Question 3: Matrix Computations</h2>
+<p>Suppose we are storing matrices in row major form as JavaScript arrays. For <code>Array a</code>, <code>a[4]</code> will be the center of the matrix (unlike in the equation on page 3, JavaScript array indexing starts at 0).</p>
+<p>If we have two matrices <code>a</code> and <code>b</code> and multiply them together to get a third matrix <code>c=a*b</code>, write an expression for the center element of the result.</p>
+<p>This is a good chance to remind yourself how matrix multiply works!</p>
+</div>
+<div class="examplebox"></div>
+<div class="examplebox">
+<h2 id="question-4-write-a-matrix">Question 4: Write a Matrix</h2>
+<p>Write a matrix (9 numbers, row major form) that map from the red square to the blue shape.</p>
+<p><img alt="Images/q4.png" src="Images/q4.png" /></p>
+</div>
+<div class="examplebox">
+<h2 id="question-5-write-a-matrix">Question 5: Write a Matrix</h2>
+<p>Write a matrix (9 numbers, row major form) that map from the red square to the blue shape. Note that the arrow goes along the top of the red square, but along the bottom of the blue shape</p>
+<p><img alt="Images/q5.png" src="Images/q5.png" /></p>
+</div>
+<div class="examplebox">
+<h2 id="question-6-write-transforms">Question 6: Write Transforms</h2>
+<p>Write a sequence of Javascript Canvas transformation commands that transform the red square into the blue shape in Question 5. Assume that the context is in the variable <code>context</code>. You should have a list of statements like:</p>
+<div class="codehilite"><pre><span></span>context.rotate(Math.PI/2);
+context.scale(4,5);
+</pre></div>
+
+
+<p>You may only use <code>rotate</code>, <code>translate</code>, and <code>scale</code>.</p>
+</div>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+
+<title>
+    Page 10-3: GLSL and THREE
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/3-glsl-three.md -->
+<h1 id="page-10-3-glsl-and-three">Page 10-3: GLSL and THREE</h1>
+<div class="examplebox">
+<h2 id="box-1-glsl">Box 1: GLSL</h2>
+<p>Part of writing shaders is that you have to work in a shading language, which is yet another programming language to learn. My experience is that the thing that is challenging for most students is the <em>concept</em> of shaders, the details of the language follow. In fact, in old assignments we used to make students translate shaders from one language to another to emphasize that the languages aren't that different.</p>
+<p>GLSL is convenient: it is one shading language that works almost everywhere, and the compiler is built into the graphics drivers. Back in the old days, you had to worry about getting the compiler and hoping it worked with your graphics card.</p>
+<p>While it is a bit of a pain to have "yet another" language to learn, the fact that GLSL is highly specialized for shaders means it has a lot of nice features for doing shader programming. It has excellent support for vectors and matrices (since graphics programming always has vectors and matrices). It has all kinds of convenient math functions built in.</p>
+<p>Unfortunately, most documentation for GLSL spends its time explaining the concepts of shaders, and how to communicate with the host program. So, I don't have a great document to recommend (see the list on the <a href="index.html">index</a> page). I think the best way to learn it is to try to read and write shaders, and then look up features in a reference card  (for example The <a href="https://www.khronos.org/files/webgl20-reference-guide.pdf">WebGL Reference Card</a>, but other ideas are on the <a href="index.html">index</a> page). Expect to make lots of mistakes (which is painful, since you don't get to see the errors until the compiler runs).</p>
+<p>Here are a few things that will help you get started:</p>
+<p><strong>GLSL is C-like in syntax.</strong> It uses the same basic syntax, but uses different keywords and operators, has different built-in types, and a different feature set.</p>
+<p><strong>GLSL is strongly typed.</strong> Everything has a type, and is required to be that type. For example, integers are floats are different. 1 is an integer. 1.0 is a float. 1+1.0 is not 2.0 or 2, it is a type error.</p>
+<p><strong>GLSL has many vector and matrix types.</strong> In graphics, we use 2,3 and 4 vectors and 2x2, 3x3, and 4x4 matrices. GLSL has all of these built in. They are different. You cannot assign a <code>vec2</code> to a <code>vec3</code>.</p>
+<p><strong>GLSL has very flexible constructors for matrices and vectors.</strong> You can construct a <code>vec4</code> from a <code>vec3</code> and a float, or two <code>vec2</code>s, or ... You do have to explicitly construct things. <code>vec3 p = vec3(vec2(1,2),3).</code></p>
+<p><strong>GLSL has very flexible accessors for vectors.</strong> If you have a <code>vec3</code> variable <code>p</code>, you can access the first component of the vector as <code>p[0]</code> or <code>p.x</code> or <code>p.r</code> (as in rgb). You can also refer to other subparts, like <code>p.xy</code> (which is a 2-vector), or even <code>p.zy</code> (which selects and re-orders the subparts). The ability to select and re-order vector parts is called <strong>swizzling.</strong></p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-tools-for-glsl">Box 2: Tools for GLSL</h2>
+<p>Having good tools for GLSL programming makes writing shaders easier. You can write the shader in some tool, try it out on their sample shapes, and then move it to your real program. One catch is that the communication with the "sample" program built into the tool is never the same as communicating with your own program.</p>
+<p>Since shaders tend to be small programs, web-based tools are very practical. Several tools let you put in small programs and show you what the results look like on sample geometry. One downside of using these tools is that how the shaders are connected to the tool (so you get the sample geometry and other support) is never exactly the same as when you put it into a real program.</p>
+<p>Two tools that students have had good luck with in the past are:</p>
+<ul>
+<li>
+<p>KickJS <a href="http://www.kickjs.org/example/shader_editor/shader_editor.html">http://www.kickjs.org/example/shader_editor/shader_editor.html</a></p>
+</li>
+<li>
+<p>BKCore <a href="http://shdr.bkcore.com/">http://shdr.bkcore.com/</a> (see the info <a href="http://bkcore.com/blog/3d/shdr-online-glsl-shader-editor-viewer-validator.html">here</a>).</p>
+</li>
+</ul>
+<p>One nice thing about these is that they show you your errors right away. You don't have to go digging through the console logs to identify the errors in your shaders.</p>
+<p>I strongly recommend trying to use one of these when you write fancy shaders. It is tricky to get the variables you need from the host program (especially the attributes). But you can get things mostly working, and then move the programs into your THREE program. For class, everything you turn in must ultimately go into a THREE program.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-3-shaders-in-three">Box 3: Shaders in THREE</h2>
+<p>For using shaders in THREE: there are tutorials out there. Not as many as for other topics because the built-in shaders for THREE are so good, that you usually don't need to write your own.</p>
+<p>But, we want to write shaders because (1) you need to learn about them and (2) sometimes, you want to make your own shader (we'll see some examples in a bit).</p>
+<p>Generally, THREE makes adding shaders easy. With the <code>ShaderMaterial</code> (see the <a href="https://threejs.org/docs/#api/en/materials/ShaderMaterial">documentation</a>), you can give it shader code, and it adds GLSL declarations to the beginning so your program can access the information it needs (see the <a href="https://threejs.org/docs/#api/en/renderers/webgl/WebGLProgram">docs</a>). It also takes care of converting between JavaScript and GLSL data types, putting your vertex information into buffers to send as attributes, and a host of other details you don't want to worry about.</p>
+<p>One tricky thing: THREE has very fancy lighting. We can make many kinds of lights, and have many of them. Somehow we need to pass all of this information to our shaders (which actually compute the lighting). This is complicated. We have two choices: (1) we can read the documentation to see all the lighting information that gets passed, and implement our shaders very carefully to use it or (2) ignore THREE's lights, and do something simpler for ourselves. For class we'll choose option #2.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-4-some-advice">Box 4: Some Advice</h2>
+<p>Some GLSL/WebGL/THREE Gotchas:</p>
+<ul>
+<li>If compilation fails, it will dump error information to the console. However, since THREE adds a lot of code to your program, the line numbers will no longer work. If you don't see your object/shader, check the console for errors!</li>
+<li>Integers are not automatically coerced to floats. This is the opposite of JavaScript.</li>
+<li>Unless it knows otherwise, GLSL makes numbers without decimal points integers, and then creates compilation errors. 1 + 2.0 is an error (since 1 is an integer). Always use "1.0" if you mean a floating point number.</li>
+<li>WebGL is very good at assembling vectors from smaller pieces. <code>vec4(vec2(1.0,2.0),vec2(3.0,4.0))</code> and the like. But, you need to explicitly create the correct sized vectors.</li>
+<li>Some things in regular GLSL are not built into GLSL-ES (the variant of the language used by WebGL). Many of them are available as "extensions". THREE sets up the most common extensions for us, but shaders need to enable them.</li>
+<li>You can write if/then/else statements, but its often better to try to write them using computation functions (step, smoothstep, clamp, etc). These are not only more efficient, but also easier to change to anti-aliased versions later.</li>
+<li>To GLSL, a vector is a vector. You can refer to a <code>vec3</code> as xyz, or rgb, x is the same as r.</li>
+<li>You can also refer to parts of vectors: if you have <code>vec3 p</code>, you can refer to <code>p.xz</code> (which is a 2-vector).</li>
+</ul>
+</div>
+<div class="sumbox">
+<h2 id="summary-writing-shaders-with-three-and-glsl">Summary: Writing Shaders with THREE and GLSL</h2>
+<p>Hopefully, you have the basic ideas. Now let's try to write some interesting shaders on the <a href="4-light.html">next page</a>.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

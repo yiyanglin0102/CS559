@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Workbook 6, Page 8: Programming Task 1: Snowman
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/8-Snowman.md -->
+<h1 id="workbook-6-page-8-programming-task-1-snowman">Workbook 6, Page 8: Programming Task 1: Snowman</h1>
+<p><script src="THREE/three.js"></script>
+<script src="THREE/OrbitControls.js"></script></p>
+<div class="examplebox">
+<h2 id="exercise-snowman">Exercise: Snowman</h2>
+<p>Make a snowman using THREE!</p>
+<p>You should make the snowman using THREE primitives. You can use <a href="https://threejs.org/docs/api/en/geometries/SphereGeometry.html">spheres</a> for the snowballs (the main parts of the body), a <a href="https://threejs.org/docs/#api/en/geometries/ConeGeometry">cone</a> to make a carrot nose, a cylinder and a ring to make a top hat, ...</p>
+<p>You'll need to make primitives (Spheres, Cones, ...) and use their transformations (position, scale, rotation) to assemble the snowman.</p>
+<p>You can use simple materials of different colors (e.g., <a href="https://threejs.org/docs/#api/en/materials/MeshPhongMaterial"><code>MeshPhongMaterial</code></a> or <a href="https://threejs.org/docs/#api/en/materials/MeshStandardMaterial"><code>MeshStandardMaterial</code></a>). A white standard material won't look like snow, but it will be good enough for this assignment. Our goal is that you know how to apply materials to get different colors, not necessarily to make materials to get special effects (like snow).</p>
+<p>The main point of the assignment is create a specific shape using THREE primitives.</p>
+<p>At a minimum, your snowman must have a body, a head, eyes, and a nose. We were thinking of the "classic three-ball snowman" (see the <a href="https://en.wikipedia.org/wiki/Snowman">Wikipedia page</a>, for example), which gives enough parts (3 parts to the snowman, eyes, a nose, a mouth).  You can add the hat and corncob pipe too. If you want to be more creative, make a regular snowman first, and then put another one next to it.</p>
+<p>You do not need to animate your snowman. (you can as part of a "bonus point")</p>
+<p>Please put in a piece of ground (it can be a flat box) that the snowman stands on.</p>
+<p>We've given you a start in the file <code>8-Snowman.js</code> (where you should put your drawing code).</p>
+<p>For a bonus point, you can make an exceptionally interesting snowman. I'm not sure what this means, but you can be creative. Don't be too creative, since it still should look like a snowman, and you have to follow the assignment ground rules (below, but basically, you should just use the parts of THREE we have introduced, not the fancier features we haven't discussed yet). You can add animation as part of this. You can make the scene in which the Snowman stands be more interesting than just having it on the box.</p>
+<p>Here's is a place to put the snowman (the code to modify is <code>8-Snowman.js</code>). We have already loaded THREE and OrbitControls in this HTML file. (Please add OrbitControls to your picture). Note: we haven't given you much in this file. It's up to you to make the lights, camera, objects, etc. We just took care of the renderer.</p>
+<p>Note: There is a second programming assignment on the <a href="9-Museum.html">next page (9)</a>. And the ground rules are listed the picture.</p>
+<div id="snowman"></div>
+<script src="8-snowman.js" type="module"></script>
+
+</div>
+<div class="examplebox">
+<h2 id="ground-rules-for-workbook-6">Ground Rules for Workbook 6</h2>
+<p>For the programming assignment, we are going to ask you to make some pictures by writing programs that use THREE. We want you to focus on using the parts that we've discussed, not trying to show off that you can figure out the fancier features on your own. This is pretty limited because:</p>
+<ul>
+<li>Each primitive object gets one material (and therefore color).</li>
+<li>The primitive objects are solid colors (and not textured).</li>
+<li>We are only using the given "primitive" shapes (not making our own meshes).</li>
+<li>We aren't using reflections or shadows.</li>
+<li>We do not want you to add other object models (although, you can use the sample ones we provided).</li>
+<li>We aren't making our own new kinds of materials (by writing shaders).</li>
+</ul>
+<p>You'll get to do all of these things later in the class. For now, you can be creative and make sure you understand how to put together the basic pieces.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+    <!--
+        Workbook 3 for CS559 - page four -
+        written January 2019, by Michael Gleicher
+
+        students are allowed (and) encouraged to read the HTML source files!
+
+        (however, this one is boring - you can just look at it in the browser)
+    -->
+
+<header>
+        <meta charset="UTF-8">
+        <!-- use the CS559 Style Sheet -->
+        <link rel="stylesheet" href="Libs/style559.css">
+        <link rel="stylesheet" href="a03.css">
+        <link rel="stylesheet" href="Libs/pygments.css">
+        <title>
+            Assignment 03: Index Page
+        </title>
+</header>
+<body>
+    <!-- @@MDReplace: SOURCES/rotate.md -->
+<h2>Workbook 3, page 4 - Rotation</h2>
+<p>Time for the next transformation... rotation. Spinning things around.</p>
+<p>Rotation will turn out to have all sorts of complexity to it - especially when we get to 3D.</p>
+<p>But the basic idea is simple: we spin an object around some point.</p>
+<p>Rotations are a <em>rigid</em> transformation: they do not change the distances between points. Translation is also a kind of rigid transformation.</p>
+<p>If translation is sliding the paper you're drawing on in some direction, scaling is stretching it, then rotation is turning it by some amount.</p>
+<div class="examplebox">
+<h2>Box 1: Rotation</h2>
+<p>When you rotate, there is always one point that you spin around: the center of rotation. By convention, this is the center of the coordinate system.</p>
+<p>With Canvas, the rotation command measures the amount of rotation in radians, measured clockwise.</p>
+<canvas id="b1" width="80px" height="80px"></canvas>
+<input id="s1" type="range" min="-2" max="2" step=".1"></input>
+<input type="text" id="sp1" value="FILL" style="width:50px" readonly></input>*Pi
+
+<p>Of course, we can change coordinate systems to move the origin to the center of the window so we can see what is going on. Here I am drawing the coordinate axes (x=0 and y=0) before I do the rotation. Make sure to look at the code to understand the change of coordinate system!</p>
+<canvas id="b1c" width="80px" height="80px"></canvas>
+
+<p>Just like with scaling and translation, rotation can be viewed as either rotating the object or rotating the coordinate system.</p>
+</div>
+<div class="examplebox">
+<h2>Box 2 - Center of Rotation</h2>
+<p>Just like with scaling, the center of rotation (the point that does not move) is at the center of the coordinate system.</p>
+<p>We often like to rotate about the center of an object - which means we need to change coordinate systems! We move the object so that the center (the point we want to rotate around) is at the origin of the coordinate system, we rotate, we then move the object back. We can view this as: move the coordinate system to the object's center, rotate the coordinate system, move the coordinate system back to where it came from. The latter may still feel weird to you, but since the commands operate on coordinate systems, the code will read in the correct direction.</p>
+<p>Here are a bunch of squares places in different places, rotating around different centers. You should be able to guess what the code looks like, but you should read it anyway...</p>
+<p><input id="s2" type="range" min="-2" max="2" step=".1"></input>
+<canvas id="b2" width="250px" height="80px"></canvas></p>
+<p>Make sure you understand this!</p>
+<p>Making good use of center of rotation is an important tool in making objects that move correctly. It's also useful in positioning things.</p>
+</div>
+<div class="examplebox">
+<h2>Box 3 - An Actual Picture</h2>
+<p>This time, I'll try to make something that you might actually want to make rotate: a simple windmill.
+It's still really simple. But at least it has the right rotation.</p>
+<canvas id="b3" width="400px" height="200px"></canvas>
+
+<p>So this isn't great landscape art, but it makes a few points.</p>
+<p>Most obviously is that it uses rotation to make the mills spin. But it also uses rotate to build the fans: I have code that makes one blade, and then I rotate that blade into 3 other places to make the 4 bladed fan. We talked about <em>instancing</em> on a prior page, but this is an example.</p>
+<p>Notice how the picture is built up from parts. The scene is made from windmills. The windmills are made from a body and a propeller. A propeller is made from four of blades. Each blade has two pieces.</p>
+<p>The idea of building up objects from parts is called <strong>hierarchical modeling</strong>. Any object is made up of other objects. Until at some point we get to primitives.</p>
+<p>Coordinate systems and transforms are critical for hierarchical modeling. Each object has its own coordinate system. When a part is placed inside of a containing object, a transformation is used to rotate, translate, and/or scale things into place. In the future, we will use other transformations too.</p>
+<p>Hierarchical modeling makes it easier to build objects. It also makes it easier to change or animate objects - for example, by having the windmill fan as a separate piece, we can rotate it.</p>
+<p>Notice how the composition of transformations means that changes we make to a part get properly placed in the whole. The windmill fan rotates about its center. But that gets moved to the correct place on the windmill. And the windmill gets moved to the right place in the scene.</p>
+</div>
+<div class="examplebox">
+<h2>Box 4 - The arm bone is connected to ...</h2>
+<p>Here's another example of hierarchical modeling: I'll make a stick figure arm. Each piece will be simple, but once I put them together, I can always improve how they look.</p>
+<p>First, I'll make a hand - I'll put the origin of its coordinate system at the base of the hand where it attaches to the wrist.</p>
+<canvas id="b4-1" width="200" height="100"></canvas>
+
+<p>Now, I'll make the wrist bone. The center of the coordinate system is the elbow. The wrist joint is at the end of the bone - so that's where I'll place the hand (by translating it to the right place). I'll also rotate the handle by the wrist joint angle.</p>
+<canvas id="b4-2" width="200" height="100"></canvas>
+
+<p>Now, I'll make the upper arm bone. The center of the coordinate system is the shoulder. The elbow joint is at the end of the upper arm bone. I'll place the wrist at the elbow (by translation) and rotate the elbow by the joint angle.</p>
+<canvas id="b4-3" width="200" height="100"></canvas>
+
+<p>Now, I'll make the Torso. It's center is at the waist. The right shoulder is at the top right of the torso. That's where the arm gets attached.</p>
+<canvas id="b4-4" width="200" height="150"></canvas>
+
+<p>Try changing the joint angles with the sliders below. Notice that when a bone moves, the other things in its coordinate system (the parts connected to it) move as well. Because we are only changing the rotations, the parts stay connected. Remember that each of the pictures is in a different coordinate system.</p>
+<p><input id="s4-1" type="range" min="-1" max="1" step=".05" width="100px"></input>
+<input id="s4-2" type="range" min="-1" max="1" step=".05" width="100px"></input>
+<input id="s4-3" type="range" min="-1" max="1" step=".05" width="100px"></input></p>
+<p>The code for this example is in a separate file, <code>A03-4-rotate-arm.js</code> that is loaded as a module from <code>A03-4-rotate.js</code>. Be sure to read the code.
+It is important to understand these ideas of hierarchical modeling in the simple
+cases, before we move on to complex ones.</p>
+<p>A hierarcical model that consists of rigid pieces that rotate relative to each other (such as this arm, or even the windmill) is referred to as an <strong>articulated</strong> object. Sometimes the term is used more general for an object that has a set of pieces that move relative to each other.</p>
+</div>
+<div class="sumbox">
+<h2>Summary</h2>
+<p>We've seen rotations, and how we use transformations to build hierarchical models.</p>
+<p>These are both important concepts that will not go away.</p>
+<p>We'll look at it a slightly more complex example on the <a href="A03-5-hierarchy.html">next page</a></p>
+</div>
+    <!-- @@EndMDReplace: -->
+    
+    <script src="A03-4-rotate.js" type="module"></script>
+</body>
+</html>

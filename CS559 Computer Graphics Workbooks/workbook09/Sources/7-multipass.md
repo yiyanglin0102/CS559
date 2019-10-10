@@ -1,0 +1,42 @@
+# Page 9-7 - Multi-Pass Rendering
+
+In class, we will talk about the concept of multi-pass rendering. We'll focus on a particular kind of multi-pass rendering: where we draw the scene from some other viewpoint than the camera that is ultimately making the picture, store that picture somewhere, and use it in (often as a texture) when we make the final picture.
+
+This is useful for many things, for example:
+
+- Reflections (we take a picture of what the mirror sees and put that on the mirror)
+- Shadows (we take a picture of what the light sees, and only light those parts)
+- Environments (rather than pre-paining an environment map, we render a picture of the world so the correct things show up)
+
+From an implementation perspective these things involve:
+
+1. Setting up an additional camera
+2. Rendering a picture from that camera's viewpoint and storing the picture in a texture. This is called *render to texture*.
+3. Using that rendered texture when we ultimately draw the scene.
+
+Understanding this concept is important, we may ask you about it on the exam. But for now, we will not tell you about the mechanics of how to implement #2 in THREE.JS (#1 and #3 are relatively straightforward, since you already know how to make cameras and use textures).
+
+So, for this exercise, if you're brave, you can figure out render-to-texture in THREE on your own. This exercise is optional, and purely for bonus points. But even if you don't do the exercise, read through it, since it explains the basics.
+
+The exercise is: show off a basic render-to-texture / multi-pass usage within the class code framework.
+
+For the exercise, make a "live video feed". The idea is you'll place a "video camera" in the scene, and also place a video screen in the scene. The video screen shows what the camera sees. (if the camera looks at the screen, it sees what was drawn in the previous frame).
+
+To do this you must:
+
+1. Create a world with at least some things moving (so you can see that the video feed is "live")
+2. Create a second camera in the world
+3. In the "draw" loop, before the normal draw, make a first drawing using the camera in #2, and rather than drawing to the screen, have it draw to a texture. (you'll need to figure out a `WebGLRenderTarget` in THREE)
+4. Use the texture created by step #3 on some surface in your scene
+
+In the framework, you will not be able to use the stock animation loop (GrWorld's `go`), since you'll need to draw twice (once to create the texture, and once to do the real drawing to screen).
+
+There are plenty of examples on the web.
+
+Once you've done this, you'll be able to make "live" (rather than pre-computed) reflection map. This requires some cleverness in how you place the camera behind the mirror. For this assignment, just getting render-to-texture to work is good enough.
+
+For an even fancier version of this, you could (1) have the camera fly around the scene (say, providing first person video from a drone), or (2) have the camera be a set of cameras that create a cubemap that can be used to make a dynamic environment map (three has pretty good built in support for this).
+
+<script src="THREE/three.js"></script>
+<script src="THREE/OrbitControls.js"></script>
+<script src="7-multipass.js" type="module"></script>

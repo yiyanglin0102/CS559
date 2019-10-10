@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    WB4: 0-Index: Transformation Math
+</title>
+</header>
+<body>
+<!-- @@MDReplace: SOURCES/0-index.md -->
+<h1 id="workbook-4-transformation-math">Workbook 4 - Transformation Math</h1>
+<p>Last time, we learned about transformations and coordinate systems. We learned a few transformations (translate, scale and rotate), how to think about transformations as changes of coordinate systems, and some ways we use transformations (e.g., to build hierarchy or create convenient coordinate systems). This week we'll learn about how they work mathematically.</p>
+<p>We'll start by looking at a notational reason why our math (or the math in a textbook) looks different than the code we write for the Canvas API. We'll then look at the general math for transformations as well as the special, simple case of <em>linear</em> transformations. Linear transformations are the most common case in graphics - and include all of the transformations we've discussed so far. Then we can dive into the math of linear transformations (although, the textbooks cover this well). As part of this, we'll look at a common graphics trick of using <em>homogeneous coordinates</em> which will allow us to represent translation as a linear transformation. When we get to 3D, this will let us do other things as well.</p>
+<p>Also, as part of this workbook, we'll experiment with a fun animation technique as a way to practice vector algebra.</p>
+<p>This workbook has less code than normal - but we'll make up for that on the last page. The HTML is unimportant - don't worry about trying to read it.</p>
+<p><a href="4-Matrix-Exercise.html">Page 4</a> has required exercises on it. And <a href="6-flocking.html">Page 6</a> has a non-trivial programming exercise. But feel free to tinker with the code on other pages as a way to understand how the examples work.</p>
+<p>Don't forget about the <code>README.md</code> and <code>QUESTIONS.md</code>. And to commit and push to GitHub!</p>
+<h2 id="required-reading">Required Reading</h2>
+<p><strong>Tutorials:</strong> If you still haven't read the <a href="http://graphics.cs.wisc.edu/WP/tutorials/points-vectors-and-coordinate-systems-why-are-points-and-vectors-different/">Tutorial: Points, Vectors, Coordinates</a>, now might be a good time.</p>
+<p><strong>Textbook:</strong> The math of transformations is covered well in the graphics textbooks. You are required to read Sections 6.1, 6.3, 6.4 and 6.5 of Fundamentals of Computer Graphics (Shirley et al.) <a href="https://canvas.wisc.edu/files/7180025/download?download_frd=1">FCG4_Ch06.pdf</a> (although, 6.1.6 is a more advanced topic that we won't discuss in class, and the 3D parts, including 6.2 we'll come back to later). You are also required to read Chapter 5 of "The Big Fun Graphics Book" (Hart) <a href="https://canvas.wisc.edu/files/7180426/download?download_frd=1">Hart05-jan19.pdf</a> - which covers the same material. It is important enough that you should see it twice, and each one adds extra details.</p>
+<p>However, you might want to start reading through the workbook first - it will set up the connection to the textbook chapters.</p>
+<p><strong>Optional:</strong> If you want a refresher on linear algebra, you may want to look at Chapters 1, 2 and 4 of <em>Practical Linear Algebra</em>. The book is discussed on the <a href="https://graphics.cs.wisc.edu/WP/cs559-sp2019/books/">Books</a> page, and you can find it online at the UW Library (<a href="https://search.library.wisc.edu/catalog/9911163667202121">(Practical Linear Algebra-UW)</a>). We have put Chapters 1, 2 and 4 in Canvas (<a href="https://canvas.wisc.edu/files/7108164/download?download_frd=1">pla_chapter_1.pdf</a>, <a href="https://canvas.wisc.edu/files/7108165/download?download_frd=1">pla_chapter_2.pdf</a>, <a href="https://canvas.wisc.edu/files/7108166/download?download_frd=1">pla_chapter_4.pdf</a>).</p>
+<p><strong>Warning:</strong> In class, we will be moving on to talk about shape representations, so you may want to read ahead a little bit. Next weeks readings will include Section 8.1 of Fundamentals of Computer Graphics <a href="https://canvas.wisc.edu/files/7180027/download?download_frd=1">FCG4_Ch08.pdf</a>, and Chapter 15 <a href="https://canvas.wisc.edu/files/7180032/download?download_frd=1">FCG4_Ch15.pdf</a> (although we won't be doing everything in Chapter 15).</p>
+<h2 id="get-started">Get Started!</h2>
+<p>Don't forget to commit and push as you work!</p>
+<p>Get started on <a href="1-math.html">page one.</a></p>
+<!-- @@EndMDReplace: -->
+</body>
+</html

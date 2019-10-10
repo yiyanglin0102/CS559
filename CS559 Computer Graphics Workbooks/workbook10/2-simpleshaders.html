@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+
+<title>
+    Page 10-2: Starting with Simple Shaders
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/2-simpleshaders.md -->
+<h1 id="page-10-2-starting-with-simple-shaders">Page 10-2: Starting with Simple Shaders</h1>
+<script src="THREE/three.js"></script>
+
+<script src="THREE/OrbitControls.js"></script>
+
+<p>Now that we know what shaders are, let's look at some simple ones!</p>
+<p>There are two things that go beyond theory here: (1) the shaders are written in a specific shader language (GLSL), and (2) there are the details of how we set them up and pass information to them from our "host program" (the JavaScript program we write). Fortunately, THREE.JS will take care of #2, but that means we need to learn about its quirks.</p>
+<div class="examplebox">
+<h2 id="box-1-a-first-shader-pair">Box 1: A First Shader Pair</h2>
+<p>As you know, we always make shaders in pairs - we'll need a vertex shader and a fragment shader.</p>
+<p>I like to put shaders in separate files (so we can edit them more easily). The shaders for this example are in the files <code>Shaders/s0.vs</code> and <code>Shaders/s0.fs</code> (I am using vs for fragment shader and fs for vertex shader). My program loads these files (alternatively, you could put the shader source code into a string in JavaScript - but this means your GLSL program is mixed into your JavaScript program).</p>
+<p>Here is the vertex shader (<code>Shaders/s0.vs</code> has comments in it):</p>
+<div class="codehilite"><pre><span></span><span class="kt">void</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nb">gl_Position</span> <span class="o">=</span> <span class="n">projectionMatrix</span> <span class="o">*</span> <span class="n">modelViewMatrix</span> <span class="o">*</span> <span class="kt">vec4</span><span class="p">(</span> <span class="n">position</span><span class="p">,</span> <span class="mf">1.0</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Observe that a GLSL shader program (vertex or fragment) always is the <code>main</code> function, with type <code>void</code>. GLSL syntax is very C-like, so if you are a C programmer, this will look familiar.</p>
+<p>Shader programs take their inputs and outputs through variables. Here there are three input variables (<code>position</code>, <code>projectionMatrix</code>, and <code>modelViewMatrix</code>). These variables are how the host program passes information to the shader. They are set up by THREE for us. If you want to see the list of variables THREE sets up automatically for us, check <a href="https://threejs.org/docs/#api/en/renderers/webgl/WebGLProgram">this page</a>.
+Under the hood, THREE has actually added lines to our GLSL program that declare these variables. If you're unfortunate and have a compiler error, you will get a program listing that includes this.</p>
+<p>The output of this shader program is setting the variable <code>gl_Position</code>. This is a special variable that all vertex shaders must set. It is of type <code>vec4</code> (a homogeneous coordinate).</p>
+<p>This program takes the <code>position</code> of the vertex (which is a point in 3D), converts it to a homogeneous coordinate (adding a 1 for the w component). And then transforming it by the modeling matrix (the objects matrix that positions it in the world), the view matrix (the transformation that puts things in front of the camera), and the projection matrix (that makes things far away be smaller). The program uses <code>modelViewMatrix</code>, however it could have used <code>modelMatrix</code> and <code>viewMatrix</code> and multiplied them together.</p>
+<p>A few things to notice.</p>
+<ol>
+<li>GLSL has nice matrix and vector types. And it can put them together in easy ways (we made a 4-vector by adding a number at the end of a 3-vector).</li>
+<li>GLSL is picky about numbers. <code>1</code> is an integer, <code>1.0</code> is a float. It is a type error to give an integer where a float is required.</li>
+<li>Because THREE wrote them for us, we don't see the <code>attribute</code> declaration for <code>position</code> or the <code>uniform</code> declaration for <code>projectionMatrix</code>, and <code>modelViewMatrix</code>. But be aware that they are there.</li>
+</ol>
+<p>Now, here is the fragment shader (<code>Shaders/s0.fs</code>):</p>
+<div class="codehilite"><pre><span></span><span class="kt">void</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nb">gl_FragColor</span> <span class="o">=</span> <span class="kt">vec4</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.4</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>This just sets the pixel's color to yellow. It uses the special output variable <code>gl_FragColor</code>.</p>
+<p>Note that in GLSL, colors range from 0-1 (not 0-255, as they do in "byte oriented" systems). Also, note that here I wrote "1" even though I should have written "1.0" - the <code>vec4</code> (and other <code>vec</code> constructors) are one of the few places where integers can be used where floats are expected.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-using-these-programs">Box 2: Using these programs</h2>
+<p>Now that we've written the shaders, we need to use them in our THREE program. Basically, we need to make a new kind of material that has these two programs as part of it.</p>
+<p>The steps would be:</p>
+<ol>
+<li>Read in the files as text. (must be asynchronous - since it may take time to load the files or fetch them from the web)</li>
+<li>Create a new THREE <code>ShaderMaterial</code> that uses the text as the shader source code. THREE will run the GLSL compiler on each.</li>
+<li>Attach that material to some THREE Objects and see our shaders run!</li>
+</ol>
+<p>To simplify steps 1 and 2, The CS559 Framework provides a utility that takes 2 URLS (file paths) and makes a <code>ShaderMaterial</code>. You don't have to use it, but I find it convenient and will use it for all the examples in the workbook.</p>
+<p>There is also a step 2b: check to make sure there were no compilation errors. If there are, you'll see them in the console. If your object doesn't show up as expected, you should check.</p>
+<p>In file <code>2-1-simple.js</code> there is a simple scene that uses the shaders from the previous box.</p>
+<div id="2-1"></div>
+<script src="2-1-simple.js" type="module"></script>
+
+<p>The line of interest is:</p>
+<div class="codehilite"><pre><span></span><span class="kd">let</span> <span class="nx">shaderMat</span> <span class="o">=</span> <span class="nx">shaderMaterial</span><span class="p">(</span><span class="s2">&quot;./Shaders/s0.vs&quot;</span><span class="p">,</span><span class="s2">&quot;./Shaders/s0.fs&quot;</span><span class="p">,{</span><span class="nx">side</span><span class="o">:</span><span class="nx">T</span><span class="p">.</span><span class="nx">DoubleSide</span><span class="p">});</span>
+</pre></div>
+
+
+<p>But the real action happens in the <code>s0.vs</code> and <code>s0.fs</code> files.</p>
+<p>Make sure you understand all this before going on. Including the shader files.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-3-our-own-uniforms">Box 3: Our own uniforms</h2>
+<p>In the first shaders, we only used THREE's variables. Now we can add one of our own. We'll still have a simple constant-color shader, but we'll make that "constant" color be a value that we pass from our program via a uniform variable.</p>
+<p>For shader pair <code>s1.vs</code> and <code>s1.fs</code> (which we'll use in this box), the vertex shader doesn't change (since it doesn't use the color). I could have used <code>s0.vs</code>, but I added different comments.</p>
+<p>The fragment shader <code>s1.fs</code> is changed slightly:</p>
+<div class="codehilite"><pre><span></span><span class="k">uniform</span> <span class="kt">vec3</span> <span class="n">color</span><span class="p">;</span>
+<span class="kt">void</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nb">gl_FragColor</span> <span class="o">=</span> <span class="kt">vec4</span><span class="p">(</span><span class="n">color</span><span class="p">,</span><span class="mf">1.0</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Note that we had to declare a new variable (<code>color</code>) as a <strong>uniform</strong>. This is like a global variable that we set in our host program. It keeps its value for the set of triangles being drawn (the current THREE object).</p>
+<p>The only thing remaining is to tell THREE to do the "host program" side of declaring the <code>color</code> variable and setting it to the correct value. We do this by giving the uniforms as a parameter to <code>ShaderMaterial</code>. The <code>shaderMaterial</code> helper function passes parameters through, so in the JavaScript (<code>2-2-uniforms.js</code>) we write:</p>
+<div class="codehilite"><pre><span></span><span class="kd">let</span> <span class="nx">mat1</span> <span class="o">=</span> <span class="nx">shaderMaterial</span><span class="p">(</span><span class="s2">&quot;./Shaders/s1.vs&quot;</span><span class="p">,</span><span class="s2">&quot;./Shaders/s1.fs&quot;</span><span class="p">,</span>
+                          <span class="p">{</span><span class="nx">uniforms</span><span class="o">:</span> <span class="p">{</span><span class="nx">color</span><span class="o">:</span> <span class="p">{</span><span class="nx">value</span><span class="o">:</span> <span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">Vector3</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.8</span><span class="p">)}</span> <span class="p">}});</span>
+</pre></div>
+
+
+<p>Note that we pass uniforms as a dictionary (hashmap) of variable names (color) and dictionaries with a value key. This is THREE.JS's format. The value of color is the 3-vector (.4,.8,.8). THREE takes care of the conversion between a JavaScript (THREE) <code>Vector3</code> and a GLSL <code>vec3</code>.</p>
+<p>The example in this box, <code>2-2-uniforms.js</code>, has three cubes. One uses the shaders from the previous box (yellow). The next uses this shader with the uniform to make a cyan cube. The third animates the uniform property to make a cube that changes color. Read this code and make sure you understand it before moving on.</p>
+<div id="2-2"></div>
+<script src="2-2-uniforms.js" type="module"></script>
+
+
+</div>
+<div class="examplebox">
+<h2 id="box-4-passing-attributes-and-varying">Box 4: Passing attributes and varying</h2>
+<p>In the previous box, we passed a value that was constant for the entire object. In this box, we'll think about vertex properties.</p>
+<p>In GLSL, a property of a vertex is called an <strong>attribute</strong>. Up until now, we've seen <code>position</code>. THREE set this up for us.</p>
+<p>Setting up attributes is tricky because we also need to arrange for the triangle data to be organized correctly. For this workbook, we'll let THREE take care of this, and only use the attributes that it has built in. Fortunately, it has the main ones we want (position, normal, texture coordinate, and per-vertex color). See the <a href="https://threejs.org/docs/#api/en/renderers/webgl/WebGLProgram">documentation</a> for the full list.</p>
+<p>Our vertex program has access to all of these attributes and can use them to  compute properties it wants to pass along to the fragment shader. So, for example, let us send the texture coordinate to the fragment shader so it can use it to color the fragments. We need to extend the vertex shader slightly so it passes the value along:</p>
+<div class="codehilite"><pre><span></span><span class="k">varying</span> <span class="kt">vec2</span> <span class="n">v_uv</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+   <span class="c1">// the main output of the shader (the vertex position)</span>
+   <span class="nb">gl_Position</span> <span class="o">=</span> <span class="n">projectionMatrix</span> <span class="o">*</span> <span class="n">modelViewMatrix</span> <span class="o">*</span> <span class="kt">vec4</span><span class="p">(</span> <span class="n">position</span><span class="p">,</span> <span class="mf">1.0</span> <span class="p">);</span>
+
+   <span class="c1">// pass the texture coordinate as well</span>
+   <span class="n">v_uv</span> <span class="o">=</span> <span class="n">uv</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Note how we declare a new <strong>varying</strong> variable (<code>v_uv</code>) to pass information between the vertex shader and the fragment shader, and copy the attribute <code>uv</code> we get from THREE into it. The rasterizer will interpolate the values over the area of the triangle.</p>
+<p>The fragment shader is similarly modified - declaring the variable it expects to receive, and using it as two components of the color.</p>
+<div class="codehilite"><pre><span></span> <span class="k">varying</span> <span class="kt">vec2</span> <span class="n">v_uv</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nb">gl_FragColor</span> <span class="o">=</span> <span class="kt">vec4</span><span class="p">(</span><span class="n">v_uv</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>These shaders are in <code>s2.vs</code> and <code>s2.fs</code> (with some extra comments). The program (<code>2-3-varying.js</code>) looks like:</p>
+<div id="2-3"></div>
+<script src="2-3-varying.js" type="module"></script>
+
+</div>
+<div class="sumbox">
+<h2 id="summary-the-basics-of-shaders">Summary: The basics of shaders</h2>
+<p>In this box, we saw some very simple (boring?) shaders. But hopefully, you got the basics of shaders, GLSL and how we fit them into THREE and the CS559 Framework. Make sure you understand how we pass data from JavaScript to our shaders!</p>
+<p>We'll talk more about GLSL on the <a href="3-glsl-three.html">next page.</a></p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

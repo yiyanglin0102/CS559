@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Page 10-8: All Together
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/8-alltogether.md -->
+<h1 id="page-10-8-all-together">Page 10-8: All Together</h1>
+<p><script src="THREE/three.js"></script>
+<script src="THREE/OrbitControls.js"></script></p>
+<p>On this page there are 3 exercises: you need to write a shader for each one.</p>
+<p>Exercises 8-1 and 8-2 require some lighting, and 8-3 recommends it. For the purposes of these exercises, you can assume that the lights are in "camera coordinates". If you do diffuse lighting, the lighting will change as the camera moves (because the lights move with the camera). It is sufficient to create a single directional light either in the camera direction (0,0,1 in view coordinates), or from above the camera (0,1,0 in view coordinates). It is sufficient to just to diffuse lighting (since it is simple), you may want to add some ambient to it so that the parts facing away from the light are not totally black.</p>
+<p>If you do something really creative, you can earn bonus points.</p>
+<p><strong>Optional:</strong> If you want to figure out how to connect to THREE's lighting system, you can earn bonus points by having your shaders on this page use the ambient, directional, and point lights from THREE. If you do this, make sure that you pick some lighting that will be obvious (for example, using the "extreme" lighting of GrWorld). You may want to put an extra sphere into the world using one of THREE's materials so we can see that the lighting is the same. If you choose to try this, expect to have to read the THREE.JS source code, as the documentation is not complete.</p>
+<div class="examplebox">
+<h2 id="box-1-exercise-8-1-lighting-and-procedural">Box 1: Exercise 8-1 - Lighting and Procedural</h2>
+<p>Write a shader in <code>ex81.vs</code> and <code>ex81.fs</code> that creates a procedural texture (one of the ones from page 5 is fine - even one of the examples) and adds lighting. A single directional light source (either in the direction of the camera line of sight or from above the camera) is sufficient. You may not need to modify <code>8-1.js</code>, but you can if you want to.</p>
+<div id="8-1"></div>
+<script src="8-1.js" type="module"></script>
+
+</div>
+<div class="examplebox">
+<h2 id="box-2-exercise-8-2-images-and-lighting">Box 2: Exercise 8-2 - Images and Lighting</h2>
+<p>Write a shader in <code>ex82.vs</code> and <code>ex82.fs</code> that combines information from an image with lighting. A single directional light source (either in the direction of the camera line of sight or from above the camera) is sufficient. You will need to modify <code>8-2.js</code> to load the image and to set up the texture in a uniform.</p>
+<p>See if you can do something more creative than just showing the colors in the texture (the standard color map that you could do with THREE's built in shaders). If you add your own image, make sure you add it to the repository and push it when you submit.</p>
+<div id="8-2"></div>
+<script src="8-2.js" type="module"></script>
+
+</div>
+<div class="examplebox">
+<h2 id="box-3-exercise-8-3-students-choice">Box 3: Exercise 8-3 - Student's choice</h2>
+<p>Write a shader in <code>ex83.vs</code> and <code>ex83.fs</code> that does something interesting and different than the other shaders you've made already in this workbook. You will need to modify <code>8-3.js</code> to set up the uniforms and load textures.</p>
+<p>In this exercise, you must add a uniform variable that controls some parameter, and have this be controlled by a slider. You can look at the examples on Pages 5 and 6 to see how to make sliders easily with the framework code.</p>
+<p>If you write a shader that alters the geometry of the object (moving vertices), you may want to increase the tessellation of the sphere (see Box 7-2 for an example). You can add more example geometry if you think it shows off your shader better - but please leave the plane and sphere.</p>
+<p>Some things to consider trying:</p>
+<ul>
+<li>alter the geometry in the vertex shader (as in Box 7-2)</li>
+<li>mix lighting with other colorings</li>
+<li>animate effects (see Box 2-3 for an example)</li>
+<li>have procedural effects modify images (or vice versa)</li>
+<li>create a different pattern</li>
+<li>combine effects (make dirty wood grain, or a checkerboard of different woods)</li>
+</ul>
+<div id="8-3"></div>
+<script src="8-3.js" type="module"></script>
+
+</div>
+<div class="sumbox">
+<h2 id="summary-shaders">Summary: Shaders</h2>
+<p>This marks the end of our workbook on shaders. You can make more in the future, although, the ones built in to THREE will be good enough.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

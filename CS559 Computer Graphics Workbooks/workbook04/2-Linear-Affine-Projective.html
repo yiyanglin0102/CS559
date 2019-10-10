@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    WB4: 2-Linear-Affine-Projective: Transformations as Matrices
+</title>
+</header>
+<body>
+<!-- @@MDReplace: SOURCES/2-Linear-Affine-Projective.md -->
+<h1 id="workbook-4-page-2-linear-affine-projective">Workbook 4, Page 2 - Linear, Affine, Projective</h1>
+<p>On this page, we'll finally get to doing things in terms of vector/linear algebra.</p>
+<p>Again, this is more of a lecture review than a workbook. Read it to have the notation that we can use going forward. The "work" to do for this page will be in the QUESTIONS.md file.</p>
+<div class="examplebox">
+<h2 id="box-1-linear-transformations">Box 1 - Linear Transformations</h2>
+<p>Many useful transformations can be written as linear combinations of the input variables.
+<script type="math/tex; mode=display"> x' = ax + by \\ y' = cx + dy </script>
+The "new x" is some multiple of the old x, added to some multiple of the old y. Note that for the 2D case, there are 4 parameters (a,b,c,d) which correspond to the amount that new x depends on the old y (b), etc. In fact, a slightly different naming might make this clearer.
+<script type="math/tex; mode=display"> x' = a_{xx} x + a_{xy}y \\ y' = a_{yx}x + a_{yy}y </script>
+Where the four parameters have names like <script type="math/tex">a_{yx}</script> to denote its the amount that y depends on x.</p>
+<p>Notice that the 4 parameters (<script type="math/tex"> a_{xx}, a_{xy}, a_{yx}, a_{yy}</script>) naturally form a square. The rows are all the variables that are used to compute each new variable (so the top row is for new x). The columns are the ways that each old variable affects the new ones (so the first column is the amount that the old x variable affects the new x and y).</p>
+<p>Hopefully, you recognize this square of numbers as a matrix, and the operation performed in that equation as multiplying a matrix by a vector. So if I write:
+<script type="math/tex; mode=display">  \mathbf{x'} = \mathbf{Ax} </script>
+where <strong>x'</strong> and <strong>x</strong> are vectors (of length 2), and <strong>A</strong> is a 2x2 matrix, you won't be too surprised. Other than that I am ignoring whether something is a column vector or a row vector.</p>
+<p>If you're not comfortable with the matrix notation and matrix multiplication, now might be a good time to review it.</p>
+<p>Even if you are familiar with matrices, make sure that you see what each row and column does in the matrix multiplication.</p>
+<p>The matrix multiplication says that the first element of the result (x') comes from the top row of the matrix (<script type="math/tex">a_{xx}, a_{xy}</script>) combined with the input vector (x,y or <strong>x</strong>). The operation between the two vectors is called a dot product. In fact, you can think of matrix by vector multiplication as the process of taking the dot product of each row of the matrix with the vector we're multiplying by (on the right).</p>
+<p>A <strong>linear transformation</strong> is a transformation where the function is multiplication by some matrix. Specifically, we multiply the vector on the right. So, the transformation (function) <script type="math/tex"> f_A </script> would use the matrix <strong>A</strong> would as <script type="math/tex"> f_A(\mathbf{ x }) = \mathbf{ A } \mathbf{ x } </script>.</p>
+<p>Here are some important facts about linear transformations. If you took a linear algebra class, you probably proved all of them already.</p>
+<ol>
+<li>Zero is preserved. If you put in the vector zero, you get zero out.</li>
+<li>Composition of functions is multiplication of matrices. If we have two transformations <script type="math/tex"> f_A </script> and <script type="math/tex">f_B</script> that we apply as composition <script type="math/tex"> f_B(f_A(\mathbf{ x }))</script> this is the same as <script type="math/tex"> (f_B \circ f_A) (x) </script>, which is <script type="math/tex"> \mathbf{ B } \mathbf{ A } \mathbf{ x } </script>.</li>
+<li>Because matrix multiplication associates, you can multiply the matrices first. <script type="math/tex"> \mathbf{ B } \mathbf{ A } \mathbf{ x } = (\mathbf{ B } \mathbf{ A }) \mathbf{ x } = \mathbf{ B } (\mathbf{ A } \mathbf{ x }) </script>
+</li>
+<li>The set of linear transformation is closed under composition. Any sequence of linear transformations is a linear transformation. For any sequence of linear transformations, there is a single linear transformation that has the same result.</li>
+<li>The order of application matters. Matrix multiplication does not commute.</li>
+</ol>
+<p>Now is a good time to read Section 6.1 of Fundamentals of Computer Graphics <a href="https://canvas.wisc.edu/files/7180025/download?download_frd=1">FCG4_Ch06.pdf</a>, which will review all of this, and show you the matrices corresponding to the transformations that we learned about.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-translations-affine-transformations">Box 2: Translations (affine transformations)</h2>
+<p>Hopefully, you noticed that translation is <strong>not</strong> a linear transformation.
+If nothing else, it violates property #1 above (zero is preserved). Translation adds a vector to all points, including zero.</p>
+<p>The combination of a linear transformation and a translation is called an <strong>affine transformation.</strong> Affine is another class of transformations that contains linear transformations (a linear transformation is an affine transformation with a zero translation).</p>
+<p>We typically write affine transformations by multiplying first and adding second. So, for matrix <strong>A</strong> and translation vector <strong>t</strong>, we write <script type="math/tex">f_{A,t}(\mathbf{ x }) = \mathbf{ A } \mathbf{ x } + \mathbf{ t } </script>
+</p>
+<p>Writing this out to expose what matrix multiply does can emphasize that this can be viewed as a separate equation for each coordinate (row of the equation):
+<script type="math/tex; mode=display"> \mathbf{x'} = \begin{bmatrix}  x'_x \\ x'_y \end{bmatrix}  = f_{A,t}(\mathbf{ x })  = \mathbf{ A } \mathbf{ x } + \mathbf{ t } = \begin{bmatrix} a_{xx} & a_{xy} \\ a_{yx} & a_{yy} \end{bmatrix}  \begin{bmatrix} x_x \\ x_y \end{bmatrix}  + \begin{bmatrix} t_x\\t_y\end{bmatrix}  </script>
+or
+<script type="math/tex; mode=display"> x'_x = a_{xx} x_x + a_{xy} x_y + t_x \\ x'_y = a_{yx} x_x + a_{yy} x_y + t_y </script>
+</p>
+<p>It is tempting to put that 3x2 "rectangle" of numbers as a matrix. However, we cannot use multiply operations for composition or application. You can't multiply two 3x2 matrices together, nor does it make sense to multiply a 3x2 matrix by a 2-vector on the right.</p>
+<p>Affine transformations are closed under composition, and have the property that any sequence of affine transformations can be represented as a single affine transformation. However, the composition is messy notationally. We can't use the nice matrix notation where function composition is matrix multiplication. Unless we use the trick in the next box.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-3-homogeneous-coordinates">Box 3: Homogeneous coordinates</h2>
+<p>Several transformations that we want to have in 2D are not linear. But we like linear transformations.</p>
+<p>The counter-intuitive solution will be to stop using 2D points. We'll embed the 2D space that we want to work in into a 3D space, do linear operations in this 3D space, and then interpret the points in 3D back in 2D.</p>
+<p>This will turn out to have all sorts of advantages as we do more graphics because many important operations will turn into simple linear operations in a higher dimension. We'll start with the simple version that will allow us to do affine transformations (including translations) as linear transformations.</p>
+<p>The trick of using an <em>n+1</em> dimensional space to represent <em>n</em> dimensional points is known as <strong>homogeneous coordinates.</strong> For this workbook, we'll be using 3D homogeneous coordinates to represent 2D spaces. In the future, we'll use 4D homogeneous coordinates to represent 3D spaces.</p>
+<p>We'll call the last coordinate of the 3 coordinates w. So our three coordinates in homogeneous space will be (x,y,w). Calling the extra dimension w will be a reminder that it is special, and also still work when we get to making 4D homogeneous coordinates for 3D space.</p>
+<p><strong>Basic version:</strong> we'll represent the 2D point (x,y) by the 3-vector (x,y,1). In this workbook, we'll focus on the case where the last coordinate (w) is 1.</p>
+<p><em>If you want the math version:</em> (wait for the discussion in class, but briefly)
+Homogenous space treats all points along lines through the origin as equivalent.
+Our 2D space will be the plane w=1 inside of the 3d space. For any line through the origin, we project the entire line to its intersection with the plane. So if we have a point (x,y,w) in 3D, it's equivalent to the point (x/w, y/w, 1), which we interpret as (x/w, y/w) in our 2D space.</p>
+<p>If we change our 2D points into homogeneous coordinates, our transformations become 3x3 matrices to transform the 3D homogeneous points. An affine transformation in 2D becomes a linear transformation in the 3D homogeneous space. If we had the 2D affine transformation <script type="math/tex"> \mathbf{x'} = \mathbf{ A } \mathbf{ x } + \mathbf{ t } </script> we write the following in 3D:
+<script type="math/tex; mode=display"> \begin{bmatrix} x'_x \\ x'_y \\ x'_w\end{bmatrix}  = \begin{bmatrix}
+a_{xx}&a_{xy}&t_x \\ a_{yx}&a_{yy}&t_y \\0&0&1\end{bmatrix}  \begin{bmatrix} x_x\\x_y\\1\end{bmatrix} </script>
+<br />
+If you multiply this out, you'll see that <script type="math/tex"> x'_w </script> will always end up being 1. You'll also notice that the top two rows end up being exactly the same expressions as in Box 2.</p>
+<p>If you're wondering why this trick works, we'll explain in class. The short mathy version: translation in 2D becomes a skew in the homogeneous space.</p>
+<p>But the cool thing: affine transformations in 2D are linear transformations in the 3D homogeneous space. We can represent transformations as matrices. Transformation composition is matrix multiplication.</p>
+<p>Now you can read the rest of Chapter 6 of Fundamentals of Computer Graphics (you can skip 6.2 for now as it covers 3D transformations) <a href="https://canvas.wisc.edu/files/7180025/download?download_frd=1">FCG4_Ch06.pdf</a>. Section 6.3 discusses homogeneous coordinates.  You should also read Chapter 5 of Hart's Big Fun Book of Computer Graphics <a href="https://canvas.wisc.edu/files/7180426/download?download_frd=1">Hart05-jan19.pdf</a> which covers the same material in a different way.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-4-projective-coordinates">Box 4: Projective Coordinates</h2>
+<p>Homogeneous coordinates are sometimes called projective because we need to project points from the higher dimensional space back to our original space. This will be useful when we get to 3D since it will let us do perspective transformation (which involve a projection).</p>
+<p>If the bottom row of the projective transformation (the one we apply to homogeneous coordinates) is zero except for a 1 in the lower right corner, the transformation is affine in the original space. If the point we transform starts out with a 1 for its w coordinate, it will end up with a 1 for its w coordinate.</p>
+<p>However, if the bottom row of the matrix is not 0,0,1, or the w of the point is not 1, we will end up with a number other than 1 for the new w, and we need to remember to "divide by w" to convert back to 2D when the time comes.</p>
+<p>To illustrate how this can work, consider the scaling transformation. We can write it two different ways:
+<script type="math/tex; mode=display"> \begin{bmatrix} s & 0 & 0 \\ 0 & s & 0 \\ 0 & 0 & 1 \end{bmatrix} or \begin{bmatrix} 1&0&0\\0&1&0\\0&0&1/s \end{bmatrix} </script>
+Notice that these give the same result. If we transform the 2D point x,y using the first matrix we get (sx,sy,1) or (sx,sy). If we use the second matrix, we get (x,y,1/s), which after division by w (to convert back to 2D) gives us (sx,sy).</p>
+</div>
+<div class="examplebox">
+<h2 id="box-5-reading-matrices">Box 5: Reading Matrices</h2>
+<p>It is important to understand how the matrices work so we can "read" them to understand what a specific matrix does. This will also let us "write" matrices directly (without having to compose them from multiple simple transformations).</p>
+<p>
+<script type="math/tex; mode=display"> \begin{bmatrix} x'_x \\ x'_y \\ x'_w\end{bmatrix}  = \begin{bmatrix}
+a_{xx}&a_{xy}&t_x \\ a_{yx}&a_{yy}&t_y \\0&0&1\end{bmatrix}  \begin{bmatrix} x_x\\x_y\\1\end{bmatrix} </script>
+</p>
+<p>We can read this matrix as follows:</p>
+<ol>
+<li>The first column ( <script type="math/tex">a_{xx}, a_{yx}, 0 </script> ) tells us the new direction and scale of the x axis. For every unit of x (in <script type="math/tex">x_x</script>), we move this vector in the new space.</li>
+<li>The second column ( <script type="math/tex">a_{yx}, a_{yy}, 0</script> ) tells us the new direction and scale of the y axis.</li>
+<li>The third column ( <script type="math/tex">t_x, t_y, 1 </script> ) tells us the new position of the origin. It's where the zero vector will go.</li>
+</ol>
+<p>So, we can use this backwards if we know the transformation we want, we can create the matrix that achieves that transformation. Consider trying to transform the red box into the blue box:</p>
+<p><img alt="diagram" src="Images/A04-1-5-1.png" /></p>
+<p>From the picture, I can see that I want the origin to go to (2,1), I want the x axis to go to (4,2) and I want the y axis to go to (-1,3). I can use this to create the matrix:</p>
+<p>
+<script type="math/tex; mode=display"> \begin{bmatrix} 4 & -1 & 2 \\ 2 & 3 & 1 \\ 0 & 0 & 1 \end{bmatrix} </script>
+</p>
+<p>I could have created this matrix as the composition of basic transformations. But in this case, it was easier just to build the matrix by looking where things went.</p>
+<p>Make sure that you can do this! It makes for a good exam question, but its also is useful when you need to construct matrices to put objects in particular places.</p>
+</div>
+<div class="sumbox">
+<h2 id="summary">Summary</h2>
+<p>In this page, we made the connection between transformations and matrices. This will allow you to read the books (which discuss transformations in terms of matrices). But it also will let you use matrices in code, which we will start to do on the <a href="3-Matrix-Code.html">next page</a>.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html

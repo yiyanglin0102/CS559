@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    WB4: 1-Math: Transformations as Math
+</title>
+</header>
+<body>
+<!-- @@MDReplace: SOURCES/1-math.md -->
+<h1 id="workbook-4-page-1-transformations-as-math-vs-code">Workbook 4, Page 1: Transformations as Math vs. Code</h1>
+<p>When working with Canvas, we write lots of code that refers to the positions of points using things such as <code>context.moveTo(x,y),</code>  <code>context.lineTo(x,y)</code> or <code>context.fillRect(x,y,w,h)</code>. In these cases, we pass points as a pair of numbers (<code>x,y</code>).</p>
+<p>When thinking about points, it is easier notation to write points directly. So we can use a variable <strong>p</strong> to refer to a point. In terms of implementation, we might represent <strong>p</strong> as an array (of length 2 for 2d), or as an object with members for x and y. Some APIs we will see later in the class will define their functions to take point objects, rather than a list of individual parameters.</p>
+<p>Points and vectors are not the same (see <a href="http://graphics.cs.wisc.edu/WP/tutorials/points-vectors-and-coordinate-systems-why-are-points-and-vectors-different/">Tutorial: Points, Vectors, Coordinates</a> if you need a reminder). However, in code (and notation), we often do not distinguish between them. In terms of representation, they store the same things (e.g., two numbers for a 2D point or a 2D vector).</p>
+<p>Generally, we write vectors or points as lowercase boldface (in print). I will try to be consistent with that. So, x is a scalar (number), <strong>x</strong> is a vector, and <script type="math/tex">x_x</script> is the x component of the <strong>x</strong> vector (which is a scalar). It might be more correct to write <script type="math/tex"> \mathbf{x}_x </script> since <strong>x</strong> is a vector.</p>
+<p>Note: this workbook page reviews what we'll discuss in lecture. There isn't any code to look at. Rather than editing this file, we'll ask you things in <code>QUESTIONS.md</code>.</p>
+<p>And a warning, you will seen things x, <strong>x</strong>, <script type="math/tex"> x </script> and <script type="math/tex"> \mathbf{ x } </script>. Sorry for the inconsistency in typesetting - getting math right on the web is a bit of a hassle. In text variables will be x (scalar) or <strong>x</strong> (vector), in equations (that may appear inline), they will be <script type="math/tex"> x </script> (scalar) or <script type="math/tex"> \mathbf{ x } </script> (vector).</p>
+<div class="examplebox">
+<h2 id="box-1-transformations-as-functions">Box 1 : Transformations as Functions</h2>
+<p>Recall that we said that transformations are functions that change points into other points. So, for example when we apply a translation <code>translate(a,b)</code> we are saying to use the function <script type="math/tex">f(x,y) = x+a, y+b</script> on every point we encounter.</p>
+<p>Using vector notion (having the point be a vector variable), we could instead write this as <code>translate(t)</code> (for a vector <strong>t</strong>) is <script type="math/tex">f(\mathbf{x})=\mathbf{x}+\mathbf{t}</script>. If I was being picky about notation, the f should also be boldfaced since it is a function that returns a vector.</p>
+<p>The other transformations we have seen so far can also be written this way (as functions that take a point as input and produce a point as output). In fact, this might be a way to define transformation: it is a function that takes a point as input and returns a new point as output.</p>
+<p>The only thing new here is a change of notation: we are writing <script type="math/tex">f(\mathbf{ x })</script> rather than <script type="math/tex"> f(x,y) </script>. This makes it easier to write/type the math. And it also makes it easier to connect between what we see in the textbook and what we write as code.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-transformation-composition-as-function-composition">Box 2 : Transformation Composition as Function Composition</h2>
+<p>In the previous workbook, we saw how we can use sequences of transformations to create "one" transformation that does a compound thing. For example, in order to scale about a particular point, we translate such that the center point is at the origin, we scale by the desired amount, and then we translate to return the center point from where it came. (this was in Workbook 3). In code, this sequence would be written:</p>
+<div class="codehilite"><pre><span></span>    context.translate(c.x, c.y);
+    context.scale(s,s);
+    context.translate(-c.x, -c.y);
+    DRAW STUFF
+</pre></div>
+
+
+<p>Where draw stuff includes drawing commands that provide points. Note that I have a point <strong>c</strong>, so in my Canvas code I had to refer to its specific parts.</p>
+<p>If we write this using function notation, we first have the "last" translate (which moves the point <strong>c</strong> to the origin, <code>translate(-c.x, -c.y)</code>). Let's call this function f, so the application of it to the points (in "draw stuff") would be <script type="math/tex"> f ( \mathbf{ x } ) </script>. Call the second function (that does the scaling) g. This function is applied to the results of applying the first function to the point. Similarly, if we call the final translation h, that function is applied to the result of the second function (which was applied to the results of the first function, which was applied to the point).</p>
+<p>So, we could re-write the code in math as:
+<script type="math/tex; mode=display"> h ( g ( f ( \mathbf{ x }))) </script>
+</p>
+<p>Notice that the first function we apply to a point (f) appears in the right of the list, while the last function we apply appears first. Just like it does in the code. We can think of the functions as a "machine" where we pour points in on the right, and they come out on the left. They go in in their "local" coordinate system, and come out in the final coordinate system on the left.</p>
+<p>Function notation also lets us talk about combining the functions. The idea of creating a new function by putting two functions together is called <em>composition.</em> If we want to create a new function that does what the combination of f and g do (apply f to the input, then apply g to the result), we write <script type="math/tex"> g \circ f </script>. Note that this new function first applies f to the input, but f is still on the right of the expression (it is closest to the input). Or, to define a new function k as the sequence above, <script type="math/tex"> k = h \circ g \circ f </script>, which means that <script type="math/tex"> k(\mathbf{ x })=h(g(f(\mathbf{ x }))) </script>.</p>
+<p>Understanding this is important since it helps explain the ordering. In code, points are "issued" at the bottom and move "up" through the transformations. In math notation, the points are on the right, and move through the transformations right to left. The transformations that are written last are applied to the points first.</p>
+<p>If you're wondering where the parameters to the transformation went (<strong>c</strong> and s in the code example), they were built in to the functions that I defined. So g above was "scale by s". I could have picked a different notation, for example calling the scaling function S (capital), and using a subscript to denote its parameters.</p>
+</div>
+<div class="sumbox">
+<h2 id="summary">Summary:</h2>
+<p>Hopefully, representing points using vector notation and using function notation for transformations connects to the code for you. This kind of notation will make many things easier going forward.</p>
+<p>We'll use this notation to connect what we're doing to linear algebra on the <a href="2-Linear-Affine-Projective.html">next page</a>.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html

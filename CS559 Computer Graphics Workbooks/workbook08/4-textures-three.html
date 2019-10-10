@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Page 8-4 - Textures in THREE
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/4-textures-three.md -->
+<h1 id="page-8-4-textures-in-three">Page 8-4 - Textures in THREE</h1>
+<p>Using textures is notoriously tricky because there are a lot of steps involved. Fortunately, THREE makes it remarkably easy - it takes care of all of the little details, allowing you to focus on the big parts (setting coordinates, defining the texture image).</p>
+<p>If you want a sense of how much had to happen to get a cube with texture on it, have a look at the <a href="https://jsbin.com/pafugaqoho/edit?html,js,output">2015 example</a>! And this doesn't do any lighting!</p>
+<p>Fortunately, THREE takes care of all of this for us. And it gives us access to lots of fancier kinds of texture things as well.</p>
+<p>The "ThreeJS Fundamentals" website has a <a href="https://threejsfundamentals.org/threejs/lessons/threejs-textures.html">nice tutorial on texture mapping</a> that gets to some of the more advanced issues that we will get to later.</p>
+<div class="examplebox">
+<h2 id="box-1-the-complete-example">Box 1: The Complete Example</h2>
+<p>I'm going to do this backwards, Here is a complete example program. It's in <code>4-texturetriangle.js</code>. It's the two triangles from page 1, with an extra plane and a texture added. The plane is so you can see what the texture looks like.</p>
+<div id="texture-triangle"></div>
+
+<p>I'll explain how it works over the next few boxes, but you might want to have a look first.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-texture-coordinates-in-three">Box 2: Texture Coordinates in THREE</h2>
+<p>Most THREE primitives have reasonable texture coordinates defined. For example, the demo in Box 1 has its u,v going from 0 to 1 over the course of a plane.</p>
+<p>For user-defined geometries (of class <code>Geometry</code>), we have to provide texture coordinates ourselves. Just like with colors and normals, a vertex may be "split" so that it has a different texture coordinate for each face it is part of. However, unlike colors and normals, the texture coordinates are not part of the <code>Face3</code> data structures.</p>
+<p>Texture coordinates must be provided as an array of arrays of arrays of vectors. The <code>faceVertexUvs</code> property of a <code>Geometry</code> has type <code>Vector2[][][]</code>. It is triple nested because:</p>
+<ul>
+<li>Each vertex needs a 2D coordinate (a <code>Vector2</code>)</li>
+<li>Each face has 3 vertices</li>
+<li>Each layer has an array of faces</li>
+<li>Each geometry can have multiple layers of texture coordinates.</li>
+</ul>
+<p>We won't use layers now. So we'll always make the top level be an array of length 1.</p>
+<p>Here's an example from the code:</p>
+<div class="codehilite"><pre><span></span><span class="nx">geometry</span><span class="p">.</span><span class="nx">faceVertexUvs</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[]</span> <span class="p">];</span>
+<span class="kd">let</span> <span class="nx">f1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">Face3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+<span class="nx">geometry</span><span class="p">.</span><span class="nx">faces</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">f1</span><span class="p">);</span>
+<span class="nx">geometry</span><span class="p">.</span><span class="nx">faceVertexUvs</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">push</span><span class="p">([</span><span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">Vector2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">Vector2</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">Vector2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)]);</span>
+</pre></div>
+
+
+<p>The first line of this snippet create the <code>faceVertexUvs</code> array with a single layer. For now, that layer is empty (it has no faces in it). The last line adds the texture coordinate for the particular triangle. Notice that it adds to the layer (<code>faceVertexUvs[0]</code>). What it adds is the information for the face: the coordinates for the three vertices of the triangle. Each coordinate is a <code>Vector2</code>, and the face is an array of three of them.</p>
+<p>To see the nesting, let me write the code in multiple lines:</p>
+<div class="codehilite"><pre><span></span><span class="kd">let</span> <span class="nx">vertex1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">Vector2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>        <span class="c1">// vertex 2 and 3 defined as well</span>
+<span class="kd">let</span> <span class="nx">face1</span> <span class="o">=</span> <span class="p">[</span><span class="nx">vertex1</span><span class="p">,</span> <span class="nx">vertex2</span><span class="p">,</span> <span class="nx">vertex3</span><span class="p">];</span> <span class="c1">// a face is 3 vertices</span>
+<span class="kd">let</span> <span class="nx">layer</span> <span class="o">=</span> <span class="p">[</span><span class="nx">face1</span><span class="p">];</span>                     <span class="c1">// and more faces...</span>
+<span class="kd">let</span> <span class="nx">geometry</span><span class="p">.</span><span class="nx">faceVertexUvs</span> <span class="o">=</span> <span class="p">[</span><span class="nx">layer</span><span class="p">];</span>    <span class="c1">// we only have one layer</span>
+</pre></div>
+
+
+</div>
+<div class="examplebox">
+<h2 id="box-3-texture-image-loading-in-three">Box 3: Texture Image Loading in THREE</h2>
+<p>In order to have a texture image, we need to get the image from somewhere. Usually, this is from some image file.</p>
+<p>Loading an image into a texture is tricky. We need to load the image. We need to wait until the image is loaded. We need to process the image and put it into a special format (just wait). We need to attach the image to its surface.</p>
+<p>Fortunately, THREE takes care of all this for you with a fancy texture loader. You say "load me a texture", and it loads the texture in and sets things up once its loaded. A cool feature: before the texture is loaded, things still work (it just shows up as blank). Remember, this is JavaScript asynchronicity, so there really isn't any multi-threading. You need to make sure you return back to the main event loop for loading to happen (remember how <code>requestAnimationFrame</code> works?).</p>
+<p>The line of code is:</p>
+<div class="codehilite"><pre><span></span><span class="kd">let</span> <span class="nx">tl</span><span class="o">=</span><span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">TextureLoader</span><span class="p">().</span><span class="nx">load</span><span class="p">(</span><span class="s2">&quot;./THREE/UV_Grid_Sm.jpg&quot;</span><span class="p">);</span>
+</pre></div>
+
+
+</div>
+<div class="examplebox">
+<h2 id="box-4-texture-usage-in-three">Box 4: Texture Usage in THREE</h2>
+<p>Once a texture is created, we simply need to tell the material to use it in order to get the colors on the triangles. This is done by specifying a <code>map</code> parameter to a texture. So, in the example:</p>
+<div class="codehilite"><pre><span></span><span class="kd">let</span> <span class="nx">tl</span><span class="o">=</span><span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">TextureLoader</span><span class="p">().</span><span class="nx">load</span><span class="p">(</span><span class="s2">&quot;./THREE/UV_Grid_Sm.jpg&quot;</span><span class="p">);</span>
+<span class="kd">let</span> <span class="nx">material</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">T</span><span class="p">.</span><span class="nx">MeshStandardMaterial</span><span class="p">({</span><span class="nx">map</span><span class="o">:</span><span class="nx">tl</span><span class="p">,</span><span class="nx">roughness</span><span class="o">:</span><span class="mf">0.75</span><span class="p">});</span>
+</pre></div>
+
+
+<p>We can specify other properties for the material. In the example, I specified <code>roughness</code>. You can even specify <code>color</code>, and this color will be combined with the colors from the texture. And of course, with a <code>MeshStandardMaterial</code>, the colors are affected by lighting as well. If you want to use textures but do not want the color affected by lighting, use a <code>MeshBasicMaterial</code>.</p>
+<p>THREE allows us to control many properties of how textures are used. These will make more sense once we learn about how texturing works in class. For now, the default parameters will probably be fine.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-5-texture-re-use">Box 5: Texture Re-Use</h2>
+<p>It's so easy to load and use textures with THREE that you might forget how many you've loaded. In general, using lots of textures can be a problem: they take up a lot of memory.</p>
+<p>For example, in the example code (<code>4-texturetriangle.js</code>), the texture file <code>./THREE/UV_Grid_Sm.jpg</code> is loaded three times. A separate copy will be loaded for each instance of <code>TwoTrianglesTextured</code> and <code>TwoTrianglesTextured2</code> that we create. Right now, there is just one of each (so that's two copies of the texture - a third is used for the plane). If we made a lot of these objects, the memory usage would add up fast.</p>
+<p>Therefore, when we use textures, we need to be careful to re-use things that we've loaded already and not load multiple copies. In fact, we might want to try to re-use the same texture over and over to save memory. Think about this when you make your own objects for future projects.</p>
+</div>
+<div class="sumbox">
+<h2 id="summary-textures-in-three">Summary: Textures in THREE</h2>
+<p>That was a quick summary of how textures are applied in THREE. On the <a href="5-dice-domino.html">next page</a>, you can try doing it yourself!</p>
+</div>
+<script src="THREE/three.js"></script>
+
+<script src="THREE/OrbitControls.js"></script>
+
+<script src="4-textures.js" type="module"></script>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

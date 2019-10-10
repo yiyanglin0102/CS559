@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Page 7-4: Quaternions
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/4-quaternions.md -->
+<h1 id="page-7-4-quaternions">Page 7-4: Quaternions</h1>
+<div class="examplebox">
+<h2 id="box-1-quaternions">Box 1: Quaternions</h2>
+<p>Quaternions are usually not a topic discussed in an introductory graphics course - but they are an important topic that gets a lot of discussion in graphics more generally. I want to give you the basic idea for two reasons:</p>
+<ol>
+<li>The basic idea isn't that much different than Axis Angle, which you should understand as part of a graphics class. If you have this idea, Quaternions won't seem so magical.</li>
+<li>Internally, this is how THREE.js works. You can see this in the <a href="https://threejs.org/docs/index.html#manual/en/introduction/Matrix-transformations">documentation</a>. THREE does a great job of hiding the fact that it always stores rotations as quaternions - it does the conversions as necessary.</li>
+</ol>
+<p>Quaternions are 4-dimensional complex numbers. Technically, in computer graphics we deal with <strong>Unit Quaternions</strong> which are Quaternions (4 numbers) that have unit magnitude. Unit Quaternions can be used to represent rotations.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-from-axis-angle-to-quaternions">Box 2: From Axis Angle to Quaternions</h2>
+<p>On the last page, we saw how nice Axis Angle representations are for getting nice rotations. Unlike Euler angles, Axis Angle representations require us to store 4 numbers to represent a rotation (3 for the axis, 1 for the angle).</p>
+<p>The problem with Axis Angle representation is that there are some things we don't know how to do with them. The biggest one: If we have two Axis Angle rotations, we don't know how to compose them into a single Axis Angle rotation (if the axes are different - if the axes are the same, we can just add the angles). Also, figuring out how to "apply" the rotation to a point (either doing the transformation directly, or converting it to a matrix) is a lot of work.</p>
+<p>Euler Angles have these same problems (but might be worse for both).</p>
+<p>But with axis angles, there is a simple trick...</p>
+<p>Suppose our axis angle representation is <script type="math/tex"> \theta, \mathbf{\hat{v}} </script> so <script type="math/tex">\theta</script> is the angle and <script type="math/tex">\mathbf{\hat{v}}</script> is the unit vector of the axis (we can always normalize the axis to get a unit vector).</p>
+<p>We'll create a new set of 4 numbers (one scalar and a 3-vector):</p>
+<p>
+<script type="math/tex; mode=display">\cos{\frac{\theta}{2}},\sin{\frac{\theta}{2}}\mathbf{\hat{v}}</script>
+</p>
+<p>All we did was replace <script type="math/tex">\theta</script> by <script type="math/tex">\cos{\frac{\theta}{2}}</script> and scaled the vector (<script type="math/tex">\mathbf{\hat{v}}</script>) by <script type="math/tex">\sin{\frac{\theta}{2}}</script>.</p>
+<p>Remembering some high school trigonometry, <script type="math/tex; mode=display">\cos^2{\alpha}+\sin^2{\alpha}=1</script> we can see that this new version of the 4 numbers is going to have magnitude one.</p>
+<p>Now, you might wonder "of all the different things we could have done to the 4 numbers of axis angle, why would we ever scale by the sin of the half angle?" Sorry, but the answer is way beyond what we'll study in an introductory graphics class.</p>
+<p>But, if you do this non-obvious change, something special happens: we have encoded the rotation as a unit quaternion. A unit quaternion is, in one sense, just a set of 4 numbers that have magnitude one. So our scaling change does create one. And once we have a unit quaternion, there are all kinds of things we can do with them because they have a well-defined algebra.</p>
+<p>Now, if you want to learn how to <strong>use</strong> quaternions, you can look at a graphics book (such as Chapter 4.3 of Real Time Rendering <a href="https://canvas.wisc.edu/files/7750567/download?download_frd=1">RTR4_Ch04.pdf</a>) and see:</p>
+<ul>
+<li>Unit Quaternions can be multiplied together easily. This lets us compose rotations.</li>
+<li>If you have two Unit Quaternions you can interpolate between them using <em>spherical linear interpolation</em> (or <strong>slerp</strong> for short - yes, that is the term graphics people use).</li>
+<li>For almost everything you need to do with a rotation in computer graphics, there is an efficient and elegant way to do it with Unit Quaternions.</li>
+<li>The math behind Quaternions has to do with high-dimensional complex numbers, so it sounds really fancy. It is quite elegant.</li>
+</ul>
+<p>So, for these reasons, THREE.js (and many other systems) use Unit Quaternions internally for representing rotations. Fortunately, in THREE, they hide the internals well, so you never have to see a Quaternion. You can work with Euler Angles or Axis Angle representations, and it will get converted back and forth as needed.</p>
+</div>
+<div class="sumbox">
+<h2 id="summary-quaternions">Summary: Quaternions</h2>
+<p>Hopefully, you now have a sense of what a Quaternion is and why we use them.
+Sadly, this is probably all we are going to discuss in class about Quaternions.</p>
+<p>So go on to the <a href="5-hierarchy.html">next page</a> where we'll talk more about doing transformations in THREE.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Workbook 5: Page 1 - Curves
+</title>
+</header>
+<body>
+<!-- @@MDReplace: SOURCES/1-curves.md -->
+<h1 id="workbook-5-page-1-curves">Workbook 5, Page 1: Curves</h1>
+<p>The book chapter (FCG15) describes multiple ways to define curves. We are going to focus on parametric curves in this workbook.</p>
+<div class="examplebox">
+<h2 id="box-1-parametric-curves-in-2d">Box 1: Parametric Curves in 2D</h2>
+<p>A parametric curve is a shape represented by a function <script type="math/tex">f(u)</script>, which returns 2D values. We can think of it as either <script type="math/tex">\mathbf{ x }=f(u)</script> or as separate functions for each dimension, <script type="math/tex">x=f_x(u), y=f_y(u)</script>.</p>
+<p>The parameter of this function is the "free parameter" and it goes over some range. The curve maps the interval (the range of the parameter) to a set of points in 2D.</p>
+<p>For a function, we need to know the right range for the interval. For functions meant to go from 0 to 1, I'll use the parameter variable u.</p>
+<p>There is no loss of generality - we can always scale the parameter to the right range.</p>
+<p>Here are some examples of some curves:</p>
+<canvas id="c1" width="720" height="200"></canvas>
+
+<p>You can see the parametric functions in the file <code>1-curve.js</code>. You should also look at the <code>plotter</code> function.</p>
+<p>Notice that the first three functions all draw the same line segment - however, the point moves differently. Notice that in the third line segment, the point starts out slowly and speed up.</p>
+<p>The circle and parabola should not be surprises.</p>
+<p>The V shaped curve is effectively two line segments, with an if statement that switches between them at u=.5. This is an example of how we make a compound shape from simpler pieces.</p>
+<p>The last curve - the two line segments on the right - is a single curve, it is just not connected. The pen "jumps" at .5 (look at the way the function is defined). This is very similar to the V shape, except that rather than just changing direction at .5, the pen jumps to a different spot.</p>
+<p>If you look at the <code>plotter</code> function, you can see that these curves are actually being drawn by approximating them by a number of line segments. Canvas is actually capable of drawing all of these shapes, but I wanted to emphasize the idea that we can draw parametric curves by sampling a bunch of parameter values.</p>
+<p>In this program, I am drawing the curves by choosing parameter values with even spacing. But this means that I need to know how many samples to use when drawing the curve. For line segments, I can use 2 samples (0 and 1). However, for the smoother shapes I use many segments (the circle uses 50) so that the shape looks as if it were a continuous circle. If you look carefully, you'd see it's really a 50-sided polygon.</p>
+<p>For curves where there is an abrupt change (such as the abrupt change in direction in the V or the jump in position in the two lines on the right), we need to be careful to choose values around the jump. In fact, for the two lines, I didn't even try to use the plotter code (which assumes that things are connected). We will call curves where there is a sudden change <strong>discontinuous.</strong> We'll discuss continuity and discontinuity on a future page.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-tangents-with-exercise">Box 2: Tangents (with exercise)</h2>
+<p>The <em>tangent</em> to a curve at a particular point is the line that touches the curve at that point. Another way to think of it is that the tangent is the velocity vector of the pen. To determine the tangent at a particular point, we take the derivative of the point location (the parametric function) with respect to the parameter.</p>
+<canvas id="c2" width="720" height="280"></canvas>
+
+<p>This figure is similar to Figure 1, except that I am now drawing the tangent vector (scaled by 40% so it fits nicely in the box). Note that I did not put the tangent in for the parabola: that is left as an <strong>exercise.</strong> (have the parabola function return the correct derivatives). This is good practice at doing calculus in code for curves. We'll do more later.</p>
+<p>Observe that in all cases (after you fix the derivatives for the parabola), the tangent vector points in the direction that the pen moves as the parameter goes up in value.</p>
+<p>For the lines, notice that the first two lines the tangent is constant, while for the third line (the one that starts slowly and speeds up) the tangent grows as the point moves downward.</p>
+<p>And notice how the tangent changes abruptly for the V and disconnected lines. This is a discontinuity in the derivatives.</p>
+</div>
+<div class="sumbox">
+<h2 id="summary-parametric-functions">Summary: Parametric Functions</h2>
+<p>In this page, we looked at parametric functions and how to draw them. On the <a href="2-continuity.html">next page</a> we will look at continuity in more detail.</p>
+</div>
+<script type="module" src="1-curves.js"></script>
+<!-- @@EndMDReplace: -->
+</body>
+</html

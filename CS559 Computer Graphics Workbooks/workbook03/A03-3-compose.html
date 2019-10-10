@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+    <!--
+        Workbook 3 for CS559 - page three -
+        written January 2019, by Michael Gleicher
+
+        students are allowed (and) encouraged to read the HTML source files!
+
+        (however, this one is boring - you can just look at it in the browser)
+    -->
+
+<header>
+        <meta charset="UTF-8">
+        <!-- use the CS559 Style Sheet -->
+        <link rel="stylesheet" href="Libs/style559.css">
+        <link rel="stylesheet" href="a03.css">
+        <link rel="stylesheet" href="Libs/pygments.css">
+        <title>
+            Assignment 03: Index Page
+        </title>
+</header>
+<body>
+    <!-- @@MDReplace: SOURCES/compose.md -->
+<h2>Workbook 3, page 3 - Composition</h2>
+<p>Now that we've learned <code>scale</code> and <code>translate</code>, let's try to put them together!</p>
+<p>The idea of putting transformations together is a very important part of computer graphics. It's important to understand it in the simple case (scale and translate), so that when we get to more complex transformations and more complex combinations, you will be able to appreciate what is happening.</p>
+<p>As a reminder, you should be looking at the code for each of these examples. For this workbook, the HTML files aren't important.</p>
+<div class="examplebox">
+<h2>Box 1: Scale and Translate</h2>
+<p>We can apply transformations one after the other. For example, here we can scale (in the X direction) and then translate (also in the X direction).</p>
+<p>Translate: <input id="s1t" type="range" min="0" max="50" step="1" width="100px"></input>
+<input type="text" id="sp1t" value="FILL" style="width:50px" readonly></input><br />
+Scale: <input id="s1s" type="range" min="0" max="3" step=".1" width="100px"></input>
+<input type="text" id="sp1s" value="FILL" style="width:50px" readonly></input> </p>
+<p>Scale then translate:<br />
+<canvas id="s1st" width="160" height="60"></p>
+<p>Translate then scale:<br />
+<canvas id="s1ts" width="160" height="60"></p>
+<p>Notice the difference in behavior. If we translate first, then the scale only applies to the object (we stretch the coordinate axes after we've moved the origin). If we scale first, then the translation applies in that stretched coordinate system.</p>
+<p>We can think about this as functions being applied to positions (transformation). Let the position of the point be <code>x</code>, the translation be <code>t</code> and the scale be <code>s</code>. The translate transformation is <code>T(x,y) =&gt; (x+t,y)</code>, and the scale transformation is <code>S(x,y) =&gt; (sx,y)</code>.</p>
+<p>If we translate first then scale it is <code>T(S(x,y)) = T(sx,y) = sx+t,y</code>.</p>
+<p>If we scale first then translate then it is <code>S(T(x,y)) = S(x+t,y) = sx+st,y</code>.</p>
+<p>Remember, that translate and scale apply to the <em>coordinate system.</em> The coordinate system then effects the points, because the points are interpreted in the coordinate system. To use the pen and paper analogy, the transformation commands (translate and scale) move and stretch the paper we draw on.</p>
+<p>We can view the operations as applying to the points, but this requires us to read <em>backwards</em>. If do translate then scale, that means first scale the object then move it. If we scale then translate, we can think about first moving the object, then scaling the object (in its new position).</p>
+</div>
+<div class="examplebox">
+<h2>Box 2: Scale about the center</h2>
+<p>Suppose I want to scale around the center of an object, not the center of the coordinate system.</p>
+<p>I could: move the object so its center is at the origin, scale it, then move the object back to its original position.</p>
+<canvas id="b2" width="80" height="80"></canvas>
+<input id="s2" type="range" min="0" max="3" step=".1" width="100px"></input>
+
+<p>Here, I arbitrarily chose to put the center of the square at <code>(40,40)</code>. So I need to <code>translate(-40,-40)</code> to place its center at the origin, then scale, then do a translation to put the center back where it belongs. But when we look at the code:</p>
+<div class="codehilite"><pre><span></span>        <span class="nx">context</span><span class="p">.</span><span class="nx">translate</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span><span class="mi">40</span><span class="p">);</span>
+        <span class="nx">context</span><span class="p">.</span><span class="nx">scale</span><span class="p">(</span><span class="nx">sc</span><span class="p">,</span><span class="nx">sc</span><span class="p">);</span>
+        <span class="nx">context</span><span class="p">.</span><span class="nx">translate</span><span class="p">(</span><span class="o">-</span><span class="mi">40</span><span class="p">,</span><span class="o">-</span><span class="mi">40</span><span class="p">);</span>
+        <span class="nx">context</span><span class="p">.</span><span class="nx">fillRect</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span>
+</pre></div>
+
+
+<p>Notice that the order of transforms is backwards. The transformation that applies first to the object is closest to the object. However, if we think of the transformations as being things that change the coordinate system, they occur in the correct order. We can read the code as: (1) move the center of the coordinate system to where the center of the object will be; (2) scale the coordinate system; (3) move the center of the coordinate system back so that the object's center position is where the object's center position should be.</p>
+<p>Note that we cannot do a save/restore to undo the first translation because that would also get rid of the scale.</p>
+</div>
+<div class="examplebox">
+<h2>Box 3 (exercise) - another example</h2>
+<p>Here's another example to show things off...</p>
+<p>The original box with a triangle function puts the box at the origin. Suppose I want to make a grid of them (on the same (20,20) spacing), but with the boxes being half size.</p>
+<p>I could scale the whole sheet and then draw each one in the right place.</p>
+<canvas id="b31" width="160" height="80"></canvas>
+
+<p>Or I could have a loop that went to each location and then scaled each one appropriately.</p>
+<canvas id="b32" width="160" height="80"></canvas>
+
+<p>Oh wait, I left out the scale :-) You need to fix my code - add the appropriate scaling, save and restore to make this box <code>b32</code> look like the one above.</p>
+</div>
+<div class="examplebox">
+<h2>Box 4 - do a flip!</h2>
+<p>With Canvas, we've gotten used to the idea that the coordinate system starts in the upper left corner, the x axis goes to the right and the y axis goes down. The initial coordinate system has the Y axis scaled such that one unit in the y coordinate is one "html pixel" downward, but we can change that using scale.</p>
+<p>In math classes, we usually put the origin in the lower left corner and have y going upwards. We can now change the coordinate system so that Canvas works like we're used to! We need to scale the Y axis and translate the origin. Or we can translate the origin and scale the Y axis.</p>
+<p>Here's three pictures - the first with the regular canvas coordinate system, the second scaling and translating, and the third translating and scaling. Read the code and notice how the values for the translation change depending on the order. If you want, you can make a more interesting picture.</p>
+<canvas id="b41" width="80" height="80"></canvas>
+<canvas id="b42" width="80" height="80"></canvas>
+<canvas id="b43" width="80" height="80"></canvas>
+
+</div>
+<div class="examplebox">
+<h2>Box 5 - one more exercise!</h2>
+<p>In computer graphics, we often like to have a coordinate system with the origin in the center of the "window" (in our case, the Canvas we're working in), and the x and y coordinates ranging from -1 to 1. That way, we can draw things with the same coordinates no matter how big the window is.</p>
+<p>Unfortunately, this is a bad idea in Canvas for many reasons. One problem is that some browsers do some of the drawing using integer arithmetic. So, for this exercise, we'll go from -100 to 100 instead.</p>
+<p>You can create the coordinate system for canvas using a translation and a scale (in either order). In the Box 5 code, add something to the "picture" function to set the coordinate system for it goes from -100 to 100 in x and y. The picture is a diamond shape that touches the edges, a plus at the center, and a T near the top left. You should only add translate and scale commands to set the coordinate system. If you do it correctly, you will fill each of the boxes below in a similar way.</p>
+<canvas id="b51" width="80" height="80"></canvas>
+<canvas id="b52" width="160" height="160"></canvas>
+<canvas id="b53" width="160" height="80"></canvas>
+
+<p><strong>HINT:</strong> you can access <code>canvas.width</code> and <code>canvas.height</code>. You only need to add two lines of code to the <code>picture</code> function in <code>box5</code>.</p>
+</div>
+<div class="sumbox">
+<h2>Summary: Composing transformations</h2>
+<p>Composing transformations is a key concept in computer graphics. It is important to understand it now, when the transformations are simple (2D translate and scale). In the future, the transformations will become more complex, but the basic idea of composition will be the same.</p>
+<p>In fact, on the <a href="A03-4-rotate.html">next page</a>, we'll consider rotations - which might really make your head spin.</p>
+</div>
+    <!-- @@EndMDReplace: -->
+    
+    <script src="A03-3-compose.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Page 10-6: Aliasing
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/6-aliasing.md -->
+<h1 id="page-10-6-aliasing">Page 10-6: Aliasing</h1>
+<script src="THREE/three.js"></script>
+
+<script src="THREE/OrbitControls.js"></script>
+
+<div class="examplebox">
+<h2 id="box-1-aliasing-and-one-way-to-fix-it">Box 1: Aliasing and One Way to Fix It</h2>
+<p>If you look at the dots on the previous page (repeated below), you'll notice that you can see the pixel boundaries on the texture. Since something either is part of a dot or not, each pixel matters. As the dots get small, this can be ugly. This causes the jagged edges (called "jaggies" - yes, that's a technical term).</p>
+<p>The problem is that we are making the pixels either light or dark - nothing in between. Even if a pixel is half full of a dot, it has to be either light or dark.</p>
+<p>A different way to look at it: for each pixel, we compute the color at the center and make the entire pixel be that color. Since that point is either inside or outside of the dot, we choose a color for a pixel.</p>
+<div id="6-1"></div>
+<script src="6-1-dots.js" type="module"></script>
+
+<p>An answer to this is to make the cutoff for inside/outside less severe. We can "blur" the dots - making the boundary fuzzy. The transition between inside and outside can be gradual. That way a pixel can be correctly on the boundary. If you select "large blur" you can see that in action. Notice that things look blurry, but the shapes are smooth (not jaggy).</p>
+<p>Can we have both sharp edges and no jaggies? Try "correct anti-aliasing" and see what is the best we can do easily. We're still blurring the edge, we're just making the blurriness be one pixel in width (rather than fixed in UV space). GLSL has support to help us do that. Basically, you take the derivative of <code>u</code> and <code>v</code> with respect to screen coordinates to see how much they change. This is a slightly advanced topic - but it is really important for making nice looking texturing.</p>
+<p>Note that this is exactly the same problem as trying to figure out what level of the mipmap to look up when we filter image-based textures.</p>
+</div>
+<div class="examplebox">
+<h2 id="exercise-6-1-bonus-anti-aliased-checkerboard">Exercise 6-1: Bonus: Anti-Aliased Checkerboard</h2>
+<p>As an <strong>optional bonus exercise</strong>, make a version of your checkerboard shader that is anti-aliased!</p>
+<p>You can figure out how to do it from the dots example on this page. Note: this is optional, it is only for bonus points. Put the code into the shaders <code>e61-aa-checks.vs</code> and <code>e61-aa-checks.fs</code>.</p>
+<div id="6-2"></div>
+<script src="6-2-aa-checks.js" type="module"></script>
+
+</div>
+<div class="sumbox">
+<h2 id="summary-anti-aliasing">Summary: Anti-Aliasing</h2>
+<p>If you get jaggy looking textures, you need to do something about it. This is called "anti-aliasing". We'll learn more about it in class.</p>
+<p>For now we'll move on to the <a href="7-textures.html">next page</a> and learn about how to use images in textures.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

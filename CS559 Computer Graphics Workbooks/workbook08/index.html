@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Workbook 8: Meshes and Textures
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/0-index.md -->
+<h1 id="workbook-8-meshes-and-textures">Workbook 8: Meshes and Textures</h1>
+<p>This week, we'll move on to making the objects that we see in 3D worlds. We'll learn about how we group triangles into <em>meshes</em> and use <em>texturing</em> to give them more interesting colors.</p>
+<p>This workbook is due Friday, April 5th, with no assignments accepted after Monday, April 8th.</p>
+<h2 id="learning-goals">Learning Goals</h2>
+<ol>
+<li>To get some practice with mesh data structures, and see how they are used in a practical API.</li>
+<li>To see the effects of vertex and face properties including colors and normals.</li>
+<li>To practice the basic concepts of textures, especially texture coordinates.</li>
+<li>To see how texturing is implemented in a practical API.</li>
+<li>To gain some experience using shape and texture to create interesting 3D models.</li>
+</ol>
+<h2 id="required-and-recommended-readings">Required and Recommended Readings</h2>
+<p>The required material will be discussed in class. You will want to consult the THREE.JS documentation for details on how to use the API, and you may want to consult a JavaScript text to learn about JavaScript features that are important for the class software framework. The readings described are here in case you want a little more depth than we discuss in lecture, or you just need to see the material presented a different way.</p>
+<h3>Basics of THREE</h3>
+<p>By now, you probably have the basics of THREE down. But the <a href="https://discoverthreejs.com/book/1-first-steps/6-shapes-transformations/">"discover threejs tutorial"</a> is a good way to review primitives, hierarchies and other basics. I didn't know about it before. Unfortunately, its one of a very few chapters of the book that has been written.</p>
+<h3>Meshes</h3>
+<p>We'll discuss the basic concepts in class, which will be sufficient for what you need to know. Section 12.1 of Fundamentals of Computer Graphics <a href="https://canvas.wisc.edu/files/7180030/download?download_frd=1">FCG4_Ch12.pdf</a> covers this, and then some. Sections 12, 12.1 and 12.2 cover the material for class. Section 12.1.3 covers strips and fans (which we will touch on in class, but won't use much). Section 12.1.4 discusses the fancy data structures used for representing meshes when they need to be manipulated - this is beyond what we will do in class - read this section to get a taste of a more advanced topic. Chapter 4 of The Big Fun Graphics Book (<a href="https://canvas.wisc.edu/files/7180425/download?download_frd=1">Hart04-jan19.pdf</a>) covers much of the same material.</p>
+<p>The THREE data structure we will use is the <code>Geometry</code> which is documented <a href="https://threejs.org/docs/#api/en/core/Geometry">here</a>. This also links to the <code>Face3</code> class (<a href="https://threejs.org/docs/#api/en/core/Face3">documentation</a>). These data structures are poorly documented, and there aren't many good examples. (Most examples use the <code>BufferGeometry</code> class that we will learn about later). Use the examples in this workbook (read the documents and the code). The design isn't what you might guess, but once you understand what they've done it makes sense.</p>
+<h3>Texturing</h3>
+<p>Texturing is a big topic. We'll cover the basic concepts now, and return to see a lot more of the details later. Again, everything you need will be discussed in class, read a book chapter to get more details or see it explained another way. Fundamentals of Computer Graphics Chapter 11 (<a href="https://canvas.wisc.edu/files/7180029/download?download_frd=1">FCG4_Ch11.pdf</a>) covers texturing, describing it in a very general way. Section 11.1 gives the main ideas, and 11.2 gives many different types of texture - we'll focus on what's described in 12.2.2. Sections 11.2.4 (perspective correct interpolation) and 11.3 (pixel lookups) are topics we will come back to. The Big Fun Book of Computer Graphics also covers this material but focuses on parts that we aren't doing now.</p>
+<p>The implementation of texturing we'll use is built into the various <code>Materials</code> in THREE. The description of how a texture is stored is discussed with the <a href="https://threejs.org/docs/#api/en/textures/Texture"><code>Texture</code></a> class. We'll discuss the main ideas in class, and the examples in this workbook will help you out. There are many examples of using textures with THREE around the web, however, many of them use old versions of THREE. The new versions are much more convenient (especially the <code>TextureLoader</code>). If you're looking for things to read, <a href="https://discoverthreejs.com/book/1-first-steps/4-textures-intro/">this Discover ThreeJS tutorial</a> shows some of the basics, but goes off into tangents about details we probably won't care about (like color spaces and anisotropic filtering). This <a href="http://rogerallen.github.io/webgl/2014/01/24/threejs-baby-steps/">"ThreeJS Baby Steps"</a> posting shows how you can do it all yourself - don't worry, you don't have to.</p>
+<h2 id="exercises">Exercises</h2>
+<p>Pages 1 and 4 have sample code on them. You don't have to do anything with them, but you probably want to understand the simple examples.</p>
+<p>Pages 2, 5, 6 and 7 all have exercises on them that require you to create new object types within the CS559 Framework code.</p>
+<h3>Bonus Point Opportunities</h3>
+<p>All of the exercises have the opportunity for bonus points for making objects that are more interesting than what is required. These are generally "artistic merit" bonus points. If you feel that your creations are worthy of bonus points, be sure to say so in your README.</p>
+<h3>Rubric</h3>
+<p>You will score points for (with the page they are on):</p>
+<ol>
+<li>(P2) Creating an object that is a mesh with different colors on the faces. (.5pts/3)</li>
+<li>(P2) Creating an object that is a mesh that uses vertex colors to create smooth transitions. (.5 pts/3)</li>
+<li>(P2) Creating an object that is a mesh that uses per-vertex normals to give it a faked smooth appearance. (.5pts/3)</li>
+<li>(P5.1) Creating dice that look like dice. (.4 pts)</li>
+<li>(P5.1) Placing two dice on the groundplane with different numbers facing up (.1pts).</li>
+<li>(P5.2) Creating a double 6 domino. (.5pts)</li>
+<li>(P6) Creating a building with sufficiently complex geometry. (.5pts)</li>
+<li>(P6) Having this building use textures effectively. (.25pts)</li>
+<li>(P6) Making a second building (with a different shape and texture). (.5pts)</li>
+<li>(P7) Make a vehicle. (.75pts)</li>
+</ol>
+<p>That's .5 points for Page 2, 1 point for Page 5, 1.25 points for Page 6, and .75 points for page 7. You will be able to re-use your work on Pages 6 and 7 in future assignments.</p>
+<p>Everything else is for bonus points.</p>
+<h2 id="list-of-pages">List of Pages</h2>
+<ul>
+<li><a href="index.html">Workbook 8: Meshes and Textures</a></li>
+<li><a href="1-meshes.html">Page 8-1 - Meshes: What you need to know</a></li>
+<li><a href="2-mesh-exercise.html">Page 8-2 - Mesh Exercise</a></li>
+<li><a href="3-textures.html">Page 8-3 - Texture Notes</a></li>
+<li><a href="4-textures-three.html">Page 8-4 - Textures in THREE</a></li>
+<li><a href="5-dice-domino.html">Page 8-5 - The Dice and Dominos Exercise</a><ul>
+<li><a href="5-1-dice.html">Exercise 5-1: Dice</a></li>
+<li><a href="5-2-domino.html">Exercise 5-2: Domino</a></li>
+</ul>
+</li>
+<li><a href="6-buildings.html">Page 8-6 - The Graphics Town Buildings Exercise</a><ul>
+<li><a href="6-1-buildingdemo.html">Exercise 6: Buildings</a></li>
+</ul>
+</li>
+<li><a href="7-car.html">Page 8-7 - A Car for Graphics town</a><ul>
+<li><a href="7-1-cardemo.html">Exercise 7: Cars</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="get-started">Get Started</h2>
+<p>Everything begins on <a href="1-meshes.html">page one</a>.</p>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

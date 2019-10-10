@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Workbook 7 - Transformation and Hierarchy in THREE.JS
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/0-index.md -->
+<h1 id="workbook-7-transformation-and-hierarchy-in-threejs">Workbook 7 - Transformation and Hierarchy in THREE.JS</h1>
+<p>This week, we'll continue to do more THREE programming, with a focus on using THREE's mechanisms for transformation and hierarchy to make more interesting things.</p>
+<p>This workbook is due Friday, March 29th. With no late assignments accepted after Monday, April 1.</p>
+<h2 id="learning-goals">Learning Goals</h2>
+<ol>
+<li>To gain some experience doing hierarchical modeling, particularly for animation</li>
+<li>To get some practice working with 3D rotations</li>
+<li>To get some experience working with the CS559 framework code</li>
+<li>To get more practice working with a modern scene graph API</li>
+<li>To see some details of how different rotation representation are used</li>
+<li>To get some exposure to modern JavaScript features like classes</li>
+</ol>
+<h2 id="required-and-recommended-reading">Required and Recommended Reading</h2>
+<p>The readings are here to help you understand the things we discussed in class.</p>
+<p>Over the course of this assignment, you will probably need to read a lot of the THREE.js documentation (it's <a href="https://threejs.org/docs/index.html#manual/en/introduction/Creating-a-scene">here</a>). Unfortunately, this documentation isn't good to read - its fine for when you need to look things up. So expect to read a lot of pages as you do more programming.</p>
+<p>You will also start working with the class framework code. This will require you to spend some time reading the code and its documentation (which is derived from comments in the code). It may also cause you to need to read up on some aspects of JavaScript we haven't used much in class yet.</p>
+<p>The textbooks cover the math of the transformations - giving you the matrices. You've already had to read those chapters for prior workbooks. Understanding what happens inside the matrices is useful, so if you haven't already read Chapter 6 of Fundamentals of Computer Graphics (FCG) (<a href="https://canvas.wisc.edu/files/7180025/download?download_frd=1">FCG4_Ch06.pdf</a>) and the relevant portions of Chapter 6 of The Big Fun Graphics Book (Hart) (<a href="https://canvas.wisc.edu/files/7180428/download?download_frd=1">Hart06-jan19.pdf</a>), you may want to now.</p>
+<p>Hierarchical modeling is discussed briefly in FCG 12.2 (<a href="https://canvas.wisc.edu/files/7180030/download?download_frd=1">FCG4_Ch12.pdf</a>) and Hart Chapter 7 (<a href="https://canvas.wisc.edu/files/7180430/download?download_frd=1">Hart07-jan19.pdf</a>). In both cases, the focus is more on how you implement the scene graph traversal using transformation stacks than how to think in terms of hierarchical models. In class, we'll let THREE do this work for us.</p>
+<p>The lookfrom/lookat/vup transformation is called the "The Camera Transformation" in FCG (it's 7.1.3 <a href="https://canvas.wisc.edu/files/7180026/download?download_frd=1">FCG4_Ch07.pdf</a>). Other things in the chapter discuss the Perspective Transformation in depth (no pun intended), and can help you understand these concepts better. Hart discusses lookfrom/lookat in Chapter 8 (<a href="https://canvas.wisc.edu/files/7180431/download?download_frd=1">Hart08-jan19.pdf</a>), but it adds little beyond what you've seen already. Look at it if you want to see it explained a different way.</p>
+<p>The Real Time Rendering book has a very thorough discussion of transformations in Chapter 4 (Sections 4.1-4.3) (<a href="https://canvas.wisc.edu/files/7750567/download?download_frd=1">RTR4_Ch04.pdf</a>), with significant attention paid to rotations and Quaternions (Section 4.3). This material is beyond what you need for class, but may be a good thing to read if you want a better understanding of 3D transformations.</p>
+<h2 id="exercises">Exercises</h2>
+<p>The main exercises for this workbook are:</p>
+<ul>
+<li>Rotation Toys - I am giving you the demos I made in class to play with. You should use them to help build your intuitions as to how 3D rotations work (or do not work) as the case may be.</li>
+<li>The Quadcopter / Aircraft - you get to make a quadcopter again, this time in 3D. It's a hierarchical model. And you'll need to show that you can use a "lookat" transformation.</li>
+<li>Graphics Park - before we get to Graphics Town, we'll start smaller. This is a chance to animate some hierarchical objects in 3D and figure out the framework code.</li>
+<li>Construction Equipment - another chance to use the framework code and make a different kind of hierarchical object.</li>
+</ul>
+<p>Over the next few weeks, we'll be using the framework code to make increasingly interesting objects. The Framework code is evolving, but the idea is that by the end of the semester, all of the objects you make can fit together into Graphics Town.</p>
+<h3>Bonus Point Opportunities</h3>
+<p>The requirements for the three main exercises (quadcopter, park, and construction) are pretty minimal. You can get bonus points for making more interesting objects and additional objects.</p>
+<h3>Rubric</h3>
+<p>You will score points for:</p>
+<ol>
+<li>Making a quadcopter that flies (1pt)</li>
+<li>Having a radar dish that points at the quadcopter as it flies (.5pt)</li>
+<li>Placing park equipment (.25pt)</li>
+<li>Making the Merry-Go-Round (.75pt)</li>
+<li>Making construction equipment (1pt)</li>
+</ol>
+<p>For this workbook, there are no questions to answer.</p>
+<h2 id="list-of-pages">List of Pages</h2>
+<p>The pages in this workbook are:</p>
+<ul>
+<li><a href="index.html">Workbook 7 - Transformation and Hierarchy in THREE.JS</a></li>
+<li><a href="1-rotations.html">Page 7-1: Rotations in 3D</a></li>
+<li><a href="2-euler-toy.html">Page 7-2: Euler Angle Toy</a></li>
+<li><a href="3-compare-rot.html">Page 7-3: Comparing Incremental Rotations</a></li>
+<li><a href="4-quaternions.html">Page 7-4: Quaternions</a></li>
+<li><a href="5-hierarchy.html">Page 7-5: Hierarchical Modeling</a></li>
+<li><a href="6-quadcopter.html">Page 7-6: Exercise: Quadcopter / Multi-Rotor</a></li>
+<li><a href="7-framework.html">Page 7-7: The CS559 Framework Code (GraphicsTown)</a></li>
+<li><a href="8-graphicspark.html">Page 7-8: Exercise: Graphics Park</a></li>
+<li><a href="9-construction.html">Page 7-9: Exercise: Construction Site</a></li>
+</ul>
+<h2 id="get-started">Get Started!</h2>
+<p>Everything begins on <a href="index.html">page one</a>.</p>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

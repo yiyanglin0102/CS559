@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: SimpleObjects.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: SimpleObjects.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*jshint esversion: 6 */
+// @ts-check
+
+/**
+ * CS559 3D World Framework Code
+ * 
+ * Simple Example Objects - they don't do much, but for convenience they
+ * provide wrappers around THREE objects
+ * 
+ *  
+ */
+
+ /** @module SimpleObjects */
+
+// we need to have the BaseClass definition
+import { GrObject } from "./GrObject.js";
+
+// these four lines fake out TypeScript into thinking that THREE
+// has the same type as the T.js module, so things work for type checking
+// type inferencing figures out that THREE has the same type as T
+// and then I have to use T (not THREE) to avoid the "UMD Module" warning
+/**  @type typeof import("./../THREE/threets/index"); */
+let T;
+// @ts-ignore
+T = THREE;
+
+let simpleObjectCounter = 0;
+
+// a simple GrObject - a cube
+/**
+ * @typedef CubeProperties
+ * @type {object}
+ * @property {THREE.Material} [material]
+ * @property {string} [color]
+ * @property {number} [x=0]
+ * @property {number} [y=0]
+ * @property {number} [z=0]
+ * @property {number} [size=1]
+ */
+export class GrCube extends GrObject {
+    /**
+     * @param {CubeProperties} params 
+     * @param {Array&lt;string|Array>} [paramInfo] - parameters for the GrObject (for sliders)
+     */
+    constructor(params={},paramInfo=undefined) {
+        let material;
+        if (params.material) {
+            material = params.material;
+        } else if (params.color) {
+            material = new T.MeshStandardMaterial( {color:params.color} );
+        } else {
+            material = new T.MeshStandardMaterial( {color: "#FF8888"});
+        }
+        let geom = new T.CubeGeometry(params.size,params.size,params.size);
+        let mesh = new T.Mesh(geom, material);
+        // note that we have to make the Object3D before we can call
+        // super and we have to call super before we can use this
+        
+        super(`Cube-${simpleObjectCounter++}`,mesh,paramInfo);
+
+        // put the object in its place
+        mesh.position.x = params.x ? Number(params.x) : 0;
+        mesh.position.y = params.y ? Number(params.y) : 0;
+        mesh.position.z = params.z ? Number(params.z) : 0;
+    }
+}
+
+export class GrSphere extends GrObject {
+    /**
+     * @param {CubeProperties} params 
+     * @param {Array&lt;string|Array>} [paramInfo] - parameters for the GrObject (for sliders)
+     */
+    constructor(params, paramInfo) {
+        let material;
+        if (params.material) {
+            material = params.material;
+        } else if (params.color) {
+            material = new T.MeshStandardMaterial( {color:params.color} );
+        } else {
+            material = new T.MeshStandardMaterial( {color: "#FF8888"});
+        }
+        let geom = new T.SphereBufferGeometry(params.size ? (params.size / 2.0) : 1.0);
+        let mesh = new T.Mesh(geom, material);
+        // note that we have to make the Object3D before we can call
+        // super and we have to call super before we can use this
+        
+        super(`Sphere-${simpleObjectCounter++}`,mesh,paramInfo);
+
+        // put the object in its place
+        mesh.position.x = params.x ? Number(params.x) : 0;
+        mesh.position.y = params.y ? Number(params.y) : 0;
+        mesh.position.z = params.z ? Number(params.z) : 0;
+    }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-AutoUI.html">AutoUI</a></li><li><a href="module-GrObject.html">GrObject</a></li><li><a href="module-GrWorld.html">GrWorld</a></li><li><a href="module-SimpleBehaviors.html">SimpleBehaviors</a></li><li><a href="module-SimpleObjects.html">SimpleObjects</a></li><li><a href="module-TestObjects.html">TestObjects</a></li></ul><h3>Classes</h3><ul><li><a href="module-AutoUI.AutoUI.html">AutoUI</a></li><li><a href="module-GrObject.GrObject.html">GrObject</a></li><li><a href="module-GrWorld.GrWorld.html">GrWorld</a></li><li><a href="module-SimpleObjects.GrCube.html">GrCube</a></li><li><a href="module-SimpleObjects.GrSphere.html">GrSphere</a></li><li><a href="module-TestObjects.BetterDelayTest.html">BetterDelayTest</a></li><li><a href="module-TestObjects.DelayTest.html">DelayTest</a></li><li><a href="module-TestObjects.HingeCube.html">HingeCube</a></li><li><a href="module-TestObjects.MaterialDelayTest.html">MaterialDelayTest</a></li><li><a href="module-TestObjects-CheckSign.html">CheckSign</a></li><li><a href="SimpleGroundPlane.html">SimpleGroundPlane</a></li></ul><h3>Global</h3><ul><li><a href="global.html#T">T</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Mar 31 2019 20:53:34 GMT-0500 (Central Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

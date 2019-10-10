@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    Workbook 6, Page 5: Lights, Camera, Action!
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/5-LightsCamera.md -->
+<h1 id="workbook-6-page-5-lights-camera-action">Workbook 6, Page 5: Lights, Camera, Action!</h1>
+<p><script src="THREE/three.js"></script>
+<script src="THREE/OrbitControls.js"></script>
+<script src="5-Lights.js" type="module"></script></p>
+<div class="examplebox">
+<h2 id="box-1-the-camera">Box 1: The Camera</h2>
+<p>The "normal" camera we will use to make scenes is the <code>PerspectiveCamera</code> - see its <a href="https://threejs.org/docs/#api/en/cameras/PerspectiveCamera">documentation</a>.</p>
+<p>By default, the camera sights down the negative Z axis, and it's default position is at the origin. Therefore, we almost always need to position it (to place the eye point at someplace useful), and rotate it (to aim the camera at something interesting). Fortunately, the camera in THREE is like any other <code>Object3D</code> and has a full complement of positioning and orienting functions.</p>
+<p>One particularly useful function is <code>lookat</code> - a method that sets the rotation of the camera so that the negative Z axis points at the specified position. This makes it such that the position given to <code>lookat</code> appears at the center  of the camera's image. We'll learn more about how <code>lookat</code> works in class. But an important thing to remember: <code>lookat</code> is just like any of the other THREE functions for setting rotation. We could use any one we want on the camera (we just often want to use <code>lookat</code> because it is convenient).</p>
+<p>The intuition to have for using the camera is just like placing a real camera in the world - we need to position it and orient it so that we can see what we want.</p>
+<p>Make sure you understand the parameters of the <code>PerspectiveCamera</code>. The "field of view" tells us how "wide-angle" the lens is. The aspect ratio must be set to the aspect ratio of the window that we are drawing into - otherwise things will get squished. The camera also needs to know a near distance (any object that is too close will be ignored) and a far distance (any object that is too far away will be ignored). The near and far distances will be important when we get to visibility.</p>
+<p>We'll learn about the math of Cameras soon. If you want to read ahead (optionally), check out Chapter 7 of Fundamentals of Computer Graphics <a href="https://canvas.wisc.edu/files/7180026/download?download_frd=1">FCG4_Ch07.pdf</a> or Chapters 8 and 9 of Hart (<a href="https://canvas.wisc.edu/files/7180431/download?download_frd=1">Hart08-jan19.pdf</a> and <a href="https://canvas.wisc.edu/files/7180432/download?download_frd=1">Hart09-jan19.pdf</a>).</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-lights">Box 2: Lights</h2>
+<p>Most graphics objects don't emit light: they must receive light in order to have their colors come out. In Three, most materials respond to light - and in fact they require light (otherwise, everything will just be black).</p>
+<p>We will learn about the mathematics of light sources later, but for now, we can think of light sources as objects that we place in the scene. Except, that rather than seeing the light, the lights affect other objects.</p>
+<p>Lights differ in their geometry - which rays they send out and what directions. The directions are important, as that effects appearance.</p>
+<p>The kinds of lights we will use in Three (for now):</p>
+<ul>
+<li><a href="https://threejs.org/docs/#api/en/lights/AmbientLight"><code>AmbientLight</code></a> - is a weird magic light that basically makes objects glow. It adds a uniform brightness to all objects - no matter what direction they are facing. Warning: ambient lighting does not affect the fancier (more realistic) materials.</li>
+<li><a href="https://threejs.org/docs/#api/en/lights/PointLight">'PointLight'</a> - sends rays of light out in all directions from a particular point. It's like a lightbulb. It needs to be positioned in the world.</li>
+<li><a href="https://threejs.org/docs/#api/en/lights/SpotLight">'SpotLight'</a> - A spotlight is like a pointlight, but it only sends light in certain directions. It both needs to be positioned, but also oriented like a camera.</li>
+<li><a href="https://threejs.org/docs/#api/en/lights/DirectionalLight">'DirectionalLight'</a> - creates rays of light coming from the same direction. This is useful to simulate sunlight (light coming from above), or other cases where we have big light sources that are far away.</li>
+</ul>
+<p>With all lights, we can set a color and an intensity. Different kinds of lights have different parameters (like falling off with distance).</p>
+<p>Also, while Lights are in the Scene, we don't see them - even if we look at them. If you want the lights to be visible, you need to create a "helper" object that shows up as a shape to show where the light is.</p>
+<p>Here's an example (in <code>5-Lights.js</code>): try changing the lights, or removing a light (by commenting out the line that adds it to the scene) to see the effects of different lights. The objects are moving so you can see the effects of light as things change. This scene does have the orbit controls.</p>
+<div id="lights"></div>
+
+<p>This scene has a spotlight from above, a yellow directional light from the side, and a point light that is above and to the side.</p>
+<p>Note that we don't get shadows unless we explicitly turn them on (which requires several steps). For this assignment, we won't use shadows. Light passes through objects (as well as lighting them up).</p>
+</div>
+<div class="examplebox">
+<h2 id="box-3-aiming-lights-and-cameras">Box 3: Aiming lights and Cameras</h2>
+<p>With both lights and cameras, we position them as we would any other object. We can either set the <code>position</code> or use <code>translate</code> transformations.</p>
+<p>Aiming cameras and lights is different. For a camera, we treat it as an object in the world and rotate it.</p>
+<p>For a light, we set a target position (which behaves like the point we use in lookat). If you read the documentation (e.g. <a href="https://threejs.org/docs/#api/en/lights/DirectionalLight">DirectionalLight</a>) it tells us that we need to add the target to the scene. This allows the transformation machinery to apply. However, we don't need to add the target to the scene: we can add the target anywhere in the scene graph hierarchy.</p>
+<div id="spots"></div>
+
+<p>Look at the code to see how we aim the spotlights.</p>
+<p>Be sure to look at the code (the function <code>spot</code>)! Note how we use a group for the green spotlight to move its position and target position together.</p>
+<p>Unfortunately, the <code>SpotLightHelper</code> objects (which are useful for seeing where spotlights are and what they are doing) don't update correctly for dynamic spotlights (with THREE's scene graph, we don't get control over what gets updated first). So you'll have to figure this out yourself.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-4-exercise-lighting">Box 4 Exercise: Lighting</h2>
+<p>Your turn. Here's a scene with some white cubes in it. Add some colored lights to the scene so that the different sides of the cubes are different colors. Use this as an opportunity to try out different kinds of lights. Edit the file <code>5-Lights-ex.js</code> to do this. You just need to add enough lights that we can see the cubes, and that we see different colors - but you can get fancier if you want.</p>
+<div id="lightex"></div>
+<script src="5-Lights-ex.js" type="module"></script>
+
+
+</div>
+<div class="sumbox">
+<h2 id="summary-lights-and-cameras">Summary: Lights and Cameras</h2>
+<p>Now we've made lights and cameras, we can talk about materials on the <a href="6-Materials.html">next page</a>.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

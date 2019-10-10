@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+
+<title>
+    Workbook 10: Shaders
+</title>
+</header>
+<body>
+<!-- @@MDReplace: Sources/0-index.md -->
+<h1 id="workbook-10-shaders">Workbook 10: Shaders</h1>
+<p>This week, we'll learn to program the graphics hardware. In many classes, you have to start with this (since you can't draw a triangle without writing two programs). So far, we've let THREE.JS program the graphics hardware for us. So, now we're learning what it is doing.</p>
+<p>Because of the dependency of this workbook on lectures, we will have a non-standard deadline. We will accept assignments until Tuesday, April 23rd (rather than Monday April 22nd). We will not be able to grade assignments turned in after this date.</p>
+<h2 id="learning-goals">Learning Goals</h2>
+<p>Students should learn to:</p>
+<ol>
+<li>Understand the basic organization of graphics hardware, and how programmability fits into it.</li>
+<li>Appreciate why shaders are the ways that they are and what you can do with them.</li>
+<li>Understand how the shader programming paradigm leads to specific, real implementations.</li>
+<li>Be able to write shaders in a real shading language.</li>
+<li>See how shaders are managed and integrated into a graphics application.</li>
+</ol>
+<p>In one week, you won't master shader programming. But you will get to read and write some actual shader programs. This means that you not only have to learn the concepts, but you'll need to work with a new programming langauge (we'll use GLSL)</p>
+<h2 id="recommended-and-required-readings">Recommended and Required Readings</h2>
+<p>Unfortunately, I don't have a great tutorial on how to write shaders. Things tend to spend too much time on the issues in connecting shaders to real programs (which is generally taken care of by a higher level API, such as THREE). So, I am giving you a bunch of alternatives. We'll rely on lectures a lot.</p>
+<p>What I recommend:
+- Get the basic idea of how shaders work from lecture. You can add to it by reading Chapter 17 of Fundamentals of Computer Graphics (<a href="https://canvas.wisc.edu/files/8018028/download?download_frd=1">FCG4_Ch17.pdf</a>), or Chapters 2 and 3 of the Orange Book (see below).
+- Get the basic ideas of the GLSL language by looking at examples. Reading through Chapter 3 of the Orange Book or the Shaderific documents can be helpful (see below).
+- Get ideas of what you can do with shaders by reading more examples. Reading through some of The Book Of Shaders can give you lots of ideas.
+- While you're programming, keep the reference card and the Shaderific reference handy.</p>
+<p>Note that for class:</p>
+<ol>
+<li>You must write some shaders. For this, you need to understand the basic concepts, and a little bit of the GLSL language.</li>
+<li>You must understand shaders (for the exam). We won't test you on GLSL details, but you will need to know the key concepts and be able to read shader code.</li>
+</ol>
+<p>Here are the readings. You will need to read some of this.</p>
+<ul>
+<li>
+<p>Fundamentals of Computer Graphics Chapter 17 (Using Graphics Hardware) <a href="https://canvas.wisc.edu/files/8018028/download?download_frd=1">FCG4_Ch17.pdf</a> provides an overview of how hardware works, and how we use it. It covers more about the "main program" side (how we communicate between our application and the shaders), and it's written in terms of C++ and OpenGL (rather than JavaScript and WebGL). But it is a written explanation of the things we discussed in lecture, and shows what the shaders do. Even if it spends more of its time talking about how we get data to the shaders.</p>
+</li>
+<li>
+<p><a href="https://thebookofshaders.com/">The Book of Shaders</a> promises a "a gentle step-by-step guide through the abstract and complex universe of Fragment Shaders". It's oriented more towards artists, and it only covers fragment shaders. But that's our focus, and the art aspects are fun, because the authors create cool things with it. It's a little tricky to apply directly (since all of the examples are designed to run stand alone in the browser using his framework), but not that tricky because things are simplified (it's only fragment shaders, so the examples expect less than other documents). The book also tries to do all computer graphics in a fragment shader - which leads to interesting examples, but not necessarily practical.</p>
+</li>
+<li>
+<p>The <a href="https://www.khronos.org/files/webgl20-reference-guide.pdf">WebGL Reference Card</a> is a handy reference. Pages 6-8 cover the shading language. It won't tell you much about what the different functions do or how they are used, but they will tell what is available. I find it immensely useful.</p>
+</li>
+<li>
+<p>Shaderific has a <a href="http://www.shaderific.com/glsl/">GLSL reference</a>. It's less terse than the reference card, but it still is just a reference once you have a basic idea of what you're doing. It has a paragraph or so about all the functions (that are just listed on the reference card).</p>
+</li>
+</ul>
+<p>Some alternative readings...</p>
+<ul>
+<li>
+<p>The official specification is available <a href="https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf">here</a>. It's mainly for language lawyers, but it can help you find out what are all the variable types or built in functions. It is for "OpenGL" - WebGL's version of GLSL is a subset.</p>
+</li>
+<li>
+<p>The official documentation for GLSL is the "Orange Book" - however, it seems to be out of date. The old version is available <a href="https://wiki.labomedia.org/images/1/10/Orange_Book_-_OpenGL_Shading_Language_2nd_Edition.pdf">online</a>. While the book is targeted towards OpenGL (this edition predates WebGL), it does provide a good tutorial of the basics. Chapters 2 and 3 provide a good tutorial.</p>
+</li>
+<li>
+<p>The book "GLSL Essentials" is available online from the <a href="https://search.library.wisc.edu/catalog/9912150691002121">UW library</a>. At a glance, I am not sure it adds much - it does give more examples and explanations.</p>
+</li>
+</ul>
+<h2 id="exercises">Exercises</h2>
+<p>Pages 5 and 8 have required exercises on them. Each require you to write shaders.</p>
+<h3>Rubric for Grading</h3>
+<ul>
+<li>Exercise 5-1 (Page 5, box 3) - make a checkerboard shader (.5 pts)</li>
+<li>Exercise 5-2 (Page 5, box 4) - make a procedural texture (1 pt)</li>
+<li>Exercise 8-1 (Page 8, box 1) - combine procedural with lighting (.5 pts)</li>
+<li>Exercise 8-2 (Page 8, box 2) - combine image-based with lighting (.5 pts)</li>
+<li>Exercise 8-3 (Page 8, box 3) - students choice (1pt)</li>
+</ul>
+<h3>Bonus Points</h3>
+<p>Page 6 has a bonus point only exercise. You can also earn bonus points for making very creative shaders on Page 5 and 8.</p>
+<h2 id="questions-and-the-exam">Questions and the Exam</h2>
+<p>For this workbook, we won't be grading questions. However, we wanted to give you some questions to think about to help you make sure you understand the concepts and are ready for the exam.</p>
+<h2 id="list-of-pages">List of Pages</h2>
+<ul>
+<li><a href="index.html">Workbook 10: Shaders</a></li>
+<li><a href="1-shaders.html">Page 10-1: Shaders</a></li>
+<li><a href="2-simpleshaders.html">Page 10-2: Starting with Simple Shaders</a></li>
+<li><a href="3-glsl-three.html">Page 10-3: GLSL and THREE</a></li>
+<li><a href="4-light.html">Page 10-4: Lighting in Shaders</a></li>
+<li><a href="5-procedural.html">Page 10-5: Procedural Textures</a></li>
+<li><a href="6-aliasing.html">Page 10-6: Aliasing</a></li>
+<li><a href="7-textures.html">Page 10-7: Using Textures</a></li>
+<li><a href="8-alltogether.html">Page 10-8: All Together</a></li>
+</ul>
+<h2 id="get-started">Get Started</h2>
+<p>Everything begins on <a href="1-shaders.html">Page One!</a></p>
+<!-- @@EndMDReplace: -->
+</body>
+</html>

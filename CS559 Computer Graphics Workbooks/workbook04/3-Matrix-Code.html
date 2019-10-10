@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<!-- CS559 Workbook file
+      students are allowed (and encouraged) to read the HTML source files!
+-->
+<header>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="Libs/style559.css">
+<link rel="stylesheet" href="Libs/pygments.css">
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<title>
+    WB4: 3-Matrix-Code: Matrices in Code
+</title>
+</header>
+<body>
+<!-- @@MDReplace: SOURCES/3-Matrix-Code.md -->
+<h2 id="workbook-4-page-3-matrices-in-code">Workbook 4, page 3 - Matrices in Code</h2>
+<div class="examplebox">
+<h2 id="box-1-vectors-and-matrices-in-javascript">Box 1: Vectors and Matrices in JavaScript</h2>
+<p>By itself, JavaScript doesn't deal with matrices very well. We will almost always want to use a library that implements matrices. However, for now, we will do it ourselves. Part of this is that I don't want to take the time to learn about a matrix library until later in the class when we'll get one as part of a graphics API. Part of this is I want you to understand what happens inside.</p>
+<p>Part of the problem is that arrays in JavaScript are very flexible. You can use them to store sets of numbers, but they aren't necessarily optimized to do that: they are designed to be very flexible.</p>
+<p>For 1D arrays of numbers (that we use to represent points and vectors), we can just use JavaScript arrays. There are some efficiency reasons why we might prefer something fancier, but for now, this will be fine. (If you're curious, check out <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray">TypedArray objects</a>)</p>
+<p>Note that we could make a proper class for 2D points/vectors. But we're not going to - yet.</p>
+<p>For 2D arrays of numbers (matrices), the choice is less obvious. JavaScript doesn't actually have 2D arrays. Arrays are 1D. You can make an array of arrays, but this can be cumbersome. Instead, we'll put the numbers into a 1D array. This is common practice in many situations because ultimately, the numbers are going to be stored as a 1D array in memory anyway.</p>
+<p>When we put a matrix into a 1D array, we have to choose what order to put the elements in. The most common choice is <strong>row major</strong> format, which basically puts the elements in the order that we would read them (across rows, then down). So the matrix:
+<script type="math/tex; mode=display"> \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{bmatrix} </script>
+will become the array <code>[1,2,3,4,5,6,7,8,9]</code>.</p>
+<p>The other choice is <strong>column major</strong> format, where we read things down the columns first, then across. So the array would be <code>[1,4,7,2,5,8,3,6,9]</code>. Historically, people used this (it is the way Fortran worked). But in the modern era, row major is more common. I want to mention column major because it will come up when we have to consider legacy systems (like OpenGL).</p>
+<p>Even modern systems mix row and column major formats. When we get to using THREE.js, we'll see that it uses column major internally, but row major in its documentation and certain commands.</p>
+</div>
+<div class="examplebox">
+<h2 id="box-2-transformations-in-canvas">Box 2: Transformations in Canvas</h2>
+<p>Internally, Canvas uses matrices to represent coordinate systems. Access to this matrix is only available in some web browsers (see <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/currentTransform">this document</a>).</p>
+<p>When we perform a transformation function on a Canvas, it changes the current transformation to be the composition of the current transformation with the transformation from the command. The old transformation goes away - this is why it is so important to save (so you can restore).</p>
+<p>When we start out with Canvas, the current transformation is the identity matrix: when we draw, the coordinates are used directly as Canvas coordinates.</p>
+<p>Each transformation function we apply (<code>translate</code>, <code>rotate</code>, <code>scale</code>, and the generic <code>transform</code> I will describe in a moment) changes the current transformation such that it includes the new one as well. It multiplies the current transformation matrix with what the command provides, and makes this the new current matrix. The current transformation is the transformation between the coordinate system we're working in (how coordinates in the drawing command is interpreted), and the Canvas coordinate system.</p>
+<p>The <code>transform</code> method of the Canvas allows us to give a transformation as a matrix. Because Canvas only supports affine transformations, the bottom row of the 3x3 matrix is always (0,0,1), and we only need to pass the <code>transform</code> function 6 numbers (not 9). Note that the order that the parameters are passed are not row-major. (see the <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/transform">documentation</a>).</p>
+<p>Canvas does allow us to replace the current transformation: this is via the <code>setTransform</code> method. Even the <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setTransform">documentation</a> describes this as first setting the transformation to the identity, and then applying the new transformation.</p>
+</div>
+<div class="sumbox">
+<h2 id="summary-matrices-in-canvas-and-code">Summary: Matrices in Canvas and Code</h2>
+<p>That hopefully explains how we turn the matrices that we see in the textbook into something we can use in our Canvas code.</p>
+<p>One the <a href="4-Matrix-Exercise.html">next page</a> we'll try using it.</p>
+</div>
+<!-- @@EndMDReplace: -->
+</body>
+</html

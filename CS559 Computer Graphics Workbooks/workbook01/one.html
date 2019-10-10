@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+
+<!--
+    Workbook 1 for CS559 - Page 1 (one.html) -
+    written January 2019, by Michael Gleicher
+
+    students are allowed (and) encouraged to read the HTML source files!
+-->
+
+<header>
+    <meta charset="UTF-8"> 
+    <!-- use the CS559 Style Sheet -->
+    <link rel="stylesheet" href="Libs/style559.css">
+    <title>
+        Assignment 01-01: Getting Started (Page One)
+    </title>
+</header>
+
+<body>
+    <!-- the next line is a comment that directs how the 559 file management software works -->
+    <!-- @@MDReplace: NOT_FOR_STUDENTS/one.md -->
+<h1>Workbook 1, Page 1</h1>
+<p>You should have already looked at the <a href="index.html">index</a> page.</p>
+<p>You should read this page in the web browser to see how it looks. You should also read the "source" (html file and css files) for this page to see how they work.</p>
+<p>Part of the idea of this page is to get you used to looking inside of HTML files when you read (and work on) workbooks. So, even if you know HTML well, please have a look at this file.</p>
+<p>Note that for this workbook page, you don't have to do anything other than read. We encourage you to make changes (so you can see the effects), but we are simply going to assume that you've done the "work". Throughout the page, there are suggestions for things to try to make sure that you understand how things work.</p>
+<p>For CS559, we will assume that you know the basics of how to make web pages so that you can make pages to put your graphics programs on. We will only need some basic HTML and CSS stuff. </p>
+<p>If you aren't already familiar with HTML, please find a resource on the web and learn about the basics. Here are some suggestions:</p>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/Getting_started">Mozilla Getting Started with HTML</a> - this is the very most basic stuff.</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn/HTML">Mozilla HTML Learning Guide</a> - this is a more complete guide, with many things that you won't need for class.</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn/CSS">Mozilla Tutorial on CSS</a> - you only need the most basic parts of it.</li>
+</ul>
+<h2>Some thoughts on HTML in CS559</h2>
+<p>We won't use any fancy HTML stuff for class - we will only make basic pages that we will put graphics on. However, you will need to know the basics so that you can read and write the workbooks.</p>
+<p>Because we are trying to keep the HTML simple, the pages for this class will be very <strong>ugly.</strong> You can make nice looking things with HTML, but it takes effort.</p>
+<p>Normally, we would use stylesheets or web frameworks to provide fancier page features and to make things look nice. However, to keep things simple for class, we are just making very simple web pages.</p>
+<p>Similarly, we would probably use tools to help us write HTML, rather than just typing it in an editor or IDE. But for class, what we need to do is so simple, we're better off just using the same IDE that we use for programming.</p>
+<h2>The Basic Elements of HTML you should know</h2>
+<p>A key idea is that a document (a web page) is a tree of parts. The overall document is the root of the tree. For example, the document may contain paragraphs, which contain sentences, which contain words, etc. Each part is known as an element. The tree of elements is known as the Document Object Model (or DOM). </p>
+<p>The basic idea of an HTML document is that we represent a tree of parts (the parts are called) in a text file. In the text file, we use "tags" as special markings to tell the browser how to make elements from the text. Most tags come in matching pairs - you have a first tag to "start" the element, and a second tag to "end" it.</p>
+<p>Some important elements that you will need to know about for class:</p>
+<ul>
+<li>comments - things between <code>&lt;!--</code> and <code>--&gt;</code> are ignored by the browser (so you should read them)</li>
+<li><code>&lt;html&gt;</code> - this is the "root" of the tree, representing the whole document</li>
+<li><code>&lt;body&gt;</code> - this represents the container where the content of the document goes</li>
+<li>Headers (<code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code> etc.) - these are heading lines </li>
+<li><code>&lt;div&gt;</code> - these are "divisions" of the document - boxes that contain things. They are useful for creating hierarchy.</li>
+<li><code>&lt;span&gt;</code> - contain a "run" of text (or other objects). They are useful for creating hierarchy, grouping things together so that you can work with them.</li>
+<li><code>&lt;p&gt;</code> - paragraphs (a bunch of text)</li>
+<li><code>&lt;ul&gt;</code> - unordered lists and <code>&lt;ol&gt;</code> ordered (numbered) lists. Lists should contain <code>&lt;li&gt;</code> list item elements.</li>
+<li><code>&lt;code&gt;</code> - this is used for when we put source code (like HTML or JavaScript) onto a web page for someone to read. We do not use <code>&lt;code&gt;</code> elements for code the computer is supposed to run! </li>
+<li><code>&lt;script&gt;</code> - these are the elements that contain the code that the browser is actually supposed to run (usually JavaScript). </li>
+</ul>
+<p>You may also notice that some special characters show up in a weird way. If a character might be interpreted by the web browser as being part of HTML, we need to encode it as an <em>entity.</em> So, for example, if I want to write the left angle bracket <code>&lt;</code> I need to put <code>&amp;lt;</code> into the HTML.</p>
+<h2>Identifying Elements</h2>
+<p>Most (if not all) elements can be given unique names (called ids) so that we can refer to them. 
+<span id="this-span"> For example, this sentence is in a <code>&lt;span&gt;</code> element with the id "this-span".</span>
+Look at the HTML file and make sure you can find it! Each element can only have one ID, and every document should only have one element with any particular ID. For example, there can only be one "this-span" in this document.</p>
+<p>IDs are useful so that you can find things in an HTML file (you could search for "this-span"). We will also use it so programs we write can find things.</p>
+<p>Elements can also have "classes" associated with them. These are names that can be assigned to multiple elements, and each element can have multiple classes. Classes are useful when we want to refer to multiple elements. In this <span class="this-class">sentence</span>, three of the <span class="this-class">words</span> have a <span class="this-class">class</span> associated with them. I could find those three words by looking for elements that have "this-class" as one of their classes. An element can have an ID, and any number of classes.</p>
+<p>Usually in workbooks, I will put separate examples into boxes like you will see below. These will be created as <code>&lt;div&gt;</code> elements, with the <code>examplebox</code> class (although, that might change). Each box will have an ID. I wanted to tell you that because we're about to have the first one.</p>
+    <!-- @@EndMDReplace -->
+
+<div id="one01" class="examplebox">
+    <h2>Box 1: Styling (id="one01")</h2>
+    <p>
+        Make sure you can find this "example box".
+    </p>
+    <p>
+        Just about any element can have styling information associated with it. 
+        For example, <span style="color:blue">This is a span with a blue color style.</span>
+        There are lots of different styles - I always need to look up what all the options are.
+        (although, if you use a good IDE, like Visual Studio Code, it can tell you)
+    </p>
+    <p>
+        Styles "cascade" - that is if we style one element, the elements inside of it also get that style.
+        Unless they override it. For example,
+        <span style="color:blueviolet">
+            this is one span 
+                <span style="color:crimson">with another span</span>
+            inside of it.
+        </span>
+    </p>
+    <p style="color:darkolivegreen">
+        In this, the paragraph has a style. So if I put a 
+        <span style="color:blue">span inside of it</span>
+        I can override it. 
+    </p>
+    <p>
+        Experiment with changing the styles of the text in this paragraph 
+        (or this box more generally). We won't do too much with styling text
+        in class, but we will want to style other things.
+    </p>
+</div>
+
+<div id="one02" class="examplebox">
+    <h2>Box 2: Style Sheets</h2>
+    <p>
+        We can associate styles with particular IDs or classes. 
+        This styling information can be placed right into the HTML file.
+        If you look inside this "box" in the HTML file (look for id="one02"),
+        you will see a <code>&lt;style&gt;</code> tag, as well as things that use it.
+    </p>
+    <style>
+        .redText {
+            color:darkred;
+        }
+    </style>
+    <p>
+        The style information (look in the HTML file!) says that anything with a 
+        "redText" class should be dark red. 
+        <span class="redText">Like this span.</span>
+        Styles allow us to make a lot of things that share properties, like
+        <span class="redText">these words</span> and 
+        this <span class="redText">word</span> as well.
+    </p>
+    <p>
+        If you're looking at this HTML in Visual Studio Code (or some other IDEs),
+        when you read it you will see colors and other information shown with the styles.
+    </p>
+    <p>
+        The styles are written in a language called CSS. Usually, we do not put CSS 
+        right into our HTML, we put them into separate files (.CSS files) and we link
+        to those style sheets using an html "link" tag. At the top of this file, there
+        is a link to the CS559 style sheet that is used for all pages in this workbook. 
+        In this example box, I am linking to a special style sheet just for this page.
+    </p>
+    <link rel="stylesheet" href="one.css">
+    <p>
+        See if you can figure out why 
+        <span class="blueText">this text has one color</span>, 
+        but,
+        <span id="blueText">this text has another color!</span>
+        You should be able to change the colors by editing the style sheet file.
+    </p>
+    <p>
+        We will use style sheets to change the appearance of things besides text.
+        In the "one.css" style sheet, there's a definition for the box below. 
+        Try to experiment with it to change how it looks.
+    </p>
+    <div class="onebox">
+        This is a first box.
+    </div>
+    <div class="onebox">
+        This is a second box.
+    </div>
+</div>
+
+<div id="one03" class="examplebox">
+    <h2>Box 3: Color</h2>
+    <p>
+        As you might guess, color is important for doing computer graphics.
+        We used to spend at least a week discussing it - I'm not sure how much
+        we'll do this semester.
+    </p>
+    <p>
+        You should read the 
+        <a href="http://graphics.cs.wisc.edu/WP/tutorials/color-initial-answers-to-a-practical-question/">CS559 Color Tutorial</a>.
+        This is an 
+    </p>
+    <p>
+        For now, we should focus on what we'll use for HTML.
+        When you read the HTML for this page, you'll see that many of the colors are specified
+        by name (e.g. "red", "blue", "darkred", "blueviolet").
+        This is convenient in a web page, but isn't always available when programming.
+    </p>
+    <p>
+        You should get used to specifying colors as hex strings like <code>#FF8AC5</code>. 
+        This works for HTML, and for a lot of the other web programming we will do. 
+        See the 
+        <a href="http://graphics.cs.wisc.edu/WP/tutorials/color-initial-answers-to-a-practical-question/">CS559 Color Tutorial]</a>
+        for a discussion. 
+        But basically read <code>#FF8AC5</code> as 3 hexidecimal numbers (FF,8A,C5) that 
+        are the amount of red, green and blue. Each number is a binary fraction, so that FF means 
+        FF/FF (or 255/255) or 100% (of red in this case). 
+    </p>
+    <p>
+        Here are some boxes for you to color:
+        <div style="height:20px; width:80px; float:left; margin:5px; background-color: blue"> </div>
+        <div style="height:20px; width:80px; float:left; margin:5px; background-color: #FF88CC"> </div>
+        <div style="height:20px; width:80px; float:left; margin:5px; background-color: #F8C"> </div>
+        <div style="height:20px; width:80px; float:left; margin:5px; background-color: #005080"> </div>
+        Although, this is a very verbose way to make boxes. 
+        Try experimenting with changing their colors.
+    </p>
+</div>
+
+<div id="one04" class="examplebox">
+    <h2>Box 4: Layout</h2>
+    <p>
+        If you noticed in the previous box, I put a set of 4 boxes (div tags) next to each other. 
+        Being able to arrange elements is important.
+        HTML gives some very flexible ways to do it.
+        But this flexibility can make it complicated. 
+        In general, HTML specifies the basic idea of how the different elements should be arranged,
+        and the browser lays out the elements to best fit them on the screen according to
+        some complicated rules.
+    </p>
+    <div class="simplebox" style="width:200px">
+        <div class="simplebox" style="width:80%">
+                <div class="simplebox" style="width:40%">one</div>
+                <div class="simplebox" style="width:40%">two</div>
+        </div>
+        <div class="simplebox" style="width:80%">
+        </div>
+        <div class="simplebox" style="width:80%"></div>
+    </div>
+    <p>
+        You won't need to do too much of this for class, but get used to seeing 
+        HTML that does things to create desired layouts.
+    </p>
+</div>
+
+<div id="one05" class="examplebox">
+    <h2>Box 5: Button Elements</h2>
+    <p>
+        HTML has input elements, like buttons and sliders and type-in boxes. 
+        They can be used with straight HTML for making forms. 
+        We will use them with JavaScript programs.
+    </p>
+    <p>
+        Input elements are just like any other elements - they are tags.
+        Here, I've made a button, right in the middle of my paragraph.
+        <button type="button">Button</button>
+        It probably looks silly in the middle of a paragraph.
+    </p>
+    <p>
+        There are multiple ways to make buttons, but using the <code>&lt;button&gt;</code>
+        tag is preferred. 
+        See the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/button">button documentation</a>.
+    </p>
+    <p> 
+        Just like anything else in HTML, you can style buttons to make them
+        look any way you like. If you don't do anything, they may be ugly.
+        <button>Plain</button>
+        <button style="background-color: red; border: none; color:white">Red</button>
+        <button style="background-color:lightblue; border: 2px solid blue; color:blue; border-radius: 5px">Blue</button>
+        Of course, if you do something, it might still be ugly. 
+        There are lots of style sheets around the web that make nice looking buttons.
+        See <a href="https://www.w3schools.com/css/css3_buttons.asp"> this page for ideas.</a>
+    </p>
+    <p>
+        Like other HTML elements, buttons can have classes and IDs. The latter will be
+        really important for finding particular buttons when we start programming. 
+        Here are a few buttons with their appearance styled with CSS that is 
+        in the "one.css" file:
+    </p>
+    <div>
+        <button class="onebutton" id="button11">One</button>
+        <button class="onebutton" id="button12">Two</button>
+        <button class="onebutton" id="button13">Three</button>
+    </div>
+    <p>
+        Look at the CSS and HTML for those buttons and understand why they look
+        and behave the ways that they do. Experiment with changing the CSS to make
+        them look different.
+    </p>
+    <p>
+        By themselves, buttons don't do much. We need to connect them to JavaScript
+        programs to make them more exciting.
+    </p>
+</div>
+
+<div id="one06" class="examplebox">
+    <h2>Box 6: Slider Elements</h2>
+    <p>
+        One last HTML element before we move on to programming: sliders. 
+        Sliders are mainly useful when we have programs to read them.
+    </p>
+    <p>
+        Just like buttons, sliders are elements that could be put anywhere
+        <input type="range"> 
+        like right in this paragraph. Note that a slider is called a "range"
+        input (since it's useful for making a number range).
+    </p>
+    <p>
+        In practice, we'll try to put sliders in more useful places.
+    </p>
+    <p>
+        Just like buttons (and most HTML elements), sliders can be styled. 
+        They can also have their minimum, maximum, and step sizes set. 
+        Here are a few sliders to try.
+    </p>
+    <div>
+        <!-- the "block" display type causes the sliders to stack -->
+        <input type="range" style="display: block">
+        <input type="range" style="display: block" step="10" min="0" max="100">
+        <input type="range" style="display: block; background: #DDD">
+        <input type="range" style="display: block; background: #DDD" step="5" min="0" max="20">
+    </div>
+    <p>
+        Unfortunately, handling of slider styling seems inconsistent
+        across browsers. The above looks very different in Chrome and Firefox.
+        There are all kinds of workarounds on the web - but for class, we won't worry
+        about it  - we understand that sliders may be ugly.
+    </p>
+    <p>
+        Sliders are pretty boring without programs that use them.
+        We'll make use of sliders soon enough..
+    </p>
+</div>
+
+<div class="examplebox">
+    <h2>Summary</h2>
+    <p>
+        Hopefully, the experience of trying to read (and maybe modify) this
+        web page will give you a sense of what it's like to work with a workbook
+        and to read HTML (so you can put some things around your programs as you
+        start to write them).
+    </p>
+    <p>
+        Now you're ready to go on to <a href="two.html">two.html</a> where we'll
+        start to do some JavaScript programming.
+    </p>
+</div>
+</body>
+
+</html>

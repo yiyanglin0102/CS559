@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+
+<!--
+    Workbook 1 for CS559 - Page 2 (two.html) -
+    written January 2019, by Michael Gleicher
+
+    students are allowed (and) encouraged to read the HTML source files!
+-->
+
+<header>
+    <meta charset="UTF-8">
+    <!-- use the CS559 Style Sheet -->
+    <link rel="stylesheet" href="Libs/style559.css">
+    <title>
+        Assignment 01-02: Getting Started - JavaScript (Page Two)
+    </title>
+</header>
+
+<body>
+    <!-- the next line is a comment that directs how the 559 file management software works -->
+    <!-- @@MDReplace: NOT_FOR_STUDENTS/two.md -->
+<p>You should have done <a href="one.html">page one</a> already and are used to the idea of using a workbook and looking at the HTML. Now we'll add some JavaScript programming.</p>
+<p>This page is less about JavaScript, and more to check that you understand some 
+of the details as to how we connect JavaScript programs to web pages.</p>
+<p>A secondary goal of this page is to make sure that you know how to
+use the <em>tools</em> for JavaScript programming. So please try to follow
+the instructions - we can't check that you did, but we'll find out
+soon enough when you can't do the basic things to write programs in the
+coming weeks.</p>
+    <!-- @@EndMDReplace -->
+
+    <div id="box01" class="examplebox">
+        <H2>Box 1: Where does my code go?</H2>
+        <p>You can put JavaScript code right into your HTML.</p>
+
+        <p>
+        For example, I can use a <code>&lt;script&gt;</code> tag and just
+        put JavaScript right in the middle of a paragraph like this one.
+        <script>
+            // this is JavaScript code
+            // I will do something silly
+            let boxname = "Box01";
+            let message = boxname + " says an initial message to the console";
+            console.log(message)
+        </script>
+        Look into the HTML to find that JavaScript.
+        </p>
+        <p>
+            You should have noticed that snippet of JavaScript used the function
+            <code>console.log</code> to write a message to the console.
+            This is a good time to make sure that you know about the console!
+            Open the console of your web browser, and make sure that you see
+            the message. (It will say <em>Box01 says an initial message to the console</em>).
+            To open the console in Chrome and FireFox on my Windows laptop
+            it's CTRL-SHIFT-I (the letter I).
+            If you're using Visual Studio Code with connected debugging,
+            you can see the console right in a VSCode window.
+        </p>
+        <p>
+            You can also stick JavaScript code right into elements that use them.
+            Here, I'll put a button right into this paragraph and attach some JavaScript
+            to it.
+            <button onclick="console.log('Button 1 Pressed!');">Button 1</button>
+            You should look at the HTML to see the JavaScript right inline on the button.
+            You should see what the button does (get used to looking at the console!).
+        </p>
+        <p>
+            While you can stick JavaScript code right into HTML (I just did, obviously),
+            you generally, should not do it.
+            For little one liners, it might be OK.
+            But, for anything more complicated, having the JavaScript in a separate file
+            makes things much easier to keep track of.
+        </p>
+    </div>
+    <div id="Box02" class="examplebox">
+        <H2>Box02: JavaScript Files</H2>
+        <p>
+            Since I told you not to put JavaScript into the HTML files, the next
+            question is where to put it.
+        </p>
+        <p>
+            We will put JavaScript programs into separate files - dividing them up into
+            smaller chunks (roughly "modules"), but that will come later.
+            By convention, I will always name my JavaScript files with ".js", although
+            other people will do other things (for example, we might name the files
+            with ".es6" to signify that we're using the ES6 version of JavaScript).
+        </p>
+        <p>
+            We load JavaScript files into our HTML page using the same
+            <code>&lt;script&gt;</code> tag that we used in Box01. Except that
+            rather than putting the code inline, the tag gives the file name
+            to load. Look at the HTML, since I stuck it right into this paragraph.
+            <script src="two.js" type="module"></script>
+            You will also want to look at the file that got loaded ("two.js") and
+            check the console (since, like Box1, the code writes there).
+        </p>
+        <p>
+            If you're curious (and you should be) the <code>type="module"</code>
+            in the tag tells the browser that we want the ES6 version of JavaScript.
+        </p>
+    </div>
+    <div id="Box03" class="examplebox">
+        <H2>Box03: When to run code</H3>
+        <p>
+            A cool thing about the web browser is that many things are asynchronous.
+            You don't have to wait for one thing to finish before starting the next.
+            So, for example, when we load a JavaScript program, we don't know when
+            it will finish loading. It could load immediately, or it could take some
+            time (if it has to be fetched over the network, or the compiler takes some
+            time). This creates a potential problem: we want our JavaScript program
+            to access our web page, but we don't know if the web page has finished
+            loaded (and is ready to be accessed) when our program is run.
+        </p>
+        <p>
+            The answer to this will be to delay running our JavaScript program until
+            after we're sure that the web page is loaded.
+            To do this, we'll put out program (the place to go when we want to "start")
+            as a function, and set this function to be called after the window finishes
+            loading. Inside the HTML file for this paragraph, you'll see an example.
+            (inside the script tag) - remember you are supposed to read this!
+        </p>
+        <script>
+            function main() {
+                console.log("Box03: written after the window loads");
+            }
+             window.onload = main;
+             console.log("Box03: written during loading");
+        </script>
+        <p>
+            Notice how I defined a function (called <code>main</code>, that prints something),
+            and then assigned
+            this function to the <code>onload</code> member of the <code>window</code> object.
+            If you look in the console, you'll see that print statement occurs
+            <em>after</em> all of the stuff that gets run during the loading (like the other
+            <code>console.log</code> statement).
+        </p>
+        <p>
+            Make sure that you're comfortable to the idea of defining functions (like we did here)
+            and treating them as objects (such as assigning them to variables to be called later).
+        </p>
+    </div>
+    <div id="Box04" class="examplebox">
+        <H2>Box04: Multiple start functions</H2>
+        <p>
+            In box 3, we defined a function that got called when the window finished
+            loading. If we wanted to do something else (like have a start function
+            for this box) we can't just change <code>window.onload</code> again - since
+            we'd over-write what we put there last time. Instead, we need to store whatever the
+            previous value was and make sure it gets called as well. An example of
+            how to do this is in the box. It uses a closure - which is something that you
+            will learn about as you learn to program in JavaScript.
+            We'll talk about them in class, and you can read about them if you aren't
+            already familiar with them.
+        </p>
+        <script>
+            // a function we want to have run after the page loads
+            function mainfour () {
+                console.log("Box04: Something else to write to Console");
+            }
+            // define another function - just to show how there are multiple ways
+            // to define functions
+            let mainfourb = function() {
+                console.log("Box04: Yet another line to write to console");
+            }
+            /**
+             * define the "addStart" function that gives a new function to be
+             * called at window.onload - but first calls the old handler
+             * @param {function} func
+             */
+            function addStart(func) {
+                // make a local variable and store the old value of the handler
+                // this will be kept in closure when we define the new handler function
+                let previousStart = window.onload;
+                // define a new handler function and assign it to window.onload
+                window.onload = function() {
+                    // if no previous start was given, then its value will be undefined,
+                    // so we cannot call it as a function
+                    if (previousStart) previousStart();
+                    // now we can call the function that we want to call
+                    func();
+                }
+            }
+            // now that we've defined addStart, let's use it
+            addStart(mainfour);
+            addStart(mainfourb);
+        </script>
+        <p>
+            In the future, we will give you addStart - but I wanted to explain
+            why you needed it, and to give you a first exposure to code with
+            closures. While those few lines of code are short and simple, they
+            use some important functional programming concepts.
+            We will use similar things a lot in this class.
+        </p>
+        <p>
+            And, in the future, don't put JavaScript into your HTML files like that.
+        </p>
+    </div>
+    <div id="Box05" class="examplebox">
+        <h2>Box05: What to do with buttons?</h2>
+        <p>
+            In the first button example, we stuck code right into the button's handler
+            when we created the button. That's not a good place to put code.
+            Instead, what we will do to attach JavaScript to buttons is to
+            write JavaScript that finds the button on the page and changes it.
+            Of course, that code cannot be run until after the page is loaded
+            (since we need to make sure that the button has been created before we
+            change it).
+        </p>
+        <p>
+            Here is a <button id="Box05button">button</button>.
+            Look at the code (which is in the HTML file) to see how the handler
+            is set up (and of course, check the console to see that it works).
+        </p>
+        <script>
+            function button5handler() {
+                console.log("Box05's button was pressed");
+            }
+            function setupButton5() {
+                let button = document.getElementById("Box05button");
+                button.onclick = button5handler
+            }
+            addStart(setupButton5);
+        </script>
+        <p>
+            Here is <button id="button5another">another button</button>.
+            The code to set it up does the same thing, it's just written in a
+            different style. Read the code an make sure you see how it works.
+        </p>
+        <script>
+            addStart(function() {
+                let button = document.getElementById("button5another");
+                button.onclick = function() {
+                    console.log("Box05's other button was pressed");
+                }
+            });
+        </script>
+        <p>
+            And while you're looking at code... Here's
+            <button id="button5yetanother">yet another button</button>.
+            This one does something slightly more complicated, and makes
+            use of a closure. Look at the console to figure out what
+            is happeneing.
+        </p>
+        <script>
+                addStart(function() {
+                    let button = document.getElementById("button5yetanother");
+                    let count=0;
+                    button.onclick = function() {
+                        count = count+1;
+                        console.log("Box05's third button has been pressed "+count.toString()+" times.");
+                    }
+                });
+            </script>
+            <p>
+                This (the "yet another button") example uses another closure,
+                so you can start to figure out how closures work.
+            </p>
+            <p>
+                But, I want you to do one other thing with this example: use it as a chance
+                to try out the debugger in the browser that you are using.
+                Try to put a break point in the code to stop the  program when the button is
+                clicked.
+                This program is so simple that you won't need a debugger, but soon,
+                we'll be writing bigger programs, and you'll be happy that you know
+                how to use the debugger.
+            </p>
+       </div>
+       <div id="Box06" class="examplebox">
+           <H2>Box 06: One more thing with buttons...</H2>
+           <p>
+               So far, we've made the buttons in HTML and attached JavaScript to them.
+               However, we can also make the buttons right in JavaScript using
+               JavaScript functions that create HTML elements and place them in the DOM
+               (the tree of objects).
+           </p>
+           <p id="box6par2">
+               Here is an example that places a button right in this paragraph.
+               Be sure to look at the code and understand the basic ideas.
+               Notice how we directly manipulate the "tree" of elements
+               (here we add more children to the paragraph).
+           </p>
+           <script>
+               // place buttons within the paragraph
+               // remember that we usually will not put code into our HTML
+               //
+               // first, find the paragraph we're going to add to
+                let par06 = document.getElementById("box6par2");
+                // now we create the button
+                let button06 = document.createElement("button");
+                // set it's text to what we want to see
+                button06.innerText = "Button6";
+                // add the button to the end of the paragraph
+                par06.appendChild(button06);
+                // Change the class of the button to make it look nicer
+                // see https://developer.mozilla.org/en-US/docs/Web/API/Element/classList
+                // for info on adding classes to elements
+                button06.classList.add("basicbutton");
+                // make the button do something
+                button06.onclick = function() {
+                    console.log("Box 6's button was pressed");
+                };
+
+           </script>
+           <p id="box6par3">
+               Here is another, more complicated example creating multiple buttons
+               and using closures to give them some behavior.
+               This is a good chance to try to learn to read code that uses closures.
+               This time, the actual code is in the "two.js" file.
+           </p>
+       </div>
+       <div id="sumbox" class="examplebox">
+           <h2>Summary</h2>
+           <p>
+               Hopefully, seeing this gave you some ideas as to how we connect web pages
+               and JavaScript programs. Now we can move on to the third page
+               (<a href="three.html">three.html</a>) and try to use JavaScript to actually
+               do something.
+           </p>
+       </div>
+</body>
+</html>

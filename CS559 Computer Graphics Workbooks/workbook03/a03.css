@@ -1,0 +1,21 @@
+canvas {
+    border: 2px solid black;
+}
+
+svg {
+    border: 2px solid black;
+}
+
+
+
+/*** Simple SVG styles for testing ***/
+.lightbluewithborder {
+    fill: #CCF;
+    stroke: #00F;
+    stroke-width: 4px;
+}
+.lightredwithborder {
+    fill: #FCC;
+    stroke: #F00;
+    stroke-width: 2px;
+};

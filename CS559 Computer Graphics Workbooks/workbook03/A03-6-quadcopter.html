@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+    <!--
+        Workbook 3 for CS559 - page six -
+        written January 2019, by Michael Gleicher
+
+        students are allowed (and) encouraged to read the HTML source files!
+
+        this is an exercise page, although the main work is in
+        the attached javascript file
+    -->
+
+<header>
+        <meta charset="UTF-8">
+        <!-- use the CS559 Style Sheet -->
+        <link rel="stylesheet" href="Libs/style559.css">
+        <link rel="stylesheet" href="a03.css">
+        <link rel="stylesheet" href="Libs/pygments.css">
+        <title>
+            Assignment 03: Page 6 - Quadcopter Exercise
+        </title>
+</header>
+<body>
+    <!-- @@MDReplace: SOURCES/quad.md -->
+<h1>Workbook3, Page 6: Exercise - QuadCopter</h1>
+<canvas id="p6" height="600px" width="600px"></canvas>
+
+<p>To try out hierarchical modeling and animation, you will make a QuadCopter. Since we're still doing 2D, we'll make a top view. This is a hierarchical model: the QuadCopter moves around (and turns) and has 4 propellers that stay attached, but spin around. You can make it fancier if you like. You can see an example from the 2015 class below.</p>
+<p>Some requirements:</p>
+<ol>
+<li>Your QuadCopter can be simple in shape, but it must have a front, and 4 arms that the rotors attach to.</li>
+<li>The propellers can be simple, but them must have an obvious center that they spin around.</li>
+<li>You scene must have a QuadCopter that travels in a circle and points forward as it goes around the circle.</li>
+<li>The propellers must spin.</li>
+<li>Your quadcopter must be done using Canvas, and put into a Canvas element on this page. (You can use the one that is above these instructions).</li>
+</ol>
+<p>We have asked students to do variants of this assignment in the past. So, if you look around, you will find the old assignment, and even old example code. I can't stop you from looking at it.</p>
+<p>In fact <a href="http://graphics.cs.wisc.edu/WP/cs559-fall2015/2015/09/03/programming-assignment-2/">here's the 2015 assignment</a>, and the <a href="http://graphics.cs.wisc.edu/Courses/559-f2015/Examples/QuadCopter/quad.html">2015 Example program</a>.</p>
+<p>You can look at the old program to get an idea of what to do for this assignment. The front of my quadcopter is flatter than the back - so it does have a front. The propellers spin at different rates - but not in a meaningful way. (real quadcopters control themselves by varying the speeds of the rotors).</p>
+<p>I discourage you from trying to read my old code. It's done in a weird way (archaic JavaScript - creating classes by hacking the prototype), uses drawing features we haven't learned in class (Bezier curves), and is written in a weird way to account for future features. You're better off figuring out how to do it yourself.</p>
+<p>The old assignment was actually more open ended (you didn't have to make a QuadCopter - that's just what my code happened to do).</p>
+<p>Your code must be in the file <code>03-6-quadcopter.js</code>. It's up to you to write a <code>window.onload</code> and to use <code>window.requestAnimationFrame</code> correctly. You learned about this in previous workbooks, and my code should give you plenty of examples. You may use features of Canvas that we have not learned about in class yet (like Bezier curves), but you do not have to.</p>
+<p>You can edit the HTML file (to make the Canvas a different size, hide the instructions, add instructions if there is user interaction, ...). But we will load this page (<code>A03-6-quadcopter.html</code>) into the web browser (using a local <code>http-server</code>) to grade the assignment.</p>
+<h2>Beyond the Basics...</h2>
+<p>The list above is for a complete (AB) assignment. Basically, you need to make one quadcopter that moves in a circle with propellers that spin.</p>
+<p>You can do things more than the minimum, and we will reward exceptional assignments with bonus points. How good does it need to be? I'm not sure. Be creative.</p>
+<p>If you need some ideas:</p>
+<ol>
+<li>Have multiple quadcopters that fly in more complex paths.</li>
+<li>Make cool looking quadcopters.</li>
+<li>Provide some kind of interaction (e.g., let the user fly a quadcopter with the keyboard). You can add controls to the HTML, or respond to events in the Canvas. If the user is supposed to do something, make sure that the HTML has instructions above the Canvas.</li>
+<li>Make the quadcopters "do something". You could have people that the quadcopter flies to and rescues - they could wave their arms to flag it down (more articulated motion!).</li>
+<li>Make other articulated objects in the scene.</li>
+</ol>
+<p>Remember that the main learning goal of the assignment is hierarchical modeling using transformations with parts.</p>
+<p>Be sure to explain in your readme if there are any fancy features - especially if they are not obvious (things we should watch for, interactions we can try, ...).</p>
+<p>You must satisfy the basic requirements before being eligible for bonus points for more complex things. For example, if you make a quadcopter do something more complex than flying in a circle, you should also have one that flies in a circle.</p>
+<h2>After this page...</h2>
+<p>There is one <a href="A03-7-svg.html">more page</a> with another exercise on it.</p>
+    <!-- @@EndMDReplace: -->
+    
+
+    <script src="A03-6-quadcopter.js" type="module"></script>
+</body>
+</html>
